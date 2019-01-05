@@ -1,7 +1,11 @@
 package me.simp.quirkademia.util;
 
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.inventory.ItemStack;
 
 public enum ParticleEffect {
 
@@ -158,5 +162,16 @@ public enum ParticleEffect {
 		} else {
 			loc.getWorld().spawnParticle(particle, loc, amount, offsetX, offsetY, offsetZ, extra, data, true);
 		}
+	}
+	
+	public static void displayColoredParticle(String hex, Location loc, int amount, double offsetX, double offsetY, double offsetZ) {
+		if (hex.startsWith("#")) {
+			hex = hex.substring(1);
+		}
+		
+		HexColor color = new HexColor(hex);
+		int[] rgb = color.toRGB();
+		DustOptions dust = new DustOptions(Color.fromRGB(rgb[0], rgb[1], rgb[2]), (float) 0.8);
+		ParticleEffect.REDSTONE.display(loc, amount, offsetX, offsetY, offsetZ, dust);
 	}
 }

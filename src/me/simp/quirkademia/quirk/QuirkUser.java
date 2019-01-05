@@ -1,8 +1,14 @@
 package me.simp.quirkademia.quirk;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+
+import org.bukkit.potion.PotionEffectType;
+
+import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 
 public class QuirkUser {
 	
@@ -11,11 +17,13 @@ public class QuirkUser {
 	private UUID uuid;
 	private Quirk quirk;
 	private QuirkStamina stamina;
+	private QuirkUserStatus status;
 	
 	public QuirkUser(UUID uuid, Quirk quirk) {
 		this.uuid = uuid;
 		this.quirk = quirk;
 		this.stamina = new QuirkStamina();
+		this.status = new QuirkUserStatus();
 		
 		USERS.put(uuid, this);
 	}
@@ -28,20 +36,106 @@ public class QuirkUser {
 		return quirk;
 	}
 	
+	public QuirkUser setQuirk(Quirk quirk) {
+		this.quirk = quirk;
+		return this;
+	}
+	
 	public QuirkStamina getStamina() {
 		return stamina;
+	}
+	
+	public QuirkUserStatus getStatus() {
+		return status;
 	}
 	
 	public static QuirkUser from(UUID uuid) {
 		if (USERS.containsKey(uuid)) {
 			return USERS.get(uuid);
-		} else {
-			return load(uuid);
+		}
+		
+		return null;
+	}
+	
+	public static Set<QuirkUser> getOnlineUsers() {
+		Set<QuirkUser> users = new HashSet<>();
+		
+		for (QuirkUser user : USERS.values()) {
+			users.add(user);
+		}
+		
+		return users;
+	}
+	
+	public static QuirkUser login(UUID uuid) {
+		if (USERS.containsKey(uuid)) {
+			return USERS.get(uuid);
+		}
+		
+		Quirk quirk = Quirk.get(OneForAllQuirk.class);
+		
+		//TODO: database loading stuff 
+		
+		return new QuirkUser(uuid, quirk);
+	}
+	
+	public static void logout(UUID uuid) {
+		QuirkUser user = from(uuid);
+		
+		if (user != null) {
+			//TODO: database saving stuff
+			
+			USERS.remove(uuid);
+		}
+	}
+		
+	public static enum StatusEffect {
+		INCREASED_STRENGTH(PotionEffectType.INCREASE_DAMAGE),
+		INCREASED_ENDURANCE(PotionEffectType.DAMAGE_RESISTANCE),
+		INCREASED_SPEED(PotionEffectType.SPEED), 
+		INCREASED_JUMP(PotionEffectType.JUMP), 
+		QUIRK_ERASED(null), 
+		PARALYZED(PotionEffectType.SLOW), 
+		HEALING(PotionEffectType.REGENERATION),
+		INVISIBLE(PotionEffectType.INVISIBILITY);
+		
+		public PotionEffectType type;
+		
+		private StatusEffect(PotionEffectType type) {
+			this.type = type;
+		}
+		
+		public PotionEffectType getPotion() {
+			return type;
 		}
 	}
 	
-	public static QuirkUser load(UUID uuid) {
-		//database stuff later
-		return null;
+	public class QuirkUserStatus {
+		
+		private Map<StatusEffect, Integer> active;
+		
+		private QuirkUserStatus() {
+			active = new HashMap<>();
+		}
+		
+		public boolean has(StatusEffect effect) {
+			return active.containsKey(effect);
+		}
+		
+		public void add(StatusEffect effect, int power) {
+			active.put(effect, power);
+		}
+		
+		public void remove(StatusEffect effect) {
+			active.remove(effect);
+		}
+		
+		public int getPower(StatusEffect effect) {
+			return has(effect) ? active.get(effect) : 0;
+		}
+		
+		public Set<StatusEffect> getEffects() {
+			return active.keySet();
+		}
 	}
 }

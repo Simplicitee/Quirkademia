@@ -7,25 +7,28 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 
-import me.simp.quirkademia.quirk.ability.QuirkAbility;
+import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
-public class Quirk implements IQuirk {
+public abstract class Quirk implements IQuirk {
 	
 	private static final Map<String, Quirk> QUIRKS = new HashMap<>();
 	private static final Map<Class<? extends Quirk>, Quirk> QUIRKS_CLASSES = new HashMap<>();
 
 	private String name;
 	private QuirkType type;
-	private Map<ActivationType, Class<? extends QuirkAbility>> abilities;
+	private Map<ActivationType, QuirkAbilityInfo> abilities;
 	
 	public Quirk(String name, QuirkType type) {
 		this.name = name;
 		this.type = type;
-		this.abilities = new HashMap<>();
 		
 		QUIRKS.put(name.toLowerCase(), this);
 		QUIRKS_CLASSES.put(this.getClass(), this);
+		
+		this.abilities = registerQuirkAbilities();
 	}
 	
 	@Override
@@ -39,21 +42,16 @@ public class Quirk implements IQuirk {
 	}
 
 	@Override
-	public String getDescription() {
-		return null;
-	}
-
-	@Override
 	public ChatColor getChatColor() {
 		switch (type) {
-			case EMITTER: return ChatColor.BLUE;
+			case EMITTER: return ChatColor.AQUA;
 			case TRANSFORMATION: return ChatColor.RED;
 			case MUTANT: return ChatColor.GREEN;
 			default: return ChatColor.GRAY;
 		}
 	}
 	
-	public Map<ActivationType, Class<? extends QuirkAbility>> getAbilities() {
+	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {
 		return new HashMap<>(abilities);
 	}
 	
@@ -66,7 +64,7 @@ public class Quirk implements IQuirk {
 			return null;
 		}
 		
-		Class<? extends QuirkAbility> ability = abilities.get(type);
+		Class<? extends QuirkAbility> ability = abilities.get(type).getAbilityClass();
 		try {
 			Constructor<?> construct = ability.getConstructor(QuirkUser.class);
 			return (QuirkAbility) construct.newInstance(user);
@@ -87,4 +85,10 @@ public class Quirk implements IQuirk {
 	public static Collection<Quirk> getAll() {
 		return QUIRKS.values();
 	}
+	
+	public static void loadCoreQuirks() {
+		new OneForAllQuirk();
+	}
+	
+	public abstract Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities();
 }

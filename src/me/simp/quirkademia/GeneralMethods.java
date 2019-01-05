@@ -36,13 +36,13 @@ public class GeneralMethods {
 		final World world = location.getWorld();
 
 		// To find chunks we use chunk coordinates (not block coordinates!)
-		final int smallX = (int) (location.getX() - radius) >> 4;
-		final int bigX = (int) (location.getX() + radius) >> 4;
-		final int smallZ = (int) (location.getZ() - radius) >> 4;
-		final int bigZ = (int) (location.getZ() + radius) >> 4;
+		final int x1 = (int) (location.getX() - radius) >> 4;
+		final int x2 = (int) (location.getX() + radius) >> 4;
+		final int z1 = (int) (location.getZ() - radius) >> 4;
+		final int z2 = (int) (location.getZ() + radius) >> 4;
 
-		for (int x = smallX; x <= bigX; x++) {
-			for (int z = smallZ; z <= bigZ; z++) {
+		for (int x = x1; x <= x2; x++) {
+			for (int z = z1; z <= z2; z++) {
 				if (world.isChunkLoaded(x, z)) {
 					entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
 				}

@@ -2,10 +2,14 @@ package me.simp.quirkademia;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
@@ -15,8 +19,23 @@ import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ActivationType;
 
 public class QuirkListener implements Listener {
-
+	
 	@EventHandler
+	public void onPlayerJoin(PlayerLoginEvent event) {
+		QuirkUser.login(event.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		QuirkUser.logout(event.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onPlayerKick(PlayerKickEvent event) {
+		QuirkUser.logout(event.getPlayer().getUniqueId());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerSneak(PlayerToggleSneakEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -29,7 +48,7 @@ public class QuirkListener implements Listener {
 		activateAbility(user, type);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerClick(PlayerAnimationEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -42,7 +61,7 @@ public class QuirkListener implements Listener {
 		activateAbility(user, type);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerRightClickEntity(PlayerInteractEntityEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -55,7 +74,7 @@ public class QuirkListener implements Listener {
 		activateAbility(user, type);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerToggleSprint(PlayerToggleSprintEvent event) {
 		if (event.isCancelled()) {
 			return;
@@ -73,20 +92,20 @@ public class QuirkListener implements Listener {
 		activateAbility(user, type);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerOffhandToggle(PlayerSwapHandItemsEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
 		
 		Player player = event.getPlayer();
-		ActivationType type = ActivationType.OFFHAND_TRIGGER;
+		ActivationType type = player.isSneaking() ? ActivationType.OFFHAND_TRIGGER_SNEAKING : player.isSprinting() ? ActivationType.OFFHAND_TRIGGER_SPRINTING : ActivationType.OFFHAND_TRIGGER;
 		QuirkUser user = QuirkUser.from(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerRightClickBlock(PlayerInteractEvent event) {
 		if (event.isCancelled()) {
 			return;

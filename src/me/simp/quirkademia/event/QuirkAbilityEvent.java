@@ -4,8 +4,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.ability.QuirkAbility;
 
 public abstract class QuirkAbilityEvent extends Event implements Cancellable {
 	

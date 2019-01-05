@@ -3,3 +3,10 @@ author: Simplicitee
 api-version: 1.13
 version: ${project.version}
 main: me.simp.quirkademia.QuirkPlugin
+commands:
+  quirk:
+    aliases: [q]
+    usage: /<command>
+permissions:
+  quirk.user:
+    default: true

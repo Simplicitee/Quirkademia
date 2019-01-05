@@ -1,4 +1,4 @@
-package me.simp.quirkademia.quirk.ability;
+package me.simp.quirkademia.manager;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -8,23 +8,19 @@ import java.util.PriorityQueue;
 import java.util.Set;
 
 import me.simp.quirkademia.QuirkPlugin;
+import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 
-public class QuirkAbilityManager {
+public class QuirkAbilityManager implements Manager {
 
 	private Set<QuirkAbility> instances;
 	private Map<QuirkUser, Map<Class<? extends QuirkAbility>, PriorityQueue<QuirkAbility>>> userInstances;
 	
-	private QuirkPlugin plugin;
-	
 	public QuirkAbilityManager(QuirkPlugin plugin) {
-		this.plugin = plugin;
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
-	}
-	
-	public QuirkPlugin getPlugin() {
-		return plugin;
+		
+		plugin.getManagersRunnable().registerManager(this);
 	}
 	
 	/**
@@ -101,16 +97,28 @@ public class QuirkAbilityManager {
 	 * Progresses all ability instances if possible
 	 */
 	public void progressAll() {
+		Set<QuirkAbility> remove = new HashSet<>();
 		for (QuirkAbility ability : instances) {
 			if (!ability.getPlayer().isOnline() || ability.getPlayer().isDead()) {
-				remove(ability);
+				remove.add(ability);
 				continue;
-			} 
+			} else if (!ability.getUser().getQuirk().equals(ability.getInfo().getQuirk())) {
+				remove.add(ability);
+				continue;
+			}
 			
-			//TODO: add more checks here
+			//TODO: add more checks here probably
 			
-			ability.progress();
+			if (!ability.progress()) {
+				remove.add(ability);
+			}
 		}
+		
+		for (QuirkAbility abil : remove) {
+			remove(abil);
+		}
+		
+		remove.clear();
 	}
 	
 	/**
@@ -141,5 +149,10 @@ public class QuirkAbilityManager {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void run() {
+		progressAll();
 	}
 }
