@@ -7,8 +7,11 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 
+import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
+import me.simp.quirkademia.quirk.frog.FrogQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
@@ -29,6 +32,10 @@ public abstract class Quirk implements IQuirk {
 		QUIRKS_CLASSES.put(this.getClass(), this);
 		
 		this.abilities = registerQuirkAbilities();
+		
+		for (QuirkAbilityInfo info : abilities.values()) {
+			QuirkPlugin.get().getAbilityManager().registerInfo(info);
+		}
 	}
 	
 	@Override
@@ -88,6 +95,8 @@ public abstract class Quirk implements IQuirk {
 	
 	public static void loadCoreQuirks() {
 		new OneForAllQuirk();
+		new FrogQuirk();
+		new ElectrificationQuirk();
 	}
 	
 	public abstract Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities();

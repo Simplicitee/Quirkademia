@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.util.ActivationType;
 
 public abstract class QuirkAbility {
 	
@@ -47,11 +46,6 @@ public abstract class QuirkAbility {
 		return initialized;
 	}
 	
-	public QuirkAbilityInfo getInfo() {
-		return user.getQuirk().getAbilities().get(getActivation());
-	}
-	
-	public abstract ActivationType getActivation();
 	public abstract Location getLocation();
 	public abstract boolean progress();
 	public abstract void onStart();

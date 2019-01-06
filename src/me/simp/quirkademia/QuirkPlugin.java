@@ -5,6 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simp.quirkademia.command.QuirkCommand;
 import me.simp.quirkademia.manager.ManagersRunnable;
+import me.simp.quirkademia.manager.PassiveManager;
 import me.simp.quirkademia.manager.QuirkAbilityManager;
 import me.simp.quirkademia.manager.StatusEffectManager;
 import me.simp.quirkademia.quirk.Quirk;
@@ -17,17 +18,19 @@ public class QuirkPlugin extends JavaPlugin{
 	private ManagersRunnable runner;
 	private QuirkAbilityManager abilManager;
 	private StatusEffectManager statManager;
+	private PassiveManager passiveManager;
 	
 	@Override
 	public void onEnable() {
 		plugin = this;
 		
-		Quirk.loadCoreQuirks();
-		
 		methods = new GeneralMethods(this);
 		runner = new ManagersRunnable(this);
 		abilManager = new QuirkAbilityManager(this);
 		statManager = new StatusEffectManager(this);
+		passiveManager = new PassiveManager(this);
+		
+		Quirk.loadCoreQuirks();
 		
 		getServer().getPluginCommand("quirk").setExecutor(new QuirkCommand(this));
 		
@@ -56,5 +59,9 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	public StatusEffectManager getStatusManager() {
 		return statManager;
+	}
+	
+	public PassiveManager getPassiveManager() {
+		return passiveManager;
 	}
 }

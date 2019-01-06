@@ -23,7 +23,7 @@ public class StatusEffectManager implements Manager {
 			
 			for (StatusEffect effect : status.getEffects()) {
 				if (effect.getPotion() != null) {
-					player.addPotionEffect(new PotionEffect(effect.getPotion(), 5, status.getPower(effect)), true);
+					player.addPotionEffect(new PotionEffect(effect.getPotion(), 5, status.getPower(effect), true, false), true);
 				}
 			}
 		}

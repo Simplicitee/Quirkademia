@@ -3,22 +3,26 @@ package me.simp.quirkademia.manager;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class QuirkAbilityManager implements Manager {
 
 	private Set<QuirkAbility> instances;
 	private Map<QuirkUser, Map<Class<? extends QuirkAbility>, PriorityQueue<QuirkAbility>>> userInstances;
+	private Map<Class<? extends QuirkAbility>, QuirkAbilityInfo> abilityInfos;
 	
 	public QuirkAbilityManager(QuirkPlugin plugin) {
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
+		this.abilityInfos = new HashMap<>();
 		
 		plugin.getManagersRunnable().registerManager(this);
 	}
@@ -102,7 +106,7 @@ public class QuirkAbilityManager implements Manager {
 			if (!ability.getPlayer().isOnline() || ability.getPlayer().isDead()) {
 				remove.add(ability);
 				continue;
-			} else if (!ability.getUser().getQuirk().equals(ability.getInfo().getQuirk())) {
+			} else if (!ability.getUser().getQuirk().equals(getAbilityInfo(ability.getClass()).getQuirk())) {
 				remove.add(ability);
 				continue;
 			}
@@ -119,6 +123,20 @@ public class QuirkAbilityManager implements Manager {
 		}
 		
 		remove.clear();
+	}
+	
+	public void removeAllFromUser(QuirkUser user) {
+		if (userInstances.containsKey(user)) {
+			for (Class<? extends QuirkAbility> clazz : userInstances.get(user).keySet()) {
+				Iterator<QuirkAbility> abils = userInstances.get(user).get(clazz).iterator();
+				
+				while (abils.hasNext()) {
+					QuirkAbility abil = abils.next();
+					abils.remove();
+					remove(abil);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -143,12 +161,28 @@ public class QuirkAbilityManager implements Manager {
 	 * @param clazz Class of {@link QuirkAbility} to obtain
 	 * @return oldest {@link QuirkAbility} of class clazz from user
 	 */
-	public QuirkAbility getAbility(QuirkUser user, Class<? extends QuirkAbility> clazz) {
+	public <T extends QuirkAbility> T getAbility(QuirkUser user, Class<T> clazz) {
 		if (hasAbility(user, clazz)) {
-			return userInstances.get(user).get(clazz).peek();
+			return clazz.cast(userInstances.get(user).get(clazz).peek());
 		}
 		
 		return null;
+	}
+	
+	public QuirkAbilityInfo getAbilityInfo(Class<? extends QuirkAbility> clazz) {
+		if (abilityInfos.containsKey(clazz)) {
+			return abilityInfos.get(clazz);
+		}
+		
+		return null;
+	}
+	
+	public QuirkAbilityInfo registerInfo(QuirkAbilityInfo info) {
+		if (!abilityInfos.containsKey(info.getAbilityClass())) {
+			abilityInfos.put(info.getAbilityClass(), info);
+		}
+		
+		return info;
 	}
 
 	@Override

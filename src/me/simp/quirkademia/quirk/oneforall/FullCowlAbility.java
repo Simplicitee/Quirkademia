@@ -7,7 +7,6 @@ import org.bukkit.potion.PotionEffectType;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
-import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.ParticleEffect;
 
 public class FullCowlAbility extends QuirkAbility {
@@ -63,11 +62,11 @@ public class FullCowlAbility extends QuirkAbility {
 				return false;
 			}
 			
-			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, 4);
+			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, 2);
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, 3);
 			user.getStatus().add(StatusEffect.INCREASED_JUMP, 3);
 			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, 2);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, 2), true);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, 2, true, false), true);
 			
 			ParticleEffect.displayColoredParticle("03c58b", player.getLocation().clone().add(0, 1, 0), 6, 0.25, 0.6, 0.25);
 		}
@@ -91,10 +90,5 @@ public class FullCowlAbility extends QuirkAbility {
 	@Override
 	public Location getLocation() {
 		return player.getLocation().clone().add(0, 1, 0);
-	}
-
-	@Override
-	public ActivationType getActivation() {
-		return ActivationType.OFFHAND_TRIGGER_SNEAKING;
 	}
 }
