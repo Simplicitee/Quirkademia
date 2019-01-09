@@ -16,13 +16,15 @@ public class FrogQuirk extends Quirk {
 
 	@Override
 	public String getDescription() {
-		return "Tsuyu Asui's quirk is Frog, and it's as simple as it sounds. She can do pretty much anything a frog can and is really good at jumping.";
+		return "Tsuyu Asui's quirk is Frog, and it's as simple as it sounds. She can do pretty much anything a frog can.";
 	}
 
 	@Override
 	public Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities() {
 		Map<ActivationType, QuirkAbilityInfo> register = new HashMap<>();
 		register.put(ActivationType.PASSIVE, new FroglikeInfo());
+		register.put(ActivationType.SNEAK_DOWN, new TongueAttackInfo());
+		register.put(ActivationType.OFFHAND_TRIGGER, new TongueCycleInfo());
 		return register;
 	}
 

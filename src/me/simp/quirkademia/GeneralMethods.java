@@ -13,10 +13,17 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
 public class GeneralMethods {
 
@@ -24,6 +31,29 @@ public class GeneralMethods {
 	
 	public GeneralMethods(QuirkPlugin plugin) {
 		this.plugin = plugin;
+	}
+	
+	public QuirkPlugin getPlugin() {
+		return plugin;
+	}
+	
+	public boolean canUseAbility(QuirkAbilityInfo info, QuirkUser user) {
+		if (info == null) {
+			return false;
+		} else if (user.isQuirkDisabled()) {
+			return false;
+		} else if (user.getStatus().has(StatusEffect.QUIRK_ERASED)) {
+			return false;
+		} else if (!info.getQuirk().equals(user.getQuirk())) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean canUseAbility(Class<? extends QuirkAbility> clazz, QuirkUser user) {
+		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(clazz), user);
+		
 	}
 	
 	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location location, final double radius) {
@@ -60,6 +90,14 @@ public class GeneralMethods {
 		}
 
 		return entities;
+	}
+	
+	public Vector getDirection(Location start, Location destination) {
+		double x = destination.getX() - start.getX();
+		double y = destination.getY() - start.getY();
+		double z = destination.getZ() - start.getZ();
+		
+		return new Vector(x, y, z);
 	}
 	
 	public Entity getTargetedEntity(Player player, double range, Material...ignore) {
@@ -163,5 +201,33 @@ public class GeneralMethods {
 		}
 		
 		return check;
+	}
+	
+	public boolean isAir(Block b) {
+		return b.getType() == Material.AIR || b.getType() == Material.CAVE_AIR || b.getType() == Material.VOID_AIR;
+	}
+	
+	public boolean isTransparent(Block b) {
+		return !b.getType().isOccluding() && !b.getType().isSolid();
+	}
+	
+	public boolean isWater(BlockData data) {
+		if (data instanceof Waterlogged) {
+			return ((Waterlogged) data).isWaterlogged();
+		} else {
+			switch (data.getMaterial()) {
+				case WATER:
+				case KELP:
+				case KELP_PLANT:
+				case SEAGRASS:
+				case TALL_SEAGRASS:
+					return true;
+				default: return false;
+			}
+		}
+	}
+	
+	public boolean isWater(Block b) {
+		return isWater(b.getBlockData());
 	}
 }

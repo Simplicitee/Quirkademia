@@ -22,12 +22,17 @@ public class SmashAttackAbility extends QuirkAbility {
 	public SmashAttackAbility(QuirkUser user) {
 		super(user);
 		
-		if (plugin.getAbilityManager().hasAbility(user, this.getClass())) {
 			
-		}
+		if (manager.hasAbility(user, SmashAbility.class)) {
+			type = manager.getAbility(user, SmashAbility.class).getType();
 			
-		if (plugin.getAbilityManager().hasAbility(user, SmashAbility.class)) {
-			type = plugin.getAbilityManager().getAbility(user, SmashAbility.class).getType();
+			if (manager.hasAbility(user, this.getClass())) {
+				SmashType type2 = manager.getAbility(user, this.getClass()).getType();
+				
+				if (type2 == type) {
+					return;
+				}
+			}
 		} else {
 			type = SmashType.NONE;
 		}
@@ -58,7 +63,7 @@ public class SmashAttackAbility extends QuirkAbility {
 
 			user.addCooldown(type.toString().toLowerCase() + " smash", 4000);
 			
-			plugin.getAbilityManager().start(this);
+			manager.start(this);
 		}
 	}
 
@@ -83,7 +88,7 @@ public class SmashAttackAbility extends QuirkAbility {
 		for (Entity e : plugin.getMethods().getEntitiesAroundPoint(loc, radius + 1)) {
 			if (e instanceof LivingEntity && player.getEntityId() != e.getEntityId()) {
 				e.setVelocity(direction.clone().multiply(power));
-				((LivingEntity) e).damage(2.0, player);
+				damage((LivingEntity) e, power);
 			}
 		}
 		return true;
@@ -97,4 +102,7 @@ public class SmashAttackAbility extends QuirkAbility {
 	public void onRemove() {
 	}
 
+	public SmashType getType() {
+		return type;
+	}
 }

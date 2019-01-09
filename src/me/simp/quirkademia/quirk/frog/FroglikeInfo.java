@@ -16,7 +16,7 @@ public class FroglikeInfo extends QuirkAbilityInfo {
 
 	@Override
 	public String getDescription() {
-		return "Being like a frog, Tsuyu Asui can do just about anything a frog can. She's especially good at jumping.";
+		return "Being like a frog, Tsuyu Asui can do just about anything a frog can. She's especially good at jumping and swimming. By standing still long enough, she can even camoflauge herself!";
 	}
 	
 	@Override

@@ -22,8 +22,8 @@ public class FullCowlAbility extends QuirkAbility {
 	public FullCowlAbility(QuirkUser user) {
 		super(user);
 		
-		if (plugin.getAbilityManager().hasAbility(user, this.getClass())) {
-			plugin.getAbilityManager().remove(plugin.getAbilityManager().getAbility(user, this.getClass()));
+		if (manager.hasAbility(user, this.getClass())) {
+			manager.remove(manager.getAbility(user, this.getClass()));
 			return;
 		} else if (user.hasCooldown("full cowling")) {
 			return;
@@ -36,7 +36,7 @@ public class FullCowlAbility extends QuirkAbility {
 		health = player.getHealth();
 		damageThreshold = 6;
 		
-		plugin.getAbilityManager().start(this);
+		manager.start(this);
 	}
 
 	@Override
