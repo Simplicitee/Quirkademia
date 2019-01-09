@@ -1,4 +1,5 @@
 ## TO DO
+- Stamina system
 - Ability tweaking
 - Implementing quirks (from now on, finish one before making another)
 - Sounds
