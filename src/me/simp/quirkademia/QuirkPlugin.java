@@ -3,7 +3,8 @@ package me.simp.quirkademia;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.simp.quirkademia.command.QuirkCommand;
+import me.simp.quirkademia.command.Commands;
+import me.simp.quirkademia.manager.CooldownManager;
 import me.simp.quirkademia.manager.ManagersRunnable;
 import me.simp.quirkademia.manager.PassiveManager;
 import me.simp.quirkademia.manager.QuirkAbilityManager;
@@ -18,7 +19,9 @@ public class QuirkPlugin extends JavaPlugin{
 	private ManagersRunnable runner;
 	private QuirkAbilityManager abilManager;
 	private StatusEffectManager statManager;
-	private PassiveManager passiveManager;
+	private CooldownManager coolManager;
+	private PassiveManager passManager;
+	private Commands commands;
 	
 	@Override
 	public void onEnable() {
@@ -28,11 +31,11 @@ public class QuirkPlugin extends JavaPlugin{
 		runner = new ManagersRunnable(this);
 		abilManager = new QuirkAbilityManager(this);
 		statManager = new StatusEffectManager(this);
-		passiveManager = new PassiveManager(this);
+		coolManager = new CooldownManager(this);
+		passManager = new PassiveManager(this);
+		commands = new Commands(this);
 		
 		Quirk.loadCoreQuirks();
-		
-		getServer().getPluginCommand("quirk").setExecutor(new QuirkCommand(this));
 		
 		getServer().getPluginManager().registerEvents(new QuirkListener(), this);
 		
@@ -61,7 +64,15 @@ public class QuirkPlugin extends JavaPlugin{
 		return statManager;
 	}
 	
+	public CooldownManager getCooldownManager() {
+		return coolManager;
+	}
+	
 	public PassiveManager getPassiveManager() {
-		return passiveManager;
+		return passManager;
+	}
+	
+	public Commands getCommands() {
+		return commands;
 	}
 }

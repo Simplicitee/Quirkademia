@@ -11,7 +11,7 @@ public class FullCowlInfo extends QuirkAbilityInfo {
 
 	@Override
 	public String getName() {
-		return "Full Cowl";
+		return "Full Cowling";
 	}
 
 	@Override

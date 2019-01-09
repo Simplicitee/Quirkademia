@@ -22,13 +22,22 @@ public class SmashAttackAbility extends QuirkAbility {
 	public SmashAttackAbility(QuirkUser user) {
 		super(user);
 		
+		if (plugin.getAbilityManager().hasAbility(user, this.getClass())) {
+			
+		}
+			
 		if (plugin.getAbilityManager().hasAbility(user, SmashAbility.class)) {
 			type = plugin.getAbilityManager().getAbility(user, SmashAbility.class).getType();
 		} else {
 			type = SmashType.NONE;
 		}
 		
-		if (type != SmashType.NONE) {
+		
+		if (type != SmashType.NONE) { 
+			if (user.hasCooldown(type.toString().toLowerCase() + " smash")) {
+				return;
+			}
+			
 			if (type == SmashType.DELAWARE) {
 				range = 10;
 				radius = 0.4;
@@ -46,6 +55,8 @@ public class SmashAttackAbility extends QuirkAbility {
 			start = player.getEyeLocation().clone();
 			loc = start.clone();
 			direction = start.getDirection().normalize();
+
+			user.addCooldown(type.toString().toLowerCase() + " smash", 4000);
 			
 			plugin.getAbilityManager().start(this);
 		}
@@ -53,7 +64,7 @@ public class SmashAttackAbility extends QuirkAbility {
 
 	@Override
 	public Location getLocation() {
-		return null;
+		return loc;
 	}
 
 	@Override

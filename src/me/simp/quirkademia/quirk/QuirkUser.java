@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
+import me.simp.quirkademia.util.Cooldown;
 
 public class QuirkUser {
 	
@@ -18,12 +19,16 @@ public class QuirkUser {
 	private Quirk quirk;
 	private QuirkStamina stamina;
 	private QuirkUserStatus status;
+	private boolean disabled;
+	private Map<String, Cooldown> cooldowns;
 	
 	public QuirkUser(UUID uuid, Quirk quirk) {
 		this.uuid = uuid;
 		this.quirk = quirk;
 		this.stamina = new QuirkStamina();
 		this.status = new QuirkUserStatus();
+		this.disabled = false;
+		this.cooldowns = new HashMap<>();
 		
 		USERS.put(uuid, this);
 	}
@@ -47,6 +52,38 @@ public class QuirkUser {
 	
 	public QuirkUserStatus getStatus() {
 		return status;
+	}
+	
+	public QuirkUser disableQuirk() {
+		this.disabled = true;
+		return this;
+	}
+	
+	public QuirkUser enableQuirk() {
+		this.disabled = false;
+		return this;
+	}
+	
+	public boolean isQuirkDisabled() {
+		return disabled;
+	}
+	
+	public boolean hasCooldown(String name) {
+		return cooldowns.containsKey(name);
+	}
+	
+	public QuirkUser addCooldown(String name, long cooldown) {
+		if (hasCooldown(name)) {
+			return this;
+		}
+		
+		Cooldown cd = new Cooldown(System.currentTimeMillis(), cooldown);
+		cooldowns.put(name, cd);
+		return this;
+	}
+	
+	public Map<String, Cooldown> getCooldowns() {
+		return cooldowns;
 	}
 	
 	public static QuirkUser from(UUID uuid) {

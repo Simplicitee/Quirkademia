@@ -12,17 +12,20 @@ import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
 public class QuirkAbilityManager implements Manager {
 
 	private Set<QuirkAbility> instances;
 	private Map<QuirkUser, Map<Class<? extends QuirkAbility>, PriorityQueue<QuirkAbility>>> userInstances;
 	private Map<Class<? extends QuirkAbility>, QuirkAbilityInfo> abilityInfos;
+	private Map<String, QuirkAbilityInfo> abilityInfosNames;
 	
 	public QuirkAbilityManager(QuirkPlugin plugin) {
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
 		this.abilityInfos = new HashMap<>();
+		this.abilityInfosNames = new HashMap<>();
 		
 		plugin.getManagersRunnable().registerManager(this);
 	}
@@ -33,6 +36,12 @@ public class QuirkAbilityManager implements Manager {
 	 * @return true if added to instances successfully
 	 */
 	public boolean start(QuirkAbility ability) {
+		if (ability.getUser().getStatus().has(StatusEffect.QUIRK_ERASED)) {
+			return false;
+		} else if (ability.getUser().isQuirkDisabled()) {
+			return false;
+		}
+		
 		if (instances.add(ability)) {
 			QuirkUser user = ability.getUser();
 			PriorityQueue<QuirkAbility> register;
@@ -109,6 +118,12 @@ public class QuirkAbilityManager implements Manager {
 			} else if (!ability.getUser().getQuirk().equals(getAbilityInfo(ability.getClass()).getQuirk())) {
 				remove.add(ability);
 				continue;
+			} else if (ability.getUser().getStatus().has(StatusEffect.QUIRK_ERASED)) {
+				remove.add(ability);
+				continue;
+			} else if (ability.getUser().isQuirkDisabled()) {
+				remove.add(ability);
+				continue;
 			}
 			
 			//TODO: add more checks here probably
@@ -177,9 +192,22 @@ public class QuirkAbilityManager implements Manager {
 		return null;
 	}
 	
+	public QuirkAbilityInfo getAbilityInfo(String name) {
+		name = name.toLowerCase();
+		if (abilityInfosNames.containsKey(name)) {
+			return abilityInfosNames.get(name);
+		}
+		
+		return null;
+	}
+	
 	public QuirkAbilityInfo registerInfo(QuirkAbilityInfo info) {
 		if (!abilityInfos.containsKey(info.getAbilityClass())) {
 			abilityInfos.put(info.getAbilityClass(), info);
+		}
+		
+		if (!abilityInfosNames.containsKey(info.getName().toLowerCase())) {
+			abilityInfosNames.put(info.getName().toLowerCase(), info);
 		}
 		
 		return info;
