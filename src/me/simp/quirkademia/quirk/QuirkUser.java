@@ -25,7 +25,7 @@ public class QuirkUser {
 	public QuirkUser(UUID uuid, Quirk quirk) {
 		this.uuid = uuid;
 		this.quirk = quirk;
-		this.stamina = new QuirkStamina();
+		this.stamina = new QuirkStamina(this, quirk.getStaminaTitle(), quirk.getStaminaColor(), quirk.getStaminaMax(), quirk.getStaminaRecharge());
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
 		this.cooldowns = new HashMap<>();

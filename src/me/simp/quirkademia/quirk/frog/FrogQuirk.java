@@ -3,6 +3,8 @@ package me.simp.quirkademia.quirk.frog;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.boss.BarColor;
+
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
@@ -26,6 +28,30 @@ public class FrogQuirk extends Quirk {
 		register.put(ActivationType.SNEAK_DOWN, new TongueAttackInfo());
 		register.put(ActivationType.OFFHAND_TRIGGER, new TongueCycleInfo());
 		return register;
+	}
+
+	@Override
+	public String getStaminaTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BarColor getStaminaColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getStaminaMax() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getStaminaRecharge() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

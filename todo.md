@@ -1,7 +1,7 @@
 ## TO DO
 - Stamina system
-- Ability tweaking
-- Implementing quirks (from now on, finish one before making another)
+- Config defaults
 - Sounds
+- Implementing quirks (from now on, finish one before making another)
+- Ability tweaking
 - More commands
-- Config

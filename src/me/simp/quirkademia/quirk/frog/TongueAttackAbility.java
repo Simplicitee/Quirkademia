@@ -107,7 +107,15 @@ public class TongueAttackAbility extends QuirkAbility {
 		if (!player.isSneaking()) {
 			backward = true;
 			forward = false;
-			grabbed = null;
+			
+			if (grabbed != null) {
+				if (grabbed instanceof Player) {
+					Player p = (Player) grabbed;
+					p.setWalkSpeed(walk);
+					p.setFlySpeed(fly);
+				}
+				grabbed = null;
+			}
 		}
 		
 		return true;
@@ -120,12 +128,6 @@ public class TongueAttackAbility extends QuirkAbility {
 
 	@Override
 	public void onRemove() {
-		if (grabbed instanceof Player) {
-			Player p = (Player) grabbed;
-			p.setWalkSpeed(walk);
-			p.setFlySpeed(fly);
-		}
-		
 		user.addCooldown(type.toString().toLowerCase() + " tongue", 1000);
 	}
 

@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
@@ -56,6 +58,32 @@ public abstract class Quirk implements IQuirk {
 			case MUTANT: return ChatColor.GREEN;
 			default: return ChatColor.GRAY;
 		}
+	}
+	
+	@Override
+	public String getStaminaTitle() {
+		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getString("Quirks." + name + ".Stamina.Title");
+	}
+
+	@Override
+	public BarColor getStaminaColor() {
+		BarColor color = BarColor.valueOf(QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getString("Quirks." + name + ".Stamina.Color").toUpperCase());
+		
+		if (color == null) {
+			color = BarColor.WHITE;
+		}
+		
+		return color;
+	}
+
+	@Override
+	public double getStaminaMax() {
+		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getDouble("Quirks." + name + ".Stamina.Max");
+	}
+
+	@Override
+	public double getStaminaRecharge() {
+		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getDouble("Quirks." + name + ".Stamina.Recharge");
 	}
 	
 	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {

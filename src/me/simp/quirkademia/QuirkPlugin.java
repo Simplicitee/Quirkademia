@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simp.quirkademia.command.Commands;
+import me.simp.quirkademia.configuration.Configs;
 import me.simp.quirkademia.manager.CooldownManager;
 import me.simp.quirkademia.manager.ManagersRunnable;
 import me.simp.quirkademia.manager.PassiveManager;
@@ -22,6 +23,7 @@ public class QuirkPlugin extends JavaPlugin{
 	private CooldownManager coolManager;
 	private PassiveManager passManager;
 	private Commands commands;
+	private Configs configs;
 	
 	@Override
 	public void onEnable() {
@@ -34,6 +36,7 @@ public class QuirkPlugin extends JavaPlugin{
 		coolManager = new CooldownManager(this);
 		passManager = new PassiveManager(this);
 		commands = new Commands(this);
+		configs = new Configs(this);
 		
 		Quirk.loadCoreQuirks();
 		
@@ -74,5 +77,9 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	public Commands getCommands() {
 		return commands;
+	}
+	
+	public Configs getConfigs() {
+		return configs;
 	}
 }

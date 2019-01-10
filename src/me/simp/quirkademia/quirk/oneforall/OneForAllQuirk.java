@@ -3,6 +3,8 @@ package me.simp.quirkademia.quirk.oneforall;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.boss.BarColor;
+
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
@@ -27,5 +29,29 @@ public class OneForAllQuirk extends Quirk {
 		abilities.put(ActivationType.OFFHAND_TRIGGER, new SmashCycleInfo());
 		abilities.put(ActivationType.LEFT_CLICK, new SmashAttackInfo());
 		return abilities;
+	}
+
+	@Override
+	public String getStaminaTitle() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public BarColor getStaminaColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getStaminaMax() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getStaminaRecharge() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }
