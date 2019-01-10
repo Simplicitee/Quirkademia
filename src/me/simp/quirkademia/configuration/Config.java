@@ -67,6 +67,7 @@ public class Config {
 	}
 	
 	public void save() {
+		config.options().copyDefaults(true);
 		try {
 			config.save(file);
 		} catch (IOException e) {

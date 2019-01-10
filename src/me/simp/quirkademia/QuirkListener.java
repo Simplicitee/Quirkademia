@@ -62,7 +62,7 @@ public class QuirkListener implements Listener {
 		format = format.replace("{quirkcolor}", "" + user.getQuirk().getChatColor());
 		format = format.replace("{quirk}", user.getQuirk().getName());
 		format = format.replace("{player}", "%1$2s");
-		format = format.replace("{message}", "%1$2s");
+		format = format.replace("{message}", "%2$2s");
 		
 		event.setFormat(ChatColor.translateAlternateColorCodes('&', format));
 	}

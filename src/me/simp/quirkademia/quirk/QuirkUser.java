@@ -25,7 +25,7 @@ public class QuirkUser {
 	public QuirkUser(UUID uuid, Quirk quirk) {
 		this.uuid = uuid;
 		this.quirk = quirk;
-		this.stamina = new QuirkStamina(this, quirk.getStaminaTitle(), quirk.getStaminaColor(), quirk.getStaminaMax(), quirk.getStaminaRecharge());
+		this.stamina = new QuirkStamina(this);
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
 		this.cooldowns = new HashMap<>();
@@ -43,6 +43,13 @@ public class QuirkUser {
 	
 	public QuirkUser setQuirk(Quirk quirk) {
 		this.quirk = quirk;
+		
+		if (this.stamina.getBar() != null) {
+			this.stamina.getBar().destroy();
+		}
+		
+		this.stamina = new QuirkStamina(this);
+		
 		return this;
 	}
 	
@@ -122,6 +129,7 @@ public class QuirkUser {
 		if (user != null) {
 			//TODO: database saving stuff
 			
+			user.getStamina().getBar().destroy();
 			USERS.remove(uuid);
 		}
 	}

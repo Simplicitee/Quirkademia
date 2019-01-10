@@ -1,8 +1,11 @@
 package me.simp.quirkademia.quirk;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Player;
 
 import me.simp.quirkademia.QuirkPlugin;
 
@@ -13,18 +16,20 @@ public class QuirkStamina {
 	private QuirkUser user;
 	private String name;
 	private BarColor color;
-	private double maxStamina, recharge, stamina;
+	private int maxStamina, recharge, stamina;
 	private StaminaBar bar;
 	
-	public QuirkStamina(QuirkUser user, String name, BarColor color, double maxStamina, double recharge) {
+	public QuirkStamina(QuirkUser user) {
 		this.plugin = QuirkPlugin.get();
 		this.user = user;
-		this.name = name;
-		this.color = color;
-		this.maxStamina = maxStamina;
-		this.recharge = recharge;
-		this.stamina = maxStamina;
+		this.name = user.getQuirk().getStaminaTitle();
+		this.color = user.getQuirk().getStaminaColor();
+		this.maxStamina = user.getQuirk().getStaminaMax();
+		this.recharge = user.getQuirk().getStaminaRecharge();
 		this.bar = new StaminaBar(this);
+		
+		set(maxStamina);
+		plugin.getStatusManager().register(user);
 	}
 	
 	public QuirkUser getUser() {
@@ -39,21 +44,27 @@ public class QuirkStamina {
 		return color;
 	}
 	
-	public double getMaxStamina() {
+	public int getMaxStamina() {
 		return maxStamina;
 	}
 	
-	public double getRecharge() {
+	public int getRecharge() {
 		return recharge;
 	}
 	
-	public double getStamina() {
+	public StaminaBar getBar() {
+		return bar;
+	}
+	
+	public int get() {
 		return stamina;
 	}
 	
-	public QuirkStamina setStamina(double stamina) {
+	public QuirkStamina set(int stamina) {
 		if (stamina > maxStamina) {
 			stamina = maxStamina;
+		} else if (stamina < 0) {
+			stamina = 0;
 		}
 		
 		this.stamina = stamina;
@@ -65,10 +76,13 @@ public class QuirkStamina {
 		
 		private QuirkStamina stamina;
 		private BossBar bar;
+		private Player player;
 		
 		public StaminaBar(QuirkStamina stamina) {
 			this.stamina = stamina;
-			this.bar = plugin.getServer().createBossBar(stamina.getName(), stamina.getColor(), BarStyle.SOLID);
+			this.player = Bukkit.getPlayer(stamina.getUser().getUniqueId());
+			this.bar = plugin.getServer().createBossBar(stamina.getName() + " [ Loading ]", stamina.getColor(), BarStyle.SOLID);
+			this.bar.addPlayer(player);
 		}
 		
 		public QuirkStamina getStamina() {
@@ -76,7 +90,12 @@ public class QuirkStamina {
 		}
 		
 		public void update() {
-			bar.setProgress(stamina.getStamina() / stamina.getMaxStamina());
+			bar.setTitle(stamina.getName() + " [" + ChatColor.GREEN + stamina.get() + ChatColor.WHITE + "/" + ChatColor.RED + stamina.getMaxStamina() + ChatColor.WHITE + "]");
+			bar.setProgress(((double) stamina.get()) / stamina.getMaxStamina());
+		}
+		
+		public void destroy() {
+			this.bar.removePlayer(player);
 		}
 	}
 }

@@ -14,6 +14,7 @@ import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
+import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
@@ -62,12 +63,12 @@ public abstract class Quirk implements IQuirk {
 	
 	@Override
 	public String getStaminaTitle() {
-		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getString("Quirks." + name + ".Stamina.Title");
+		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
 	}
 
 	@Override
 	public BarColor getStaminaColor() {
-		BarColor color = BarColor.valueOf(QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getString("Quirks." + name + ".Stamina.Color").toUpperCase());
+		BarColor color = BarColor.valueOf(QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color").toUpperCase());
 		
 		if (color == null) {
 			color = BarColor.WHITE;
@@ -77,13 +78,13 @@ public abstract class Quirk implements IQuirk {
 	}
 
 	@Override
-	public double getStaminaMax() {
-		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getDouble("Quirks." + name + ".Stamina.Max");
+	public int getStaminaMax() {
+		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
 	}
 
 	@Override
-	public double getStaminaRecharge() {
-		return QuirkPlugin.get().getConfigs().get(ConfigType.QUIRKS).get().getDouble("Quirks." + name + ".Stamina.Recharge");
+	public int getStaminaRecharge() {
+		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
 	}
 	
 	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {
@@ -125,6 +126,7 @@ public abstract class Quirk implements IQuirk {
 		new OneForAllQuirk();
 		new FrogQuirk();
 		new ElectrificationQuirk();
+		new HardeningQuirk();
 	}
 	
 	public abstract Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities();

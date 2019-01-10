@@ -64,10 +64,11 @@ public class UserCommand extends QuirkCommand {
 				}
 			} else if (args.size() == 3) {
 				if (args.get(1).equalsIgnoreCase("set")) {
-					Quirk quirk = Quirk.get(args.get(2).replace("-", " "));
+					Quirk quirk = Quirk.get(args.get(2).replace("-", " ").replace("_", " "));
 					
 					if (quirk == null) {
 						sender.sendMessage(ChatColor.RED + "Unknown quirk!");
+						return;
 					}
 					
 					user.setQuirk(quirk);

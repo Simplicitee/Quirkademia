@@ -11,6 +11,6 @@ public interface IQuirk {
 	public ChatColor getChatColor();
 	public String getStaminaTitle();
 	public BarColor getStaminaColor();
-	public double getStaminaMax();
-	public double getStaminaRecharge();
+	public int getStaminaMax();
+	public int getStaminaRecharge();
 }

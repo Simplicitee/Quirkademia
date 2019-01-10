@@ -31,7 +31,7 @@ public class Configs {
 		config.addDefault("Quirks.OneForAll.Stamina.Title", "Stamina");
 		config.addDefault("Quirks.OneForAll.Stamina.Color", "GREEN");
 		config.addDefault("Quirks.OneForAll.Stamina.Max", 1000);
-		config.addDefault("Quirks.OneForAll.Stamina.Recharge", 75);
+		config.addDefault("Quirks.OneForAll.Stamina.Recharge", 40);
 		
 		config.addDefault("Quirks.Frog.Stamina.Title", "Sleepy");
 		config.addDefault("Quirks.Frog.Stamina.Color", "GREEN");
@@ -45,7 +45,7 @@ public class Configs {
 		
 		config.addDefault("Quirks.Hardening.Stamina.Title", "Hardness");
 		config.addDefault("Quirks.Hardening.Stamina.Color", "RED");
-		config.addDefault("Quirks.Hardening.Stamina.Max", 40);
+		config.addDefault("Quirks.Hardening.Stamina.Max", 800);
 		config.addDefault("Quirks.Hardening.Stamina.Recharge", 0);
 		
 		config.addDefault("Quirks.Invisibility.Stamina.Title", "Light Refraction");
@@ -118,6 +118,10 @@ public class Configs {
 		config.addDefault("Abilities.Frog.Tongue.Cooldown", 2000);
 		config.addDefault("Abilities.Frog.Tongue.Range", 10);
 		config.addDefault("Abilities.Frog.Tongue.Damage", 2.0);
+		
+		config.addDefault("Abilities.Hardening.Harden.Strength", 1);
+		config.addDefault("Abilities.Hardening.Harden.Endurance", 3);
+		config.addDefault("Abilities.Hardening.Harden.UnbreakableFactor", 2);
 		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);

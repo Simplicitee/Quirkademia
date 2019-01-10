@@ -9,34 +9,34 @@ import me.simp.quirkademia.manager.CooldownManager;
 import me.simp.quirkademia.manager.ManagersRunnable;
 import me.simp.quirkademia.manager.PassiveManager;
 import me.simp.quirkademia.manager.QuirkAbilityManager;
-import me.simp.quirkademia.manager.StatusEffectManager;
+import me.simp.quirkademia.manager.StatusManager;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class QuirkPlugin extends JavaPlugin{
 
 	private static QuirkPlugin plugin;
+	private Configs configs;
 	private GeneralMethods methods;
 	private ManagersRunnable runner;
 	private QuirkAbilityManager abilManager;
-	private StatusEffectManager statManager;
+	private StatusManager statManager;
 	private CooldownManager coolManager;
 	private PassiveManager passManager;
 	private Commands commands;
-	private Configs configs;
 	
 	@Override
 	public void onEnable() {
 		plugin = this;
 		
+		configs = new Configs(this);
 		methods = new GeneralMethods(this);
 		runner = new ManagersRunnable(this);
 		abilManager = new QuirkAbilityManager(this);
-		statManager = new StatusEffectManager(this);
+		statManager = new StatusManager(this);
 		coolManager = new CooldownManager(this);
 		passManager = new PassiveManager(this);
 		commands = new Commands(this);
-		configs = new Configs(this);
 		
 		Quirk.loadCoreQuirks();
 		
@@ -44,6 +44,13 @@ public class QuirkPlugin extends JavaPlugin{
 		
 		for (Player player : getServer().getOnlinePlayers()) {
 			QuirkUser.login(player.getUniqueId());
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		for (Player player : getServer().getOnlinePlayers()) {
+			QuirkUser.logout(player.getUniqueId());
 		}
 	}
 	
@@ -63,7 +70,7 @@ public class QuirkPlugin extends JavaPlugin{
 		return abilManager;
 	}
 	
-	public StatusEffectManager getStatusManager() {
+	public StatusManager getStatusManager() {
 		return statManager;
 	}
 	
