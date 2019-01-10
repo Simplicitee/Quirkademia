@@ -12,6 +12,7 @@ import me.simp.quirkademia.manager.QuirkAbilityManager;
 import me.simp.quirkademia.manager.StatusManager;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.storage.StorageManager;
 
 public class QuirkPlugin extends JavaPlugin{
 
@@ -24,6 +25,7 @@ public class QuirkPlugin extends JavaPlugin{
 	private CooldownManager coolManager;
 	private PassiveManager passManager;
 	private Commands commands;
+	private StorageManager storage;
 	
 	@Override
 	public void onEnable() {
@@ -37,6 +39,7 @@ public class QuirkPlugin extends JavaPlugin{
 		coolManager = new CooldownManager(this);
 		passManager = new PassiveManager(this);
 		commands = new Commands(this);
+		storage = new StorageManager(this);
 		
 		Quirk.loadCoreQuirks();
 		
@@ -52,6 +55,8 @@ public class QuirkPlugin extends JavaPlugin{
 		for (Player player : getServer().getOnlinePlayers()) {
 			QuirkUser.logout(player.getUniqueId());
 		}
+		
+		storage.get().close();
 	}
 	
 	public static QuirkPlugin get() {
@@ -88,5 +93,9 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	public Configs getConfigs() {
 		return configs;
+	}
+	
+	public StorageManager getStorageManager() {
+		return storage;
 	}
 }

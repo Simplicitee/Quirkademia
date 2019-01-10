@@ -8,7 +8,8 @@ import java.util.UUID;
 
 import org.bukkit.potion.PotionEffectType;
 
-import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
+import me.simp.quirkademia.QuirkPlugin;
+import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.Cooldown;
 
 public class QuirkUser {
@@ -22,13 +23,15 @@ public class QuirkUser {
 	private boolean disabled;
 	private Map<String, Cooldown> cooldowns;
 	
-	public QuirkUser(UUID uuid, Quirk quirk) {
+	public QuirkUser(UUID uuid, Quirk quirk, Map<String, Cooldown> map) {
 		this.uuid = uuid;
 		this.quirk = quirk;
-		this.stamina = new QuirkStamina(this);
+		if (quirk != null) {
+			this.stamina = new QuirkStamina(this);
+		}
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
-		this.cooldowns = new HashMap<>();
+		this.cooldowns = map;
 		
 		USERS.put(uuid, this);
 	}
@@ -42,9 +45,13 @@ public class QuirkUser {
 	}
 	
 	public QuirkUser setQuirk(Quirk quirk) {
+		if (quirk == null) {
+			return this;
+		}
+		
 		this.quirk = quirk;
 		
-		if (this.stamina.getBar() != null) {
+		if (this.stamina != null && this.stamina.getBar() != null) {
 			this.stamina.getBar().destroy();
 		}
 		
@@ -116,18 +123,30 @@ public class QuirkUser {
 			return USERS.get(uuid);
 		}
 		
-		Quirk quirk = Quirk.get(OneForAllQuirk.class);
+		Map<String, String> storage = QuirkPlugin.get().getStorageManager().get().load(uuid);
+		if (storage.isEmpty()) {
+			return new QuirkUser(uuid, null, new HashMap<>());
+		}
 		
-		//TODO: database loading stuff 
+		Quirk quirk = Quirk.get(storage.get("quirk"));
+		Map<String, Cooldown> cooldowns = new HashMap<>();
 		
-		return new QuirkUser(uuid, quirk);
+		if (QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
+			for (String key : storage.keySet()) {
+				if (key.startsWith("cooldown.")) {
+					cooldowns.put(key.substring(9), new Cooldown(System.currentTimeMillis(), Long.valueOf(storage.get(key))));
+				}
+			}
+		}
+		
+		return new QuirkUser(uuid, quirk, cooldowns);
 	}
 	
 	public static void logout(UUID uuid) {
 		QuirkUser user = from(uuid);
 		
 		if (user != null) {
-			//TODO: database saving stuff
+			QuirkPlugin.get().getStorageManager().get().store(user);
 			
 			user.getStamina().getBar().destroy();
 			USERS.remove(uuid);

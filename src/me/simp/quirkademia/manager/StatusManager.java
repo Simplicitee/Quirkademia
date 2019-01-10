@@ -23,7 +23,7 @@ public class StatusManager implements Manager {
 
 	@Override
 	public void run() {
-		for (QuirkUser user : QuirkUser.getOnlineUsers()) {			
+		for (QuirkUser user : QuirkUser.getOnlineUsers()) {
 			Player player = Bukkit.getPlayer(user.getUniqueId());
 			QuirkUserStatus status = user.getStatus();
 			

@@ -4,7 +4,8 @@ public enum ConfigType {
 
 	QUIRKS("config_quirks.yml"),
 	ABILITIES("config_abilities.yml"),
-	CHAT("config_chat.yml");
+	CHAT("config_chat.yml"),
+	PROPERTIES("config_properties.yml");
 	
 	private String path;
 	

@@ -135,6 +135,21 @@ public class Configs {
 		
 		c.save();
 		configs.put(ConfigType.CHAT, c);
+		
+		c = new Config(ConfigType.PROPERTIES.getPath());
+		config = c.get();
+		
+		//plugin properties config
+		config.addDefault("Storage.Type", "config");
+		config.addDefault("Storage.SaveCooldowns", true);
+		config.addDefault("Storage.MySQL.host", "localhost");
+		config.addDefault("Storage.MySQL.port", 3306);
+		config.addDefault("Storage.MySQL.pass", "");
+		config.addDefault("Storage.MySQL.db", "minecraft");
+		config.addDefault("Storage.MySQL.user", "root");
+		
+		c.save();
+		configs.put(ConfigType.PROPERTIES, c);
 	}
 	
 	public Config get(ConfigType type) {

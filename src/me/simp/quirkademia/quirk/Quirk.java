@@ -110,6 +110,10 @@ public abstract class Quirk implements IQuirk {
 	}
 	
 	public static Quirk get(String name) {
+		if (name == null) {
+			return null;
+		}
+		
 		name = name.toLowerCase();
 		return (QUIRKS.containsKey(name) ? QUIRKS.get(name) : null);
 	}

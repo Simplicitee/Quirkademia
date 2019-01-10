@@ -16,7 +16,7 @@ public class HardenInfo extends QuirkAbilityInfo {
 
 	@Override
 	public String getDescription() {
-		return "Harden your body to become stronger, dealing more damage and receiving less!";
+		return "Harden your body to become stronger, dealing more damage and receiving less! You can also run through walls depending on your speed and strength!";
 	}
 
 	@Override

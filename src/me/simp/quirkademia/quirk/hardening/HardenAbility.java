@@ -2,6 +2,9 @@ package me.simp.quirkademia.quirk.hardening;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
@@ -52,6 +55,26 @@ public class HardenAbility extends QuirkAbility {
 		
 		ParticleEffect.CRIT.display(player.getLocation().clone().add(0, 1, 0), 3, 0.2, 0.55, 0.2);
 		
+		if (player.isSprinting()) {
+			Vector direction = player.getEyeLocation().getDirection().clone();
+			double power = direction.length() * 2 * (hasUnbreakable ? unbreakable : 1);
+			
+			BlockFace facing = player.getFacing();
+			Block top = player.getEyeLocation().getBlock().getRelative(facing);
+			Block bottom = player.getLocation().getBlock().getRelative(facing);
+			
+			if (top.getType().getHardness() != -1) {
+				if (top.getType().getHardness() < power && methods.isAir(top.getRelative(facing, (int) power))) {
+					top.breakNaturally();
+				}
+			}
+			
+			if (top.getType().getHardness() != -1) {
+				if (bottom.getType().getHardness() < power && methods.isAir(top.getRelative(facing, (int) power))) {
+					bottom.breakNaturally();
+				}
+			}
+		}
 		
 		if (hasUnbreakable) {
 			ParticleEffect.displayColoredParticle("ff6600", player.getLocation().clone().add(0, 1, 0), 2, 0.2, 0.55, 0.2);

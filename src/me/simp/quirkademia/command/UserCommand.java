@@ -89,13 +89,23 @@ public class UserCommand extends QuirkCommand {
 
 	public void sendUserInfo(CommandSender sender, QuirkUser user) {
 		Player target = Bukkit.getPlayer(user.getUniqueId());
+		Quirk quirk = user.getQuirk();
+		String name;
+		
+		if (quirk == null) {
+			name = ChatColor.WHITE + "Quirkless";
+		} else {
+			name = user.getQuirk().getChatColor() + user.getQuirk().getName();
+		}
 		
 		sender.sendMessage(ChatColor.YELLOW + target.getName());
-		sender.sendMessage(ChatColor.YELLOW + "- Quirk: " + user.getQuirk().getChatColor() + user.getQuirk().getName());
+		sender.sendMessage(ChatColor.YELLOW + "- Quirk: " + name);
 		sender.sendMessage(ChatColor.YELLOW + "- Abilities: ");
 		
-		for (QuirkAbilityInfo info : user.getQuirk().getAbilities().values()) {
-			sender.sendMessage(ChatColor.YELLOW + "-- " + user.getQuirk().getChatColor() + info.getName());
+		if (quirk != null) {
+			for (QuirkAbilityInfo info : user.getQuirk().getAbilities().values()) {
+				sender.sendMessage(ChatColor.YELLOW + "-- " + user.getQuirk().getChatColor() + info.getName());
+			}
 		}
 	}
 }

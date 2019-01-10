@@ -21,6 +21,10 @@ public class PassiveManager implements Manager {
 	@Override
 	public void run() {
 		for (QuirkUser user : QuirkUser.getOnlineUsers()) {
+			if (user.getQuirk() == null) {
+				continue;
+			}
+			
 			if (user.getQuirk().hasActivationType(ActivationType.PASSIVE)) {
 				QuirkAbilityInfo info = user.getQuirk().getAbilities().get(ActivationType.PASSIVE);
 				
