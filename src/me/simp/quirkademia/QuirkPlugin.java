@@ -40,7 +40,7 @@ public class QuirkPlugin extends JavaPlugin{
 		
 		Quirk.loadCoreQuirks();
 		
-		getServer().getPluginManager().registerEvents(new QuirkListener(), this);
+		new QuirkListener(this);
 		
 		for (Player player : getServer().getOnlinePlayers()) {
 			QuirkUser.login(player.getUniqueId());

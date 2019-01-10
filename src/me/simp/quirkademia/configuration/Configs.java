@@ -25,12 +25,112 @@ public class Configs {
 	private void load() {
 		Config c = new Config(ConfigType.QUIRKS.getPath());
 		FileConfiguration config = c.get();
+		
 		//quirk properties config
 		
 		config.addDefault("Quirks.OneForAll.Stamina.Title", "Stamina");
 		config.addDefault("Quirks.OneForAll.Stamina.Color", "GREEN");
 		config.addDefault("Quirks.OneForAll.Stamina.Max", 1000);
 		config.addDefault("Quirks.OneForAll.Stamina.Recharge", 75);
+		
+		config.addDefault("Quirks.Frog.Stamina.Title", "Sleepy");
+		config.addDefault("Quirks.Frog.Stamina.Color", "GREEN");
+		config.addDefault("Quirks.Frog.Stamina.Max", 100);
+		config.addDefault("Quirks.Frog.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.Electrification.Stamina.Title", "Static Charge");
+		config.addDefault("Quirks.Electrification.Stamina.Color", "YELLOW");
+		config.addDefault("Quirks.Electrification.Stamina.Max", 200);
+		config.addDefault("Quirks.Electrification.Stamina.Recharge", 20);
+		
+		config.addDefault("Quirks.Hardening.Stamina.Title", "Hardness");
+		config.addDefault("Quirks.Hardening.Stamina.Color", "RED");
+		config.addDefault("Quirks.Hardening.Stamina.Max", 40);
+		config.addDefault("Quirks.Hardening.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.Invisibility.Stamina.Title", "Light Refraction");
+		config.addDefault("Quirks.Invisibility.Stamina.Color", "WHITE");
+		config.addDefault("Quirks.Invisibility.Stamina.Max", 100);
+		config.addDefault("Quirks.Invisibility.Stamina.Recharge", 5);
+		
+		config.addDefault("Quirks.Explosion.Stamina.Title", "Nitrosweat");
+		config.addDefault("Quirks.Explosion.Stamina.Color", "RED");
+		config.addDefault("Quirks.Explosion.Stamina.Max", 500);
+		config.addDefault("Quirks.Explosion.Stamina.Recharge", 25);
+		
+		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
+		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
+		config.addDefault("Quirks.Creation.Stamina.Max", 500);
+		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.Engine.Stamina.Title", "Engine");
+		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
+		config.addDefault("Quirks.Engine.Stamina.Max", 1000);
+		config.addDefault("Quirks.Engine.Stamina.Recharge", 50);
+		
+		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Title", "Body Heat");
+		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Color", "RED");
+		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Max", 100);
+		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.NavelLaser.Stamina.Title", "Laser");
+		config.addDefault("Quirks.NavelLaser.Stamina.Color", "BLUE");
+		config.addDefault("Quirks.NavelLaser.Stamina.Max", 20);
+		config.addDefault("Quirks.NavelLaser.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.ZeroGravity.Stamina.Title", "Weight Limit");
+		config.addDefault("Quirks.ZeroGravity.Stamina.Color", "PINK");
+		config.addDefault("Quirks.ZeroGravity.Stamina.Max", 6000);
+		config.addDefault("Quirks.ZeroGravity.Stamina.Recharge", 0);
+		
+		config.addDefault("Quirks.Acid.Stamina.Title", "Acidity");
+		config.addDefault("Quirks.Acid.Stamina.Color", "PINK");
+		config.addDefault("Quirks.Acid.Stamina.Max", 200);
+		config.addDefault("Quirks.Acid.Stamina.Recharge", 5);
+		
+		c.save();
+		configs.put(ConfigType.QUIRKS, c);
+		
+		c = new Config(ConfigType.ABILITIES.getPath());
+		config = c.get();
+		
+		//ability config
+		config.addDefault("Abilities.OneForAll.FullCowling.Cooldown", 2000);
+		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Speed", 2);
+		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Jump", 2);
+		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Strength", 1);
+		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Endurance", 2);
+		config.addDefault("Abilities.OneForAll.FullCowling.ChargeTime", 3000);
+		config.addDefault("Abilities.OneForAll.FullCowling.DamageThreshold", 8.0);
+		
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Power", 1.5);
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Range", 10);
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Radius", 0.4);
+		
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Power", 3.2);
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Range", 22);
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Radius", 1.1);
+		
+		config.addDefault("Abilities.Frog.Froglike.Jump", 4);
+		config.addDefault("Abilities.Frog.Froglike.SwimSpeed", 3);
+		config.addDefault("Abilities.Frog.Froglike.CamoChargeTime", 3000);
+		
+		config.addDefault("Abilities.Frog.Tongue.Cooldown", 2000);
+		config.addDefault("Abilities.Frog.Tongue.Range", 10);
+		config.addDefault("Abilities.Frog.Tongue.Damage", 2.0);
+		
+		c.save();
+		configs.put(ConfigType.ABILITIES, c);
+		
+		c = new Config(ConfigType.CHAT.getPath());
+		config = c.get();
+		
+		//chat config
+		config.addDefault("Chat.Enabled", true);
+		config.addDefault("Chat.Format", "&e[{quirkcolor}{quirk}&e] {player}&f: {message}");
+		
+		c.save();
+		configs.put(ConfigType.CHAT, c);
 	}
 	
 	public Config get(ConfigType type) {
@@ -39,5 +139,15 @@ public class Configs {
 		}
 		
 		return null;
+	}
+	
+	public FileConfiguration getConfiguration(ConfigType type) {
+		Config c = get(type);
+		
+		if (c == null) {
+			return null;
+		}
+		
+		return c.get();
 	}
 }

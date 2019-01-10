@@ -22,6 +22,7 @@ import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.event.QuirkAbilityDamageEntityEvent;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
@@ -53,7 +54,18 @@ public class GeneralMethods {
 	
 	public boolean canUseAbility(Class<? extends QuirkAbility> clazz, QuirkUser user) {
 		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(clazz), user);
+	}
+	
+	public void damageEntity(LivingEntity damaged, Player damager, QuirkAbility ability, double damage) {
+		QuirkAbilityDamageEntityEvent event = new QuirkAbilityDamageEntityEvent(damaged, damager, ability, damage);
+		plugin.getServer().getPluginManager().callEvent(event);
 		
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		damage = event.getDamage();
+		damaged.damage(damage, damager);
 	}
 	
 	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location location, final double radius) {

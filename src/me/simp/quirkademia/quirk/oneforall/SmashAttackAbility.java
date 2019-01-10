@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.oneforall.SmashAbility.SmashType;
 import me.simp.quirkademia.util.ParticleEffect;
@@ -21,7 +22,6 @@ public class SmashAttackAbility extends QuirkAbility {
 
 	public SmashAttackAbility(QuirkUser user) {
 		super(user);
-		
 			
 		if (manager.hasAbility(user, SmashAbility.class)) {
 			type = manager.getAbility(user, SmashAbility.class).getType();
@@ -37,26 +37,14 @@ public class SmashAttackAbility extends QuirkAbility {
 			type = SmashType.NONE;
 		}
 		
-		
 		if (type != SmashType.NONE) { 
 			if (user.hasCooldown(type.toString().toLowerCase() + " smash")) {
 				return;
 			}
 			
-			if (type == SmashType.DELAWARE) {
-				range = 10;
-				radius = 0.4;
-				power = 1.5;
-			} else if (type == SmashType.DETROIT) {
-				range = 21;
-				radius = 1.1;
-				power = 3.2;
-			} else {
-				range = 0;
-				radius = 0;
-				power = 0;
-			}
-			
+			range = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".Range");
+			radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Radius");
+			power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Power");
 			start = player.getEyeLocation().clone();
 			loc = start.clone();
 			direction = start.getDirection().normalize();
@@ -88,7 +76,7 @@ public class SmashAttackAbility extends QuirkAbility {
 		for (Entity e : plugin.getMethods().getEntitiesAroundPoint(loc, radius + 1)) {
 			if (e instanceof LivingEntity && player.getEntityId() != e.getEntityId()) {
 				e.setVelocity(direction.clone().multiply(power));
-				damage((LivingEntity) e, power);
+				methods.damageEntity((LivingEntity) e, player, this, power);
 			}
 		}
 		return true;

@@ -11,23 +11,31 @@ import java.util.Set;
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.event.QuirkAbilityEvent;
+import me.simp.quirkademia.event.QuirkAbilityEvent.QuirkAbilityEventType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
 public class QuirkAbilityManager implements Manager {
 
+	private QuirkPlugin plugin;
 	private Set<QuirkAbility> instances;
 	private Map<QuirkUser, Map<Class<? extends QuirkAbility>, PriorityQueue<QuirkAbility>>> userInstances;
 	private Map<Class<? extends QuirkAbility>, QuirkAbilityInfo> abilityInfos;
 	private Map<String, QuirkAbilityInfo> abilityInfosNames;
 	
 	public QuirkAbilityManager(QuirkPlugin plugin) {
+		this.plugin = plugin;
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
 		this.abilityInfos = new HashMap<>();
 		this.abilityInfosNames = new HashMap<>();
 		
-		plugin.getManagersRunnable().registerManager(this);
+		this.plugin.getManagersRunnable().registerManager(this);
+	}
+	
+	public QuirkPlugin getPlugin() {
+		return plugin;
 	}
 	
 	/**
@@ -39,6 +47,13 @@ public class QuirkAbilityManager implements Manager {
 		if (ability.getUser().getStatus().has(StatusEffect.QUIRK_ERASED)) {
 			return false;
 		} else if (ability.getUser().isQuirkDisabled()) {
+			return false;
+		}
+		
+		QuirkAbilityEvent event = new QuirkAbilityEvent(ability.getUser(), ability, QuirkAbilityEventType.START);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		if (event.isCancelled()) {
 			return false;
 		}
 		
@@ -80,6 +95,13 @@ public class QuirkAbilityManager implements Manager {
 	 * @return true if removed successfully
 	 */
 	public boolean remove(QuirkAbility ability) {
+		QuirkAbilityEvent event = new QuirkAbilityEvent(ability.getUser(), ability, QuirkAbilityEventType.END);
+		plugin.getServer().getPluginManager().callEvent(event);
+		
+		if (event.isCancelled()) {
+			return false;
+		}
+		
 		if (instances.remove(ability)) {
 			QuirkUser user = ability.getUser();
 			
@@ -128,7 +150,12 @@ public class QuirkAbilityManager implements Manager {
 			
 			//TODO: add more checks here probably
 			
-			if (!ability.progress()) {
+			QuirkAbilityEvent event = new QuirkAbilityEvent(ability.getUser(), ability, QuirkAbilityEventType.PROGRESS);
+			plugin.getServer().getPluginManager().callEvent(event);
+			
+			if (event.isCancelled()) {
+				remove.add(ability);
+			} else if (!ability.progress()) {
 				remove.add(ability);
 			}
 		}
@@ -209,6 +236,8 @@ public class QuirkAbilityManager implements Manager {
 		if (!abilityInfosNames.containsKey(info.getName().toLowerCase())) {
 			abilityInfosNames.put(info.getName().toLowerCase(), info);
 		}
+		
+		plugin.getServer().getPluginManager().registerEvents(info, plugin);
 		
 		return info;
 	}

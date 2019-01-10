@@ -1,8 +1,10 @@
 package me.simp.quirkademia.ability;
 
+import org.bukkit.event.Listener;
+
 import me.simp.quirkademia.quirk.Quirk;
 
-public abstract class QuirkAbilityInfo {
+public abstract class QuirkAbilityInfo implements Listener {
 	
 	private Class<? extends QuirkAbility> clazz;
 	

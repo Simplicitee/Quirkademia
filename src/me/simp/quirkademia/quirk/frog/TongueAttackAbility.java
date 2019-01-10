@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.frog.FroglikeAbility.TongueType;
 import me.simp.quirkademia.util.ParticleEffect;
@@ -19,6 +20,7 @@ public class TongueAttackAbility extends QuirkAbility {
 	private LivingEntity grabbed;
 	private TongueType type;
 	private float walk, fly;
+	private double damage;
 	
 	public TongueAttackAbility(QuirkUser user) {
 		super(user);
@@ -42,7 +44,8 @@ public class TongueAttackAbility extends QuirkAbility {
 		}
 		
 		range = 0;
-		maxRange = 10;
+		maxRange = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Frog.Tongue.Range");
+		damage = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.Frog.Tongue.Damage");
 		current = player.getEyeLocation().clone();
 		forward = true;
 		backward = false;
@@ -128,7 +131,7 @@ public class TongueAttackAbility extends QuirkAbility {
 
 	@Override
 	public void onRemove() {
-		user.addCooldown(type.toString().toLowerCase() + " tongue", 1000);
+		user.addCooldown(type.toString().toLowerCase() + " tongue", configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.Frog.Tongue.Cooldown"));
 	}
 
 	private boolean locationCheck(Location loc) {
@@ -149,7 +152,7 @@ public class TongueAttackAbility extends QuirkAbility {
 							fly = ((Player) grabbed).getFlySpeed();
 						}
 					} else {
-						damage((LivingEntity) e, 2.0);
+						methods.damageEntity((LivingEntity) e, player, this, damage);
 						this.backward = true;
 					}
 					return false;

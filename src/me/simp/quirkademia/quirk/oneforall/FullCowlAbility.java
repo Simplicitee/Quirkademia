@@ -5,6 +5,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 import me.simp.quirkademia.util.ParticleEffect;
@@ -18,6 +19,7 @@ public class FullCowlAbility extends QuirkAbility {
 	private double health;
 	private double damageThreshold;
 	private boolean charged;
+	private int strength, speed, jump, endurance;
 
 	public FullCowlAbility(QuirkUser user) {
 		super(user);
@@ -29,12 +31,16 @@ public class FullCowlAbility extends QuirkAbility {
 			return;
 		}
 		
-		chargeTime = 3000;
+		chargeTime = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.FullCowling.ChargeTime");
 		animationHeight = 0;
 		animationAngle = 0;
 		charged = false;
 		health = player.getHealth();
-		damageThreshold = 6;
+		damageThreshold = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.FullCowling.DamageThreshold");
+		strength = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.FullCowling.Effects.Strength");
+		speed = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.FullCowling.Effects.Speed");
+		jump = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.FullCowling.Effects.Jump");
+		endurance = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.FullCowling.Effects.Endurance");
 		
 		manager.start(this);
 	}
@@ -66,15 +72,15 @@ public class FullCowlAbility extends QuirkAbility {
 		
 		if (charged) {
 			if (health - player.getHealth() >= damageThreshold) {
-				user.addCooldown("full cowling", 2000);
+				user.addCooldown("full cowling", configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.FullCowling.Cooldown"));
 				return false;
 			}
 			
-			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, 2);
-			user.getStatus().add(StatusEffect.INCREASED_SPEED, 3);
-			user.getStatus().add(StatusEffect.INCREASED_JUMP, 3);
-			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, 2);
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, 2, true, false), true);
+			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, strength);
+			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);
+			user.getStatus().add(StatusEffect.INCREASED_JUMP, jump);
+			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, endurance);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, speed, true, false), true);
 			
 			ParticleEffect.displayColoredParticle("03c58b", player.getLocation().clone().add(0, 1, 0), 6, 0.25, 0.6, 0.25);
 		}

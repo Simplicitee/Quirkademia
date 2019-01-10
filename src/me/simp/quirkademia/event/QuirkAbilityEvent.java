@@ -7,7 +7,7 @@ import org.bukkit.event.HandlerList;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 
-public abstract class QuirkAbilityEvent extends Event implements Cancellable {
+public class QuirkAbilityEvent extends Event implements Cancellable {
 	
 	private static final HandlerList HANDLERS = new HandlerList();
 	
