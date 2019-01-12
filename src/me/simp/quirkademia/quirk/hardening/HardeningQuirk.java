@@ -16,7 +16,7 @@ public class HardeningQuirk extends Quirk {
 
 	@Override
 	public String getDescription() {
-		return "Ejiro Kirishima can harden any part of his body, making him harder than steel. When hardened, he can even run through walls!";
+		return "Eijiro Kirishima can harden any part of his body, making him harder than steel. When hardened, he can even run through walls!";
 	}
 
 	@Override

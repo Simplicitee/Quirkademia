@@ -21,7 +21,21 @@ public class UserCommand extends QuirkCommand {
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender, false)) {
 			return;
-		} else if (!acceptableLength(sender, args.size(), 1, 3)) {
+		} else if (!acceptableLength(sender, args.size(), 0, 3)) {
+			return;
+		}
+		
+		if (args.size() == 0) {
+			sender.sendMessage(ChatColor.YELLOW + "Online Quirk Users:");
+			for (QuirkUser user : QuirkUser.getOnlineUsers()) {
+				ChatColor color = ChatColor.WHITE;
+				
+				if (user.getQuirk() != null) {
+					color = user.getQuirk().getChatColor();
+				}
+				
+				sender.sendMessage(color + Bukkit.getPlayer(user.getUniqueId()).getName());
+			}
 			return;
 		}
 		
@@ -64,6 +78,11 @@ public class UserCommand extends QuirkCommand {
 				}
 			} else if (args.size() == 3) {
 				if (args.get(1).equalsIgnoreCase("set")) {
+					if (!sender.hasPermission("quirk.command.user.set")) {
+						sender.sendMessage(ChatColor.RED + "You don't have permission to do that");
+						return;
+					}
+					
 					Quirk quirk = Quirk.get(args.get(2).replace("-", " ").replace("_", " "));
 					
 					if (quirk == null) {

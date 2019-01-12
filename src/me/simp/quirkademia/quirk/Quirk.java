@@ -13,8 +13,11 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
+import me.simp.quirkademia.quirk.engine.EngineQuirk;
+import me.simp.quirkademia.quirk.explosion.ExplosionQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
 import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
+import me.simp.quirkademia.quirk.invisibility.InvisibilityQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
@@ -54,8 +57,8 @@ public abstract class Quirk implements IQuirk {
 	@Override
 	public ChatColor getChatColor() {
 		switch (type) {
-			case EMITTER: return ChatColor.AQUA;
-			case TRANSFORMATION: return ChatColor.RED;
+			case EMITTER: return ChatColor.RED;
+			case TRANSFORMATION: return ChatColor.AQUA;
 			case MUTANT: return ChatColor.GREEN;
 			default: return ChatColor.GRAY;
 		}
@@ -101,6 +104,11 @@ public abstract class Quirk implements IQuirk {
 		}
 		
 		Class<? extends QuirkAbility> ability = abilities.get(type).getAbilityClass();
+		
+		if (!QuirkPlugin.get().getMethods().canUseAbility(ability, user)) {
+			return null;
+		}
+		
 		try {
 			Constructor<?> construct = ability.getConstructor(QuirkUser.class);
 			return (QuirkAbility) construct.newInstance(user);
@@ -131,6 +139,9 @@ public abstract class Quirk implements IQuirk {
 		new FrogQuirk();
 		new ElectrificationQuirk();
 		new HardeningQuirk();
+		new InvisibilityQuirk();
+		new ExplosionQuirk();
+		new EngineQuirk();
 	}
 	
 	public abstract Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities();

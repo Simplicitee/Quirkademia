@@ -31,6 +31,7 @@ public class Commands {
 		//load commands
 		register(new UserCommand());
 		register(new HelpCommand());
+		register(new ListCommand());
 		
 		CommandExecutor exe = new CommandExecutor() {
 

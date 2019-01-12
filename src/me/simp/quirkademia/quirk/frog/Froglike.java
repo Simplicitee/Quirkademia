@@ -10,14 +10,14 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
-public class FroglikeAbility extends QuirkAbility {
+public class Froglike extends QuirkAbility {
 
 	private TongueType type;
 	private LinkedList<TongueType> cycle;
 	private double x, y, z;
 	private int camoCounter, camoCharge;
 
-	public FroglikeAbility(QuirkUser user) {
+	public Froglike(QuirkUser user) {
 		super(user);
 
 		type = TongueType.NONE;
@@ -60,7 +60,7 @@ public class FroglikeAbility extends QuirkAbility {
 			camoCounter = 0;
 		}
 		
-		if (manager.hasAbility(user, TongueAttackAbility.class)) {
+		if (manager.hasAbility(user, TongueAttack.class)) {
 			camoCounter = 0;
 		}
 		

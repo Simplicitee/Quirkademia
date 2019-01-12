@@ -3,10 +3,10 @@ package me.simp.quirkademia.quirk.oneforall;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
 
-public class FullCowlInfo extends QuirkAbilityInfo {
+public class FullCowlingInfo extends QuirkAbilityInfo {
 	
-	public FullCowlInfo() {
-		super(FullCowlAbility.class);
+	public FullCowlingInfo() {
+		super(FullCowling.class);
 	}
 
 	@Override

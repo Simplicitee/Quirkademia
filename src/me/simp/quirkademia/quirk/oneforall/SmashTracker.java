@@ -7,12 +7,12 @@ import org.bukkit.Location;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 
-public class SmashAbility extends QuirkAbility {
+public class SmashTracker extends QuirkAbility {
 	
 	private SmashType active;
 	private LinkedList<SmashType> cycle;
 
-	public SmashAbility(QuirkUser user) {
+	public SmashTracker(QuirkUser user) {
 		super(user);
 		
 		active = SmashType.NONE;
@@ -21,7 +21,7 @@ public class SmashAbility extends QuirkAbility {
 		cycle.add(SmashType.DETROIT);
 		cycle.add(SmashType.DELAWARE);
 		
-		plugin.getAbilityManager().start(this);
+		manager.start(this);
 	}
 
 	@Override
@@ -51,8 +51,8 @@ public class SmashAbility extends QuirkAbility {
 	}
 	
 	public SmashType cycleType() {
-		cycle.add(active);
-		active = cycle.poll();
+		this.cycle.add(active);
+		this.active = cycle.poll();
 		return active;
 	}
 }

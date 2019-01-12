@@ -22,7 +22,7 @@ public class OneForAllQuirk extends Quirk {
 	@Override
 	public Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities() {
 		Map<ActivationType, QuirkAbilityInfo> abilities = new HashMap<>();
-		abilities.put(ActivationType.OFFHAND_TRIGGER_SNEAKING, new FullCowlInfo());
+		abilities.put(ActivationType.OFFHAND_TRIGGER_SNEAKING, new FullCowlingInfo());
 		abilities.put(ActivationType.PASSIVE, new SmashInfo());
 		abilities.put(ActivationType.OFFHAND_TRIGGER, new SmashCycleInfo());
 		abilities.put(ActivationType.LEFT_CLICK, new SmashAttackInfo());

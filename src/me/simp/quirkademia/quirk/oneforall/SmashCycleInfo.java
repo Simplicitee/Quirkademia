@@ -6,7 +6,7 @@ import me.simp.quirkademia.quirk.Quirk;
 public class SmashCycleInfo extends QuirkAbilityInfo {
 
 	public SmashCycleInfo() {
-		super(SmashCycleAbility.class);
+		super(SmashCycle.class);
 	}
 
 	@Override

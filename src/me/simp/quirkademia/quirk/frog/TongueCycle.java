@@ -5,17 +5,17 @@ import org.bukkit.Location;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.frog.FroglikeAbility.TongueType;
+import me.simp.quirkademia.quirk.frog.Froglike.TongueType;
 
-public class TongueCycleAbility extends QuirkAbility {
+public class TongueCycle extends QuirkAbility {
 	
-	public TongueCycleAbility(QuirkUser user) {
+	public TongueCycle(QuirkUser user) {
 		super(user);
 		
-		if (manager.hasAbility(user, FroglikeAbility.class)) {
-			FroglikeAbility abil = manager.getAbility(user, FroglikeAbility.class);
-			TongueType type = abil.cycleType();
-			player.sendMessage(ChatColor.LIGHT_PURPLE + "Selected Tongue: " + ChatColor.GREEN + type.toString());
+		if (manager.hasAbility(user, Froglike.class)) {
+			TongueType type = manager.getAbility(user, Froglike.class).cycleType();
+			
+			methods.sendActionBarMessage(ChatColor.LIGHT_PURPLE + "Selected Tongue: " + ChatColor.GREEN + type.toString(), player);
 		}
 	}
 

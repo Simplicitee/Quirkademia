@@ -8,33 +8,25 @@ import org.bukkit.util.Vector;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.oneforall.SmashAbility.SmashType;
+import me.simp.quirkademia.quirk.oneforall.SmashTracker.SmashType;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class SmashAttackAbility extends QuirkAbility {
+public class SmashAttack extends QuirkAbility {
 	
 	private SmashType type;
 	private Location start, loc;
 	private Vector direction;
-	private int range;
-	private double radius;
-	private double power;
+	private int range, stamina;
+	private double radius, power;
+	private long cooldown;
 
-	public SmashAttackAbility(QuirkUser user) {
+	public SmashAttack(QuirkUser user) {
 		super(user);
 			
-		if (manager.hasAbility(user, SmashAbility.class)) {
-			type = manager.getAbility(user, SmashAbility.class).getType();
-			
-			if (manager.hasAbility(user, this.getClass())) {
-				SmashType type2 = manager.getAbility(user, this.getClass()).getType();
-				
-				if (type2 == type) {
-					return;
-				}
-			}
+		if (manager.hasAbility(user, SmashTracker.class)) {
+			type = manager.getAbility(user, SmashTracker.class).getType();
 		} else {
-			type = SmashType.NONE;
+			return;
 		}
 		
 		if (type != SmashType.NONE) { 
@@ -42,14 +34,24 @@ public class SmashAttackAbility extends QuirkAbility {
 				return;
 			}
 			
+			cooldown = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.Smash." + type.toString() + ".Cooldown");
 			range = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".Range");
 			radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Radius");
 			power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Power");
+			stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".StaminaUse");
+			
+			int diff = user.getStamina().get() - stamina; 
+			if (diff < 0) {
+				return;
+			}
+			
+			user.getStamina().set(diff);
+			
 			start = player.getEyeLocation().clone();
 			loc = start.clone();
 			direction = start.getDirection().normalize();
 
-			user.addCooldown(type.toString().toLowerCase() + " smash", 4000);
+			user.addCooldown(type.toString().toLowerCase() + " smash", cooldown);
 			
 			manager.start(this);
 		}

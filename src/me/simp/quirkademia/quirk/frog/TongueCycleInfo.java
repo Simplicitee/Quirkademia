@@ -6,7 +6,7 @@ import me.simp.quirkademia.quirk.Quirk;
 public class TongueCycleInfo extends QuirkAbilityInfo {
 
 	public TongueCycleInfo() {
-		super(TongueCycleAbility.class);
+		super(TongueCycle.class);
 	}
 
 	@Override

@@ -55,15 +55,15 @@ public class Configs {
 		
 		config.addDefault("Quirks.Explosion.Stamina.Title", "Nitrosweat");
 		config.addDefault("Quirks.Explosion.Stamina.Color", "RED");
-		config.addDefault("Quirks.Explosion.Stamina.Max", 500);
-		config.addDefault("Quirks.Explosion.Stamina.Recharge", 25);
+		config.addDefault("Quirks.Explosion.Stamina.Max", 700);
+		config.addDefault("Quirks.Explosion.Stamina.Recharge", 35);
 		
 		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
 		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
 		config.addDefault("Quirks.Creation.Stamina.Max", 500);
 		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
 		
-		config.addDefault("Quirks.Engine.Stamina.Title", "Engine");
+		config.addDefault("Quirks.Engine.Stamina.Title", "Fuel");
 		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
 		config.addDefault("Quirks.Engine.Stamina.Max", 1000);
 		config.addDefault("Quirks.Engine.Stamina.Recharge", 50);
@@ -103,10 +103,12 @@ public class Configs {
 		config.addDefault("Abilities.OneForAll.FullCowling.ChargeTime", 3000);
 		config.addDefault("Abilities.OneForAll.FullCowling.DamageThreshold", 8.0);
 		
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Cooldown", 800);
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Power", 1.5);
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Range", 10);
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Radius", 0.4);
 		
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Cooldown", 8000);
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Power", 3.2);
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Range", 22);
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Radius", 1.1);
@@ -119,9 +121,45 @@ public class Configs {
 		config.addDefault("Abilities.Frog.Tongue.Range", 10);
 		config.addDefault("Abilities.Frog.Tongue.Damage", 2.0);
 		
+		config.addDefault("Abilities.Hardening.Harden.StaminaUse", 1);
 		config.addDefault("Abilities.Hardening.Harden.Strength", 1);
-		config.addDefault("Abilities.Hardening.Harden.Endurance", 3);
-		config.addDefault("Abilities.Hardening.Harden.UnbreakableFactor", 2);
+		config.addDefault("Abilities.Hardening.Harden.Endurance", 1);
+		config.addDefault("Abilities.Hardening.Harden.UnbreakableFactor", 4);
+		
+		config.addDefault("Abilities.Invisibility.LightRefraction.Range", 10);
+		config.addDefault("Abilities.Invisibility.LightRefraction.Radius", 1.1);
+		config.addDefault("Abilities.Invisibility.LightRefraction.StaminaUse", 5);
+		
+		config.addDefault("Abilities.Explosion.Blast.NORMAL.Cooldown", 3000);
+		config.addDefault("Abilities.Explosion.Blast.NORMAL.Range", 5);
+		config.addDefault("Abilities.Explosion.Blast.NORMAL.Radius", 0.6);
+		config.addDefault("Abilities.Explosion.Blast.NORMAL.Power", 6);
+		config.addDefault("Abilities.Explosion.Blast.NORMAL.StaminaUse", 50);
+		
+		config.addDefault("Abilities.Explosion.Blast.LARGE.Cooldown", 12000);
+		config.addDefault("Abilities.Explosion.Blast.LARGE.Range", 12);
+		config.addDefault("Abilities.Explosion.Blast.LARGE.Radius", 1.3);
+		config.addDefault("Abilities.Explosion.Blast.LARGE.Power", 9);
+		config.addDefault("Abilities.Explosion.Blast.LARGE.StaminaUse", 250);
+		
+		config.addDefault("Abilities.Explosion.Blast.APSHOT.Cooldown", 500);
+		config.addDefault("Abilities.Explosion.Blast.APSHOT.Range", 18);
+		config.addDefault("Abilities.Explosion.Blast.APSHOT.Radius", 0.2);
+		config.addDefault("Abilities.Explosion.Blast.APSHOT.Power", 4);
+		config.addDefault("Abilities.Explosion.Blast.APSHOT.StaminaUse", 10);
+		
+		config.addDefault("Abilities.Explosion.BlastRushTurbo.Power", 0.7);
+		config.addDefault("Abilities.Explosion.BlastRushTurbo.StaminaUse", 7);
+		
+		config.addDefault("Abilities.Explosion.ExplosiveLaunch.Cooldown", 7000);
+		config.addDefault("Abilities.Explosion.ExplosiveLaunch.ChargeTime", 1000);
+		config.addDefault("Abilities.Explosion.ExplosiveLaunch.Power", 3.4);
+		config.addDefault("Abilities.Explosion.ExplosiveLaunch.StaminaUse", 100);
+		
+		config.addDefault("Abilities.Engine.Engines.Speed", 2);
+		config.addDefault("Abilities.Engine.Engines.FuelConsumption", 2);
+		config.addDefault("Abilities.Engine.Engines.ReciproBurst.Factor", 3);
+		config.addDefault("Abilities.Engine.Engines.ReciproBurst.StallTime", 15000);
 		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);

@@ -13,3 +13,8 @@ permissions:
     children:
       quirk.command.user: true
       quirk.command.help: true
+      quirk.command.list: true
+  quirk.admin:
+    default: op
+    children:
+      quirk.command.user.set: true

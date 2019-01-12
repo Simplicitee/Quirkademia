@@ -6,7 +6,7 @@ import me.simp.quirkademia.quirk.Quirk;
 public class FroglikeInfo extends QuirkAbilityInfo {
 	
 	public FroglikeInfo() {
-		super(FroglikeAbility.class);
+		super(Froglike.class);
 	}
 
 	@Override

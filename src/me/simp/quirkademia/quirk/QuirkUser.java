@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.QuirkPlugin;
+import me.simp.quirkademia.ability.AbilityBoard;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.Cooldown;
 
@@ -20,6 +21,7 @@ public class QuirkUser {
 	private Quirk quirk;
 	private QuirkStamina stamina;
 	private QuirkUserStatus status;
+	private AbilityBoard board;
 	private boolean disabled;
 	private Map<String, Cooldown> cooldowns;
 	
@@ -28,6 +30,7 @@ public class QuirkUser {
 		this.quirk = quirk;
 		if (quirk != null) {
 			this.stamina = new QuirkStamina(this);
+			this.board = new AbilityBoard(this);
 		}
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
@@ -56,6 +59,12 @@ public class QuirkUser {
 		}
 		
 		this.stamina = new QuirkStamina(this);
+		
+		if (this.board != null) {
+			this.board.destroy();
+		}
+		
+		this.board = new AbilityBoard(this);
 		
 		return this;
 	}

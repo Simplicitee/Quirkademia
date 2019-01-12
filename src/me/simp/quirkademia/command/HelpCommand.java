@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.quirk.AddonQuirk;
 import me.simp.quirkademia.quirk.Quirk;
 
 public class HelpCommand extends QuirkCommand {
@@ -23,12 +24,17 @@ public class HelpCommand extends QuirkCommand {
 		}
 		
 		String topic = args.get(0).toLowerCase();
-		Quirk quirk = Quirk.get(topic.replace("-", " "));
+		Quirk quirk = Quirk.get(topic.replace("-", " ").replace("_", " "));
 		QuirkAbilityInfo info = plugin.getAbilityManager().getAbilityInfo(topic.replace("-", " "));
 		
 		if (quirk != null) {
 			sender.sendMessage(quirk.getChatColor() + quirk.getName());
 			sender.sendMessage(ChatColor.YELLOW + quirk.getDescription());
+			if (quirk instanceof AddonQuirk) {
+				AddonQuirk addon = (AddonQuirk) quirk;
+				sender.sendMessage(ChatColor.YELLOW + "Addon, made by " + ChatColor.WHITE + addon.getAuthor());
+				sender.sendMessage(ChatColor.YELLOW + "Version: " + addon.getVersion());
+			}
 		} else if (info != null) {
 			quirk = info.getQuirk();
 			sender.sendMessage(quirk.getChatColor() + info.getName());

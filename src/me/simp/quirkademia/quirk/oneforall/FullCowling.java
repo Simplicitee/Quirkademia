@@ -10,7 +10,7 @@ import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class FullCowlAbility extends QuirkAbility {
+public class FullCowling extends QuirkAbility {
 	
 	private long chargeTime;
 	private long startTime;
@@ -21,7 +21,7 @@ public class FullCowlAbility extends QuirkAbility {
 	private boolean charged;
 	private int strength, speed, jump, endurance;
 
-	public FullCowlAbility(QuirkUser user) {
+	public FullCowling(QuirkUser user) {
 		super(user);
 		
 		if (manager.hasAbility(user, this.getClass())) {
@@ -76,10 +76,18 @@ public class FullCowlAbility extends QuirkAbility {
 				return false;
 			}
 			
+			int diff = user.getStamina().get() - 2;
+			if (diff < 0) {
+				return false;
+			}
+			
+			user.getStamina().set(diff);
+			
 			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, strength);
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);
 			user.getStatus().add(StatusEffect.INCREASED_JUMP, jump);
 			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, endurance);
+			
 			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, speed, true, false), true);
 			
 			ParticleEffect.displayColoredParticle("03c58b", player.getLocation().clone().add(0, 1, 0), 6, 0.25, 0.6, 0.25);

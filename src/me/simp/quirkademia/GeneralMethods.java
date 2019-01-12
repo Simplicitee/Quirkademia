@@ -25,6 +25,8 @@ import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.event.QuirkAbilityDamageEntityEvent;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class GeneralMethods {
 
@@ -241,5 +243,11 @@ public class GeneralMethods {
 	
 	public boolean isWater(Block b) {
 		return isWater(b.getBlockData());
+	}
+	
+	public void sendActionBarMessage(String message, Player...players) {
+		for (Player player : players) {
+			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+		}
 	}
 }

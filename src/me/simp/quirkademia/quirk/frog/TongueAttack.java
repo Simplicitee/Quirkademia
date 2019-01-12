@@ -9,10 +9,10 @@ import org.bukkit.util.Vector;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.frog.FroglikeAbility.TongueType;
+import me.simp.quirkademia.quirk.frog.Froglike.TongueType;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class TongueAttackAbility extends QuirkAbility {
+public class TongueAttack extends QuirkAbility {
 
 	private int range, maxRange;
 	private Location current;
@@ -22,15 +22,15 @@ public class TongueAttackAbility extends QuirkAbility {
 	private float walk, fly;
 	private double damage;
 	
-	public TongueAttackAbility(QuirkUser user) {
+	public TongueAttack(QuirkUser user) {
 		super(user);
 		
 		if (manager.hasAbility(user, this.getClass())) {
 			return;
 		}
 		
-		if (manager.hasAbility(user, FroglikeAbility.class)) {
-			type = manager.getAbility(user, FroglikeAbility.class).getType();
+		if (manager.hasAbility(user, Froglike.class)) {
+			type = manager.getAbility(user, Froglike.class).getType();
 		} else {
 			type = TongueType.NONE;
 		}
