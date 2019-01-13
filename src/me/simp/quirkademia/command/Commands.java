@@ -38,6 +38,7 @@ public class Commands {
 			@Override
 			public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 				if (args.length == 0) {
+					sender.sendMessage(ChatColor.RED + "For names which have spaces, use '-' or '_' to indicate a space!");
 					for (QuirkCommand cmd : commandMap.values()) {
 						sender.sendMessage(ChatColor.YELLOW + cmd.getProperUse());
 					}

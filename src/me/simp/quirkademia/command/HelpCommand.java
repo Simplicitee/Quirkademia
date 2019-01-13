@@ -1,5 +1,7 @@
 package me.simp.quirkademia.command;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -25,7 +27,8 @@ public class HelpCommand extends QuirkCommand {
 		
 		String topic = args.get(0).toLowerCase();
 		Quirk quirk = Quirk.get(topic.replace("-", " ").replace("_", " "));
-		QuirkAbilityInfo info = plugin.getAbilityManager().getAbilityInfo(topic.replace("-", " "));
+		QuirkAbilityInfo info = plugin.getAbilityManager().getAbilityInfo(topic.replace("-", " ").replace("_", " "));
+		QuirkCommand cmd = plugin.getCommands().getCommand(topic);
 		
 		if (quirk != null) {
 			sender.sendMessage(quirk.getChatColor() + quirk.getName());
@@ -41,9 +44,25 @@ public class HelpCommand extends QuirkCommand {
 			sender.sendMessage(ChatColor.YELLOW + "Quirk: " + quirk.getChatColor() + quirk.getName());
 			sender.sendMessage(ChatColor.WHITE + info.getDescription());
 			sender.sendMessage(ChatColor.YELLOW + "How to use: " + ChatColor.WHITE + info.getInstruction());
+		} else if (cmd != null) {
+			sender.sendMessage(ChatColor.YELLOW + "Command: " + ChatColor.WHITE + cmd.getName());
+			
+			StringBuilder builder = new StringBuilder();
+			Iterator<String> iter = Arrays.asList(cmd.getAliases()).iterator();
+			
+			while (iter.hasNext()) {
+				String alias = iter.next();
+				if (iter.hasNext()) {
+					alias = alias + ", ";
+				}
+				builder.append(alias);
+			}
+			
+			sender.sendMessage(ChatColor.YELLOW + "Aliases: [" + ChatColor.WHITE + builder.toString() + ChatColor.YELLOW + "]");
+			sender.sendMessage(ChatColor.YELLOW + "Usage: " + ChatColor.WHITE + cmd.getProperUse());
+			sender.sendMessage(cmd.getDescription());
 		} else {
 			sender.sendMessage("Unknown help topic!");
-			return;
 		}
 	}
 
