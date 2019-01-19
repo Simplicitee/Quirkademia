@@ -8,7 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
+import me.simp.quirkademia.util.StatusEffect;
 
 public class Engines extends QuirkAbility {
 	

@@ -9,14 +9,14 @@ import org.bukkit.entity.Player;
 import me.simp.quirkademia.GeneralMethods;
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.configuration.Configs;
-import me.simp.quirkademia.manager.QuirkAbilityManager;
+import me.simp.quirkademia.manager.AbilityManager;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public abstract class QuirkAbility {
 	
 	protected QuirkPlugin plugin;
 	protected GeneralMethods methods;
-	protected QuirkAbilityManager manager;
+	protected AbilityManager manager;
 	protected Configs configs;
 	protected QuirkUser user;
 	protected Player player;

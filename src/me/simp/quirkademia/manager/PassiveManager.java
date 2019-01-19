@@ -20,7 +20,7 @@ public class PassiveManager implements Manager {
 
 	@Override
 	public void run() {
-		for (QuirkUser user : QuirkUser.getOnlineUsers()) {
+		for (QuirkUser user : plugin.getUserManager().getOnlineUsers()) {
 			if (user.getQuirk() == null) {
 				continue;
 			}
@@ -28,11 +28,11 @@ public class PassiveManager implements Manager {
 			if (user.getQuirk().hasActivationType(ActivationType.PASSIVE)) {
 				QuirkAbilityInfo info = user.getQuirk().getAbilities().get(ActivationType.PASSIVE);
 				
-				if (!plugin.getAbilityManager().hasAbility(user, info.getAbilityClass())) {
+				if (!plugin.getAbilityManager().hasAbility(user, info.getProvider())) {
 					Player player = Bukkit.getPlayer(user.getUniqueId());
 					
 					if (player == null) {
-						QuirkUser.logout(user.getUniqueId());
+						plugin.getUserManager().logout(user.getUniqueId());
 						continue;
 					}
 					

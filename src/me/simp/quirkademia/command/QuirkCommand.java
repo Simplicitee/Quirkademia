@@ -45,6 +45,7 @@ public abstract class QuirkCommand {
 	}
 	
 	public abstract void execute(CommandSender sender, List<String> args);
+	public abstract List<String> completer(CommandSender sender, List<String> args);
 	
 	public boolean hasPermission(CommandSender sender, boolean playerOnly) {
 		if (sender instanceof Player) {

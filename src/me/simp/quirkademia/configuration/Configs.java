@@ -32,61 +32,73 @@ public class Configs {
 		config.addDefault("Quirks.OneForAll.Stamina.Color", "GREEN");
 		config.addDefault("Quirks.OneForAll.Stamina.Max", 1000);
 		config.addDefault("Quirks.OneForAll.Stamina.Recharge", 40);
+		config.addDefault("Quirks.OneForAll.AssignChance", 1);
 		
-		config.addDefault("Quirks.Frog.Stamina.Title", "Sleepy");
+		config.addDefault("Quirks.Frog.Stamina.Title", "Sleepiness");
 		config.addDefault("Quirks.Frog.Stamina.Color", "GREEN");
 		config.addDefault("Quirks.Frog.Stamina.Max", 100);
 		config.addDefault("Quirks.Frog.Stamina.Recharge", 0);
+		config.addDefault("Quirks.Frog.AssignChance", 4);
 		
 		config.addDefault("Quirks.Electrification.Stamina.Title", "Static Charge");
 		config.addDefault("Quirks.Electrification.Stamina.Color", "YELLOW");
 		config.addDefault("Quirks.Electrification.Stamina.Max", 200);
 		config.addDefault("Quirks.Electrification.Stamina.Recharge", 20);
+		config.addDefault("Quirks.Electrification.AssignChance", 10);
 		
 		config.addDefault("Quirks.Hardening.Stamina.Title", "Hardness");
 		config.addDefault("Quirks.Hardening.Stamina.Color", "RED");
 		config.addDefault("Quirks.Hardening.Stamina.Max", 800);
 		config.addDefault("Quirks.Hardening.Stamina.Recharge", 0);
+		config.addDefault("Quirks.Hardening.AssignChance", 7);
 		
 		config.addDefault("Quirks.Invisibility.Stamina.Title", "Light Refraction");
 		config.addDefault("Quirks.Invisibility.Stamina.Color", "WHITE");
 		config.addDefault("Quirks.Invisibility.Stamina.Max", 100);
 		config.addDefault("Quirks.Invisibility.Stamina.Recharge", 5);
+		config.addDefault("Quirks.Invisibility.AssignChance", 4);
 		
 		config.addDefault("Quirks.Explosion.Stamina.Title", "Nitrosweat");
 		config.addDefault("Quirks.Explosion.Stamina.Color", "RED");
 		config.addDefault("Quirks.Explosion.Stamina.Max", 700);
 		config.addDefault("Quirks.Explosion.Stamina.Recharge", 35);
+		config.addDefault("Quirks.Explosion.AssignChance", 1);
 		
 		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
 		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
 		config.addDefault("Quirks.Creation.Stamina.Max", 500);
 		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
+		config.addDefault("Quirks.Creation.AssignChance", 4);
 		
 		config.addDefault("Quirks.Engine.Stamina.Title", "Fuel");
 		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
 		config.addDefault("Quirks.Engine.Stamina.Max", 1000);
 		config.addDefault("Quirks.Engine.Stamina.Recharge", 50);
+		config.addDefault("Quirks.Engine.AssignChance", 5);
 		
-		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Title", "Body Heat");
-		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Color", "RED");
-		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Max", 100);
-		config.addDefault("Quirks.HalfHotHalfCold.Stamina.Recharge", 0);
+		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Title", "Body Heat");
+		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Color", "RED");
+		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Max", 100);
+		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Recharge", 0);
+		config.addDefault("Quirks.HalfColdHalfHot.AssignChance", 1);
 		
 		config.addDefault("Quirks.NavelLaser.Stamina.Title", "Laser");
 		config.addDefault("Quirks.NavelLaser.Stamina.Color", "BLUE");
 		config.addDefault("Quirks.NavelLaser.Stamina.Max", 20);
 		config.addDefault("Quirks.NavelLaser.Stamina.Recharge", 0);
+		config.addDefault("Quirks.NavelLaser.AssignChance", 4);
 		
 		config.addDefault("Quirks.ZeroGravity.Stamina.Title", "Weight Limit");
 		config.addDefault("Quirks.ZeroGravity.Stamina.Color", "PINK");
 		config.addDefault("Quirks.ZeroGravity.Stamina.Max", 6000);
 		config.addDefault("Quirks.ZeroGravity.Stamina.Recharge", 0);
+		config.addDefault("Quirks.ZeroGravity.AssignChance", 4);
 		
 		config.addDefault("Quirks.Acid.Stamina.Title", "Acidity");
 		config.addDefault("Quirks.Acid.Stamina.Color", "PINK");
 		config.addDefault("Quirks.Acid.Stamina.Max", 200);
 		config.addDefault("Quirks.Acid.Stamina.Recharge", 5);
+		config.addDefault("Quirks.Acid.AssignChance", 3);
 		
 		c.save();
 		configs.put(ConfigType.QUIRKS, c);
@@ -161,6 +173,19 @@ public class Configs {
 		config.addDefault("Abilities.Engine.Engines.ReciproBurst.Factor", 3);
 		config.addDefault("Abilities.Engine.Engines.ReciproBurst.StallTime", 15000);
 		
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Range", 17);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Damage", 2);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Cooldown", 3000);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Radius", 0.4);
+		
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Range", 2);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Damage", 0.5);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Cooldown", 8000);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Radius", 4);
+		
+		config.addDefault("Abilities.HalfColdHalfHot.Freeze.Duration", 20000);
+		config.addDefault("Abilities.HalfColdHalfHot.Freeze.MaxPower", 5);
+		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);
 		
@@ -185,6 +210,8 @@ public class Configs {
 		config.addDefault("Storage.MySQL.pass", "");
 		config.addDefault("Storage.MySQL.db", "minecraft");
 		config.addDefault("Storage.MySQL.user", "root");
+		
+		config.addDefault("AutoAssign.Enabled", true);
 		
 		c.save();
 		configs.put(ConfigType.PROPERTIES, c);

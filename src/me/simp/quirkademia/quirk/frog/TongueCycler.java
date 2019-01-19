@@ -7,9 +7,9 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.frog.Froglike.TongueType;
 
-public class TongueCycle extends QuirkAbility {
+public class TongueCycler extends QuirkAbility {
 	
-	public TongueCycle(QuirkUser user) {
+	public TongueCycler(QuirkUser user) {
 		super(user);
 		
 		if (manager.hasAbility(user, Froglike.class)) {

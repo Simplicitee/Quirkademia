@@ -14,9 +14,9 @@ import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.event.QuirkAbilityEvent;
 import me.simp.quirkademia.event.QuirkAbilityEvent.QuirkAbilityEventType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
+import me.simp.quirkademia.util.StatusEffect;
 
-public class QuirkAbilityManager implements Manager {
+public class AbilityManager implements Manager {
 
 	private QuirkPlugin plugin;
 	private Set<QuirkAbility> instances;
@@ -24,7 +24,7 @@ public class QuirkAbilityManager implements Manager {
 	private Map<Class<? extends QuirkAbility>, QuirkAbilityInfo> abilityInfos;
 	private Map<String, QuirkAbilityInfo> abilityInfosNames;
 	
-	public QuirkAbilityManager(QuirkPlugin plugin) {
+	public AbilityManager(QuirkPlugin plugin) {
 		this.plugin = plugin;
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
@@ -229,8 +229,8 @@ public class QuirkAbilityManager implements Manager {
 	}
 	
 	public QuirkAbilityInfo registerInfo(QuirkAbilityInfo info) {
-		if (!abilityInfos.containsKey(info.getAbilityClass())) {
-			abilityInfos.put(info.getAbilityClass(), info);
+		if (!abilityInfos.containsKey(info.getProvider())) {
+			abilityInfos.put(info.getProvider(), info);
 		}
 		
 		if (!abilityInfosNames.containsKey(info.getName().toLowerCase())) {

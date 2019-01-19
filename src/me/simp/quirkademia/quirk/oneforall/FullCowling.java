@@ -7,8 +7,8 @@ import org.bukkit.potion.PotionEffectType;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 import me.simp.quirkademia.util.ParticleEffect;
+import me.simp.quirkademia.util.StatusEffect;
 
 public class FullCowling extends QuirkAbility {
 	

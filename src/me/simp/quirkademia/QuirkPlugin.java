@@ -5,13 +5,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.simp.quirkademia.command.Commands;
 import me.simp.quirkademia.configuration.Configs;
-import me.simp.quirkademia.manager.CooldownManager;
 import me.simp.quirkademia.manager.ManagersRunnable;
 import me.simp.quirkademia.manager.PassiveManager;
-import me.simp.quirkademia.manager.QuirkAbilityManager;
-import me.simp.quirkademia.manager.StatusManager;
-import me.simp.quirkademia.quirk.Quirk;
-import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.manager.AbilityManager;
+import me.simp.quirkademia.manager.QuirkManager;
+import me.simp.quirkademia.manager.UserManager;
 import me.simp.quirkademia.storage.StorageManager;
 
 public class QuirkPlugin extends JavaPlugin{
@@ -20,12 +18,12 @@ public class QuirkPlugin extends JavaPlugin{
 	private Configs configs;
 	private GeneralMethods methods;
 	private ManagersRunnable runner;
-	private QuirkAbilityManager abilManager;
-	private StatusManager statManager;
-	private CooldownManager coolManager;
+	private AbilityManager abilManager;
+	private UserManager userManager;
 	private PassiveManager passManager;
 	private Commands commands;
 	private StorageManager storage;
+	private QuirkManager quirks;
 	
 	@Override
 	public void onEnable() {
@@ -34,26 +32,24 @@ public class QuirkPlugin extends JavaPlugin{
 		configs = new Configs(this);
 		methods = new GeneralMethods(this);
 		runner = new ManagersRunnable(this);
-		abilManager = new QuirkAbilityManager(this);
-		statManager = new StatusManager(this);
-		coolManager = new CooldownManager(this);
+		abilManager = new AbilityManager(this);
+		userManager = new UserManager(this);
 		passManager = new PassiveManager(this);
 		commands = new Commands(this);
 		storage = new StorageManager(this);
-		
-		Quirk.loadCoreQuirks();
+		quirks = new QuirkManager(this);
 		
 		new QuirkListener(this);
 		
 		for (Player player : getServer().getOnlinePlayers()) {
-			QuirkUser.login(player.getUniqueId());
+			userManager.login(player.getUniqueId());
 		}
 	}
 	
 	@Override
 	public void onDisable() {
 		for (Player player : getServer().getOnlinePlayers()) {
-			QuirkUser.logout(player.getUniqueId());
+			userManager.logout(player.getUniqueId());
 		}
 		
 		storage.get().close();
@@ -71,16 +67,12 @@ public class QuirkPlugin extends JavaPlugin{
 		return runner;
 	}
 	
-	public QuirkAbilityManager getAbilityManager() {
+	public AbilityManager getAbilityManager() {
 		return abilManager;
 	}
 	
-	public StatusManager getStatusManager() {
-		return statManager;
-	}
-	
-	public CooldownManager getCooldownManager() {
-		return coolManager;
+	public UserManager getUserManager() {
+		return userManager;
 	}
 	
 	public PassiveManager getPassiveManager() {
@@ -97,5 +89,9 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	public StorageManager getStorageManager() {
 		return storage;
+	}
+	
+	public QuirkManager getQuirkManager() {
+		return quirks;
 	}
 }

@@ -29,7 +29,6 @@ public class QuirkStamina {
 		this.bar = new StaminaBar(this);
 		
 		set(maxStamina);
-		plugin.getStatusManager().register(user);
 	}
 	
 	public QuirkUser getUser() {

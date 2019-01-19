@@ -3,14 +3,18 @@ package me.simp.quirkademia.command;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabCompleter;
 
 import me.simp.quirkademia.QuirkPlugin;
 
@@ -64,7 +68,49 @@ public class Commands {
 			
 		};
 		
+		TabCompleter tab = new TabCompleter() {
+
+			@Override
+			public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+				List<String> possible = new ArrayList<>();
+				
+				if (args.length == 1) {
+					for (String name : commandMap.keySet()) {
+						possible.add(name);
+					}
+				} else if (args.length > 1) {
+					for (String name : commandMap.keySet()) {
+						QuirkCommand cmd = commandMap.get(name);
+						
+						if (args[0].equalsIgnoreCase(name) || Arrays.asList(cmd.getAliases()).contains(args[0].toLowerCase())) {
+							List<String> sendingArgs = new ArrayList<>();
+							
+							for (int i = 1; i < args.length; i++) {
+								sendingArgs.add(args[i]);
+							}
+							
+							possible.addAll(cmd.completer(sender, sendingArgs));
+						}
+					}
+				}
+				
+				String completing = args[args.length - 1];
+				Iterator<String> checks = possible.iterator();
+				while (checks.hasNext()) {
+					String possibility = checks.next();
+					
+					if (!possibility.regionMatches(true, 0, completing, 0, completing.length())) {
+						checks.remove();
+					}
+				}
+				
+				return possible;
+			}
+			
+		};
+		
 		main.setExecutor(exe);
+		main.setTabCompleter(tab);
 	}
 	
 	public void register(QuirkCommand command) {
@@ -79,5 +125,9 @@ public class Commands {
 		}
 		
 		return null;
+	}
+	
+	public Set<QuirkCommand> list() {
+		return new HashSet<>(commandMap.values());
 	}
 }

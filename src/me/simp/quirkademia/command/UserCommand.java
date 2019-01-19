@@ -1,5 +1,7 @@
 package me.simp.quirkademia.command;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -14,7 +16,7 @@ import me.simp.quirkademia.quirk.QuirkUser;
 public class UserCommand extends QuirkCommand {
 
 	public UserCommand() {
-		super("user", "Command for anything dealing with quirkusers", "/quirk user <player> [args...]", new String[] {"user", "u", "player"});
+		super("user", "Command for anything dealing with quirkusers", "/quirk user [player [toggle | set <quirk>]]", new String[] {"user", "u", "player"});
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class UserCommand extends QuirkCommand {
 		
 		if (args.size() == 0) {
 			sender.sendMessage(ChatColor.YELLOW + "Online Quirk Users:");
-			for (QuirkUser user : QuirkUser.getOnlineUsers()) {
+			for (QuirkUser user : plugin.getUserManager().getOnlineUsers()) {
 				ChatColor color = ChatColor.WHITE;
 				
 				if (user.getQuirk() != null) {
@@ -44,10 +46,10 @@ public class UserCommand extends QuirkCommand {
 		if (target == null) {
 			sender.sendMessage(ChatColor.RED + "Player not online!");
 		} else {
-			QuirkUser user = QuirkUser.from(target.getUniqueId());
+			QuirkUser user = plugin.getUserManager().getUser(target.getUniqueId());
 			
 			if (user == null) {
-				user = QuirkUser.login(target.getUniqueId());
+				user = plugin.getUserManager().login(target.getUniqueId());
 			}
 			
 			if (args.size() == 1) {
@@ -83,7 +85,7 @@ public class UserCommand extends QuirkCommand {
 						return;
 					}
 					
-					Quirk quirk = Quirk.get(args.get(2).replace("-", " ").replace("_", " "));
+					Quirk quirk = plugin.getQuirkManager().getQuirk(args.get(2).replace("-", " ").replace("_", " "));
 					
 					if (quirk == null) {
 						sender.sendMessage(ChatColor.RED + "Unknown quirk!");
@@ -126,5 +128,24 @@ public class UserCommand extends QuirkCommand {
 				sender.sendMessage(ChatColor.YELLOW + "-- " + user.getQuirk().getChatColor() + info.getName());
 			}
 		}
+	}
+
+	@Override
+	public List<String> completer(CommandSender sender, List<String> args) {
+		List<String> completions = new ArrayList<>();
+		
+		if (args.size() == 1) {
+			for (Player player : Bukkit.getOnlinePlayers()) {
+				completions.add(player.getName());
+			}
+		} else if (args.size() == 2) {
+			completions.addAll(Arrays.asList("set", "toggle"));
+		} else if (args.size() == 3 && args.get(1).equalsIgnoreCase("set")) {
+			for (Quirk quirk : plugin.getQuirkManager().getQuirks()) {
+				completions.add(quirk.getName().replace(" ", "-").toLowerCase());
+			}
+		}
+		
+		return completions;
 	}
 }

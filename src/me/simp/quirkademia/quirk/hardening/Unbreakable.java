@@ -1,19 +1,21 @@
-package me.simp.quirkademia.quirk.invisibility;
+package me.simp.quirkademia.quirk.hardening;
 
 import org.bukkit.Location;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 
-public class InvisibleAbility extends QuirkAbility {
+public class Unbreakable extends QuirkAbility {
 
-	public InvisibleAbility(QuirkUser user) {
+	public Unbreakable(QuirkUser user) {
 		super(user);
 		
-		user.getStatus().add(StatusEffect.INVISIBLE, 1);
-		
-		manager.start(this);
+		if (manager.hasAbility(user, Harden.class)) {
+			Harden abil = manager.getAbility(user, Harden.class);
+			if (!abil.hasUnbreakable()) {
+				abil.activateUnbreakable();
+			}
+		}
 	}
 
 	@Override
@@ -23,7 +25,7 @@ public class InvisibleAbility extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -33,7 +35,7 @@ public class InvisibleAbility extends QuirkAbility {
 
 	@Override
 	public void onRemove() {
-		user.getStatus().remove(StatusEffect.INVISIBLE);
+		
 	}
 
 }

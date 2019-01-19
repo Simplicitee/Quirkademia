@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.player.PlayerToggleSprintEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.Quirk;
@@ -36,17 +37,24 @@ public class QuirkListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoin(PlayerLoginEvent event) {
-		QuirkUser.login(event.getPlayer().getUniqueId());
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				plugin.getUserManager().login(event.getPlayer().getUniqueId());
+			}
+			
+		}.runTaskLater(plugin, 40);
 	}
 	
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		QuirkUser.logout(event.getPlayer().getUniqueId());
+		plugin.getUserManager().logout(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
-		QuirkUser.logout(event.getPlayer().getUniqueId());
+		plugin.getUserManager().logout(event.getPlayer().getUniqueId());
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -57,7 +65,7 @@ public class QuirkListener implements Listener {
 		
 		if (plugin.getConfigs().getConfiguration(ConfigType.CHAT).getBoolean("Chat.Enabled")) {
 			Player player = event.getPlayer();
-			QuirkUser user = QuirkUser.from(player.getUniqueId());
+			QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 			String format = plugin.getConfigs().getConfiguration(ConfigType.CHAT).getString("Chat.Format");
 			
 			format = format.replace("{quirkcolor}", "" + user.getQuirk().getChatColor());
@@ -77,20 +85,7 @@ public class QuirkListener implements Listener {
 		
 		Player player = event.getPlayer();
 		ActivationType type = player.isSneaking() ? ActivationType.SNEAK_UP : ActivationType.SNEAK_DOWN;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
-		
-		activateAbility(user, type);
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerClick(PlayerAnimationEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-		
-		Player player = event.getPlayer();
-		ActivationType type = player.isSneaking() ? ActivationType.LEFT_CLICK_SNEAKING : ActivationType.LEFT_CLICK;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}
@@ -103,7 +98,7 @@ public class QuirkListener implements Listener {
 		
 		Player player = event.getPlayer();
 		ActivationType type = player.isSneaking() ? ActivationType.RIGHT_CLICK_ENTITY_SNEAKING : ActivationType.RIGHT_CLICK_ENTITY;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}
@@ -121,7 +116,7 @@ public class QuirkListener implements Listener {
 		}
 		
 		ActivationType type = ActivationType.TOGGLE_SPRINT;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}
@@ -134,7 +129,7 @@ public class QuirkListener implements Listener {
 		
 		Player player = event.getPlayer();
 		ActivationType type = player.isSneaking() ? ActivationType.OFFHAND_TRIGGER_SNEAKING : player.isSprinting() ? ActivationType.OFFHAND_TRIGGER_SPRINTING : ActivationType.OFFHAND_TRIGGER;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}
@@ -147,7 +142,20 @@ public class QuirkListener implements Listener {
 		
 		Player player = event.getPlayer();
 		ActivationType type = player.isSneaking() ? ActivationType.RIGHT_CLICK_BLOCK_SNEAKING : ActivationType.RIGHT_CLICK_BLOCK;
-		QuirkUser user = QuirkUser.from(player.getUniqueId());
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
+		
+		activateAbility(user, type);
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerLeftClick(PlayerAnimationEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		Player player = event.getPlayer();
+		ActivationType type = player.isSneaking() ? ActivationType.LEFT_CLICK_SNEAKING : ActivationType.LEFT_CLICK;
+		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
 		activateAbility(user, type);
 	}

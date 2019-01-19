@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
@@ -16,6 +18,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -24,7 +27,7 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.event.QuirkAbilityDamageEntityEvent;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
+import me.simp.quirkademia.util.StatusEffect;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -40,7 +43,7 @@ public class GeneralMethods {
 		return plugin;
 	}
 	
-	public boolean canUseAbility(QuirkAbilityInfo info, QuirkUser user) {
+	public boolean canUseAbility(final QuirkAbilityInfo info, final QuirkUser user) {
 		if (info == null) {
 			return false;
 		} else if (user.isQuirkDisabled()) {
@@ -54,11 +57,15 @@ public class GeneralMethods {
 		return true;
 	}
 	
-	public boolean canUseAbility(Class<? extends QuirkAbility> clazz, QuirkUser user) {
+	public boolean canUseAbility(final Class<? extends QuirkAbility> clazz, final QuirkUser user) {
 		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(clazz), user);
 	}
 	
-	public void damageEntity(LivingEntity damaged, Player damager, QuirkAbility ability, double damage) {
+	public boolean canUseAbility(final String name, final QuirkUser user) {
+		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(name), user);
+	}
+	
+	public void damageEntity(final LivingEntity damaged, final Player damager, final QuirkAbility ability, final double damage) {
 		QuirkAbilityDamageEntityEvent event = new QuirkAbilityDamageEntityEvent(damaged, damager, ability, damage);
 		plugin.getServer().getPluginManager().callEvent(event);
 		
@@ -66,24 +73,77 @@ public class GeneralMethods {
 			return;
 		}
 		
-		damage = event.getDamage();
-		damaged.damage(damage, damager);
+		if (event.getDamage() <= 0) {
+			return;
+		}
+		
+		damaged.damage(event.getDamage(), damager);
 	}
 	
-	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location location, final double radius) {
-		final PriorityQueue<Entity> entities = new PriorityQueue<>(100, new Comparator<Entity>() {
+	public LinkedList<Block> getBlocksAroundPoint(Location center, final int radius, final Material...ignore) {
+		center = center.clone();
+		LinkedList<Block> blocks = new LinkedList<>();
+		List<Material> ignoring = Arrays.asList(ignore);
+		
+		for (int x = -radius; x <= radius; x++) {
+			for (int y = -radius; y <= radius; y++) {
+				for (int z = -radius; z <= radius; z++) {
+					Block b = center.add(x, y, z).getBlock();
+					
+					if (ignoring.contains(b.getType())) {
+						continue;
+					} else {
+						blocks.add(b);
+					}
+					
+					center.subtract(x, y, z);
+				}
+			}
+		}
+		
+		return blocks;
+	}
+	
+	public LinkedList<Location> getCircle(Location center, double radius, final double interval, final int sections, final boolean hollow) {
+		LinkedList<Location> circle = new LinkedList<>();
+		
+		radius = Math.abs(radius);
+		center = center.clone();
+		
+		double init = (hollow ? radius : 0);
+		double inc = radius / sections;
+		
+		for (double i = init; i <= radius; i += inc) {
+			for (double j = 0; j < Math.PI * 2; j += interval/(i + 1)) {
+				double x = i * Math.cos(j), z = i * Math.sin(j);
+				
+				center.add(x, 0, z);
+				
+				circle.add(center.clone());
+				
+				center.subtract(x, 0, z);
+			}
+		}
+		
+		return circle;
+	}
+	
+	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location center, final double radius, final EntityType...ignore) {
+		PriorityQueue<Entity> entities = new PriorityQueue<>(100, new Comparator<Entity>() {
 			@Override
 			public int compare(final Entity a, final Entity b) {
-				return (int) (location.distance(a.getLocation()) - location.distance(b.getLocation()));
+				return (int) (center.distance(a.getLocation()) - center.distance(b.getLocation()));
 			}
 		});
-		final World world = location.getWorld();
+		
+		World world = center.getWorld();
+		List<EntityType> ignoring = Arrays.asList(ignore);
 
 		// To find chunks we use chunk coordinates (not block coordinates!)
-		final int x1 = (int) (location.getX() - radius) >> 4;
-		final int x2 = (int) (location.getX() + radius) >> 4;
-		final int z1 = (int) (location.getZ() - radius) >> 4;
-		final int z2 = (int) (location.getZ() + radius) >> 4;
+		int x1 = (int) (center.getX() - radius) >> 4;
+		int x2 = (int) (center.getX() + radius) >> 4;
+		int z1 = (int) (center.getZ() - radius) >> 4;
+		int z2 = (int) (center.getZ() + radius) >> 4;
 
 		for (int x = x1; x <= x2; x++) {
 			for (int z = z1; z <= z2; z++) {
@@ -93,12 +153,14 @@ public class GeneralMethods {
 			}
 		}
 
-		final Iterator<Entity> entityIterator = entities.iterator();
+		Iterator<Entity> entityIterator = entities.iterator();
 		while (entityIterator.hasNext()) {
-			final Entity e = entityIterator.next();
-			if (e.getWorld().equals(location.getWorld()) && e.getLocation().distanceSquared(location) > radius * radius) {
+			Entity e = entityIterator.next();
+			if (e.getWorld().equals(center.getWorld()) && e.getLocation().distanceSquared(center) > radius * radius) {
 				entityIterator.remove();
 			} else if (e instanceof Player && (((Player) e).isDead() || ((Player) e).getGameMode().equals(GameMode.SPECTATOR))) {
+				entityIterator.remove();
+			} else if (ignoring.contains(e.getType())) {
 				entityIterator.remove();
 			}
 		}
@@ -106,7 +168,7 @@ public class GeneralMethods {
 		return entities;
 	}
 	
-	public Vector getDirection(Location start, Location destination) {
+	public Vector getDirection(final Location start, final Location destination) {
 		double x = destination.getX() - start.getX();
 		double y = destination.getY() - start.getY();
 		double z = destination.getZ() - start.getZ();
@@ -114,7 +176,7 @@ public class GeneralMethods {
 		return new Vector(x, y, z);
 	}
 	
-	public Entity getTargetedEntity(Player player, double range, Material...ignore) {
+	public Entity getTargetedEntity(final Player player, final double range, final Material...ignore) {
 		Set<Material> transparent = new HashSet<>();
 		transparent.add(Material.AIR);
 		transparent.add(Material.CAVE_AIR);
@@ -146,7 +208,7 @@ public class GeneralMethods {
 		return entity;
 	}
 	
-	public LivingEntity getTargetedLivingEntity(Player player, double range, Material...ignore) {
+	public LivingEntity getTargetedLivingEntity(final Player player, final double range, final Material...ignore) {
 		Set<Material> transparent = new HashSet<>();
 		transparent.add(Material.AIR);
 		transparent.add(Material.CAVE_AIR);
@@ -189,7 +251,7 @@ public class GeneralMethods {
 		return entity;
 	}
 	
-	public Location getTargetedLocation(Player player, double range, Material...ignore) {
+	public Location getTargetedLocation(final Player player, final double range, final Material...ignore) {
 		Set<Material> transparent = new HashSet<>();
 		transparent.add(Material.AIR);
 		transparent.add(Material.CAVE_AIR);
@@ -217,15 +279,38 @@ public class GeneralMethods {
 		return check;
 	}
 	
-	public boolean isAir(Block b) {
+	public Vector getOrthogonalVector(final Vector axis, final double radians) {
+		Vector ortho = new Vector(axis.getY(), -axis.getX(), 0).normalize();
+		
+		return getVectorRotation(axis, ortho, radians);
+	}
+	
+	public Location getSide(final Player player, final double length, final boolean left) {
+		Vector ortho = getOrthogonalVector(player.getLocation().getDirection(), (left ? -Math.PI/2 : Math.PI/2));
+		
+		return player.getLocation().clone().add(ortho.multiply(length));
+	}
+	
+	public Vector getVectorRotation(final Vector axis, final Vector rotating, final double radians) {
+		Vector dupli = axis.clone().normalize();
+		Vector rotor = rotating.clone();
+		Vector third = dupli.crossProduct(rotor).normalize().multiply(rotor.length());
+		
+		rotor.multiply(Math.cos(radians));
+		third.multiply(Math.sin(radians));
+		
+		return rotor.add(third);
+	}
+	
+	public boolean isAir(final Block b) {
 		return b.getType() == Material.AIR || b.getType() == Material.CAVE_AIR || b.getType() == Material.VOID_AIR;
 	}
 	
-	public boolean isTransparent(Block b) {
+	public boolean isTransparent(final Block b) {
 		return !b.getType().isOccluding() && !b.getType().isSolid();
 	}
 	
-	public boolean isWater(BlockData data) {
+	public boolean isWater(final BlockData data) {
 		if (data instanceof Waterlogged) {
 			return ((Waterlogged) data).isWaterlogged();
 		} else {
@@ -241,11 +326,11 @@ public class GeneralMethods {
 		}
 	}
 	
-	public boolean isWater(Block b) {
+	public boolean isWater(final Block b) {
 		return isWater(b.getBlockData());
 	}
 	
-	public void sendActionBarMessage(String message, Player...players) {
+	public void sendActionBarMessage(final String message, final Player...players) {
 		for (Player player : players) {
 			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
 		}

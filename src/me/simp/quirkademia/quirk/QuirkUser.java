@@ -1,17 +1,13 @@
 package me.simp.quirkademia.quirk;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.potion.PotionEffectType;
-
-import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.AbilityBoard;
-import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.Cooldown;
+import me.simp.quirkademia.util.StatusEffect;
 
 public class QuirkUser {
 	
@@ -107,80 +103,6 @@ public class QuirkUser {
 	
 	public Map<String, Cooldown> getCooldowns() {
 		return cooldowns;
-	}
-	
-	public static QuirkUser from(UUID uuid) {
-		if (USERS.containsKey(uuid)) {
-			return USERS.get(uuid);
-		}
-		
-		return null;
-	}
-	
-	public static Set<QuirkUser> getOnlineUsers() {
-		Set<QuirkUser> users = new HashSet<>();
-		
-		for (QuirkUser user : USERS.values()) {
-			users.add(user);
-		}
-		
-		return users;
-	}
-	
-	public static QuirkUser login(UUID uuid) {
-		if (USERS.containsKey(uuid)) {
-			return USERS.get(uuid);
-		}
-		
-		Map<String, String> storage = QuirkPlugin.get().getStorageManager().get().load(uuid);
-		if (storage.isEmpty()) {
-			return new QuirkUser(uuid, null, new HashMap<>());
-		}
-		
-		Quirk quirk = Quirk.get(storage.get("quirk"));
-		Map<String, Cooldown> cooldowns = new HashMap<>();
-		
-		if (QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
-			for (String key : storage.keySet()) {
-				if (key.startsWith("cooldown.")) {
-					cooldowns.put(key.substring(9), new Cooldown(System.currentTimeMillis(), Long.valueOf(storage.get(key))));
-				}
-			}
-		}
-		
-		return new QuirkUser(uuid, quirk, cooldowns);
-	}
-	
-	public static void logout(UUID uuid) {
-		QuirkUser user = from(uuid);
-		
-		if (user != null) {
-			QuirkPlugin.get().getStorageManager().get().store(user);
-			
-			user.getStamina().getBar().destroy();
-			USERS.remove(uuid);
-		}
-	}
-		
-	public static enum StatusEffect {
-		INCREASED_STRENGTH(PotionEffectType.INCREASE_DAMAGE),
-		INCREASED_ENDURANCE(PotionEffectType.DAMAGE_RESISTANCE),
-		INCREASED_SPEED(PotionEffectType.SPEED), 
-		INCREASED_JUMP(PotionEffectType.JUMP), 
-		QUIRK_ERASED(null), 
-		PARALYZED(PotionEffectType.SLOW), 
-		HEALING(PotionEffectType.REGENERATION),
-		INVISIBLE(PotionEffectType.INVISIBILITY);
-		
-		public PotionEffectType type;
-		
-		private StatusEffect(PotionEffectType type) {
-			this.type = type;
-		}
-		
-		public PotionEffectType getPotion() {
-			return type;
-		}
 	}
 	
 	public class QuirkUserStatus {

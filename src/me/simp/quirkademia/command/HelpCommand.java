@@ -1,5 +1,6 @@
 package me.simp.quirkademia.command;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +27,7 @@ public class HelpCommand extends QuirkCommand {
 		}
 		
 		String topic = args.get(0).toLowerCase();
-		Quirk quirk = Quirk.get(topic.replace("-", " ").replace("_", " "));
+		Quirk quirk = plugin.getQuirkManager().getQuirk(topic.replace("-", " ").replace("_", " "));
 		QuirkAbilityInfo info = plugin.getAbilityManager().getAbilityInfo(topic.replace("-", " ").replace("_", " "));
 		QuirkCommand cmd = plugin.getCommands().getCommand(topic);
 		
@@ -64,6 +65,20 @@ public class HelpCommand extends QuirkCommand {
 		} else {
 			sender.sendMessage("Unknown help topic!");
 		}
+	}
+
+	@Override
+	public List<String> completer(CommandSender sender, List<String> args) {
+		List<String> completions = new ArrayList<>();
+		for (Quirk quirk : plugin.getQuirkManager().getQuirks()) {
+			completions.add(quirk.getName().replace(" ", "-").toLowerCase());
+		}
+		
+		for (QuirkCommand cmd : plugin.getCommands().list()) {
+			completions.add(cmd.getName().toLowerCase());
+		}
+		
+		return completions;
 	}
 
 }

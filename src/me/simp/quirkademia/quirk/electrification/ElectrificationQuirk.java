@@ -1,12 +1,11 @@
 package me.simp.quirkademia.quirk.electrification;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
-import me.simp.quirkademia.util.ActivationType;
 
 public class ElectrificationQuirk extends Quirk {
 
@@ -20,8 +19,8 @@ public class ElectrificationQuirk extends Quirk {
 	}
 
 	@Override
-	public Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities() {
-		Map<ActivationType, QuirkAbilityInfo> register = new HashMap<>();
+	public Set<QuirkAbilityInfo> registerAbilities() {
+		Set<QuirkAbilityInfo> register = new HashSet<>();
 		
 		return register;
 	}

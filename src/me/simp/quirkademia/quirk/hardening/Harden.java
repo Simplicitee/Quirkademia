@@ -9,26 +9,26 @@ import org.bukkit.util.Vector;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.QuirkUser.StatusEffect;
 import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.ParticleEffect;
+import me.simp.quirkademia.util.StatusEffect;
 
-public class HardenAbility extends QuirkAbility {
+public class Harden extends QuirkAbility {
 	
 	private int strength, endurance;
 	private int stamina;
 	private int unbreakable;
 	private boolean hasUnbreakable;
 
-	public HardenAbility(QuirkUser user) {
+	public Harden(QuirkUser user) {
 		super(user);
 		
 		if (manager.hasAbility(user, HardenRecharge.class)) {
 			return;
 		}
 		
-		if (manager.hasAbility(user, HardenAbility.class)) {
-			manager.remove(manager.getAbility(user, HardenAbility.class));
+		if (manager.hasAbility(user, Harden.class)) {
+			manager.remove(manager.getAbility(user, Harden.class));
 			return;
 		}
 		
@@ -93,7 +93,9 @@ public class HardenAbility extends QuirkAbility {
 	public void onRemove() {
 		user.getStatus().remove(StatusEffect.INCREASED_STRENGTH);
 		user.getStatus().remove(StatusEffect.INCREASED_ENDURANCE);
-		user.getQuirk().createAbilityInstance(user, ActivationType.MANUAL);
+		if (user.getQuirk().equals(plugin.getQuirkManager().getQuirk(HardeningQuirk.class))) {
+			user.getQuirk().createAbilityInstance(user, ActivationType.MANUAL);
+		}
 	}
 
 	public void activateUnbreakable() {

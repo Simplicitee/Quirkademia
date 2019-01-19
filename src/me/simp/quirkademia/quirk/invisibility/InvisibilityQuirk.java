@@ -1,7 +1,7 @@
 package me.simp.quirkademia.quirk.invisibility;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
@@ -16,14 +16,14 @@ public class InvisibilityQuirk extends Quirk {
 
 	@Override
 	public String getDescription() {
-		return "Toru Hagakure's body is completely invisible! She can also manipulate and warp the light that passes through her body!";
+		return "Toru Hagakure's body is completely invisible! She can also manipulate and warp the light that passes through her body to some degree!";
 	}
 
 	@Override
-	public Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities() {
-		Map<ActivationType, QuirkAbilityInfo> register = new HashMap<>();
-		register.put(ActivationType.PASSIVE, new InvisibleInfo());
-		register.put(ActivationType.OFFHAND_TRIGGER_SNEAKING, new LightRefractionInfo());
+	public Set<QuirkAbilityInfo> registerAbilities() {
+		Set<QuirkAbilityInfo> register = new HashSet<>();
+		register.add(new QuirkAbilityInfo(ActivationType.PASSIVE, Invisible.class, this, "Invisible", "You're always invisible, but your clothes aren't!", "Passively active"));
+		register.add(new QuirkAbilityInfo(ActivationType.OFFHAND_TRIGGER_SNEAKING, LightRefraction.class, this, "Light Refraction", "Warp light through your body, blinding entities it strikes!", "Press the offhand trigger while sneaking, continue sneaking to warp light through your body!"));
 		return register;
 	}
 

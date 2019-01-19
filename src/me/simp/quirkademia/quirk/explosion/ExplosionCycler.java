@@ -7,9 +7,9 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.explosion.ExplosionTracker.ExplosionType;
 
-public class ExplosionCycle extends QuirkAbility {
+public class ExplosionCycler extends QuirkAbility {
 
-	public ExplosionCycle(QuirkUser user) {
+	public ExplosionCycler(QuirkUser user) {
 		super(user);
 		
 		if (manager.hasAbility(user, ExplosionTracker.class)) {

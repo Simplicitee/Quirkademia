@@ -12,16 +12,16 @@ import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class LightRefractionAbility extends QuirkAbility {
+public class LightRefraction extends QuirkAbility {
 
 	private Location loc;
 	private int range, current;
 	private double radius;
 	
-	public LightRefractionAbility(QuirkUser user) {
+	public LightRefraction(QuirkUser user) {
 		super(user);
 		
-		if (manager.hasAbility(user, LightRefractionAbility.class)) {
+		if (manager.hasAbility(user, LightRefraction.class)) {
 			return;
 		}
 		

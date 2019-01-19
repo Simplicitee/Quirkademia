@@ -1,9 +1,9 @@
 package me.simp.quirkademia.quirk;
 
 import java.lang.reflect.Constructor;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -12,35 +12,27 @@ import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
-import me.simp.quirkademia.quirk.engine.EngineQuirk;
-import me.simp.quirkademia.quirk.explosion.ExplosionQuirk;
-import me.simp.quirkademia.quirk.frog.FrogQuirk;
-import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
-import me.simp.quirkademia.quirk.invisibility.InvisibilityQuirk;
-import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
 public abstract class Quirk implements IQuirk {
-	
-	private static final Map<String, Quirk> QUIRKS = new HashMap<>();
-	private static final Map<Class<? extends Quirk>, Quirk> QUIRKS_CLASSES = new HashMap<>();
 
+	protected QuirkPlugin plugin;
+	
 	private String name;
 	private QuirkType type;
 	private Map<ActivationType, QuirkAbilityInfo> abilities;
 	
 	public Quirk(String name, QuirkType type) {
+		this.plugin = QuirkPlugin.get();
 		this.name = name;
 		this.type = type;
+		this.abilities = new HashMap<>();
 		
-		QUIRKS.put(name.toLowerCase(), this);
-		QUIRKS_CLASSES.put(this.getClass(), this);
+		Set<QuirkAbilityInfo> infos = registerAbilities();
 		
-		this.abilities = registerQuirkAbilities();
-		
-		for (QuirkAbilityInfo info : abilities.values()) {
-			QuirkPlugin.get().getAbilityManager().registerInfo(info);
+		for (QuirkAbilityInfo info : infos) {
+			abilities.put(info.getActivation(), info);
+			plugin.getAbilityManager().registerInfo(info);
 		}
 	}
 	
@@ -66,12 +58,12 @@ public abstract class Quirk implements IQuirk {
 	
 	@Override
 	public String getStaminaTitle() {
-		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
+		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
 	}
 
 	@Override
 	public BarColor getStaminaColor() {
-		BarColor color = BarColor.valueOf(QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color").toUpperCase());
+		BarColor color = BarColor.valueOf(plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color").toUpperCase());
 		
 		if (color == null) {
 			color = BarColor.WHITE;
@@ -82,12 +74,12 @@ public abstract class Quirk implements IQuirk {
 
 	@Override
 	public int getStaminaMax() {
-		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
+		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
 	}
 
 	@Override
 	public int getStaminaRecharge() {
-		return QuirkPlugin.get().getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
+		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
 	}
 	
 	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {
@@ -103,9 +95,9 @@ public abstract class Quirk implements IQuirk {
 			return null;
 		}
 		
-		Class<? extends QuirkAbility> ability = abilities.get(type).getAbilityClass();
+		Class<? extends QuirkAbility> ability = abilities.get(type).getProvider();
 		
-		if (!QuirkPlugin.get().getMethods().canUseAbility(ability, user)) {
+		if (!plugin.getMethods().canUseAbility(ability, user)) {
 			return null;
 		}
 		
@@ -117,32 +109,5 @@ public abstract class Quirk implements IQuirk {
 		}
 	}
 	
-	public static Quirk get(String name) {
-		if (name == null) {
-			return null;
-		}
-		
-		name = name.toLowerCase();
-		return (QUIRKS.containsKey(name) ? QUIRKS.get(name) : null);
-	}
-	
-	public static Quirk get(Class<? extends Quirk> clazz) {
-		return (QUIRKS_CLASSES.containsKey(clazz) ? QUIRKS_CLASSES.get(clazz) : null);
-	}
-	
-	public static Collection<Quirk> getAll() {
-		return QUIRKS.values();
-	}
-	
-	public static void loadCoreQuirks() {
-		new OneForAllQuirk();
-		new FrogQuirk();
-		new ElectrificationQuirk();
-		new HardeningQuirk();
-		new InvisibilityQuirk();
-		new ExplosionQuirk();
-		new EngineQuirk();
-	}
-	
-	public abstract Map<ActivationType, QuirkAbilityInfo> registerQuirkAbilities();
+	public abstract Set<QuirkAbilityInfo> registerAbilities();
 }

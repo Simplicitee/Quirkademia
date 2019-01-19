@@ -1,5 +1,6 @@
 package me.simp.quirkademia.command;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
@@ -21,9 +22,14 @@ public class ListCommand extends QuirkCommand {
 			return;
 		}
 		
-		for (Quirk quirk : Quirk.getAll()) {
+		for (Quirk quirk : plugin.getQuirkManager().getQuirks()) {
 			sender.sendMessage(quirk.getChatColor() + quirk.getName() + ((quirk instanceof AddonQuirk) ? "(Addon)" : ""));
 		}
+	}
+
+	@Override
+	public List<String> completer(CommandSender sender, List<String> args) {
+		return new ArrayList<>();
 	}
 
 }
