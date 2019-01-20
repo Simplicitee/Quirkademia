@@ -4,5 +4,6 @@ public enum QuirkType {
 
 	EMITTER,
 	TRANSFORMATION,
-	MUTANT;
+	MUTANT,
+	FUSION;
 }

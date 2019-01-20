@@ -52,6 +52,7 @@ public abstract class Quirk implements IQuirk {
 			case EMITTER: return ChatColor.RED;
 			case TRANSFORMATION: return ChatColor.AQUA;
 			case MUTANT: return ChatColor.GREEN;
+			case FUSION: return ChatColor.DARK_PURPLE;
 			default: return ChatColor.GRAY;
 		}
 	}
