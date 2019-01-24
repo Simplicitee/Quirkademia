@@ -47,11 +47,11 @@ public class Harden extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		if (user.getStamina().get() <= 0) {
+		if (user.getStamina().getValue() <= 0) {
 			return false;
 		}
 		
-		user.getStamina().set(user.getStamina().get() - stamina);
+		user.getStamina().setValue(user.getStamina().getValue() - stamina);
 		
 		ParticleEffect.CRIT.display(player.getLocation().clone().add(0, 1, 0), 3, 0.2, 0.55, 0.2);
 		
@@ -94,12 +94,12 @@ public class Harden extends QuirkAbility {
 		user.getStatus().remove(StatusEffect.INCREASED_STRENGTH);
 		user.getStatus().remove(StatusEffect.INCREASED_ENDURANCE);
 		if (user.getQuirk().equals(plugin.getQuirkManager().getQuirk(HardeningQuirk.class))) {
-			user.getQuirk().createAbilityInstance(user, ActivationType.MANUAL);
+			user.createAbilityInstance(ActivationType.MANUAL);
 		}
 	}
 
 	public void activateUnbreakable() {
-		player.sendMessage(ChatColor.RED + "Unbreakable mode!");
+		methods.sendActionBarMessage(ChatColor.RED + "Unbreakable mode!", player);
 		
 		hasUnbreakable = true;
 		

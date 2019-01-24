@@ -16,9 +16,11 @@ import org.bukkit.potion.PotionEffect;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.configuration.ConfigType;
+import me.simp.quirkademia.quirk.FusedQuirk;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.QuirkUser.QuirkUserStatus;
+import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.Cooldown;
 import me.simp.quirkademia.util.StatusEffect;
 
@@ -39,8 +41,16 @@ public class UserManager implements Manager {
 	@Override
 	public void run() {
 		for (QuirkUser user : users.values()) {
+			if (user.getQuirk() == null) {
+				continue;
+			}
+			
 			Player player = Bukkit.getPlayer(user.getUniqueId());
 			QuirkUserStatus status = user.getStatus();
+			
+			if (player.isOnline() && !player.isDead()) {
+				user.createAbilityInstance(ActivationType.PASSIVE);
+			}
 			
 			for (StatusEffect effect : status.getEffects()) {
 				if (effect.getPotion() != null) {
@@ -52,7 +62,7 @@ public class UserManager implements Manager {
 				if (System.currentTimeMillis() >= checks.get(user) + 1000) {
 					int recharge = user.getStamina().getRecharge();
 					
-					user.getStamina().set(user.getStamina().get() + recharge);
+					user.getStamina().setValue(user.getStamina().getValue() + recharge);
 					
 					checks.put(user, System.currentTimeMillis());
 				}
@@ -110,6 +120,13 @@ public class UserManager implements Manager {
 		
 		QuirkUser user = new QuirkUser(uuid, quirk, cooldowns);
 		
+		for (int i = 0; i < 9; i++) {
+			String key = "Slot" + (i + 1);
+			if (storage.containsKey(key)) {
+				user.setBind(i, plugin.getQuirkManager().getQuirk(storage.get(key)));
+			}
+		}
+		
 		checks.put(user, System.currentTimeMillis());
 		users.put(uuid, user);
 		
@@ -133,6 +150,10 @@ public class UserManager implements Manager {
 		List<Quirk> list = new ArrayList<>();
 		
 		for (Quirk quirk : plugin.getQuirkManager().getQuirks()) {
+			if (quirk instanceof FusedQuirk && !plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("AutoAssign.Fusions")) {
+				continue;
+			}
+			
 			int rarity = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt(quirk.getName().replace(" ", "") + ".AssignRarity");
 			
 			if (rarity <= 0) {

@@ -8,6 +8,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerAnimationEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -55,6 +56,23 @@ public class QuirkListener implements Listener {
 	@EventHandler
 	public void onPlayerKick(PlayerKickEvent event) {
 		plugin.getUserManager().logout(event.getPlayer().getUniqueId());
+	}
+	
+	@EventHandler
+	public void onPlayerChangeSlot(PlayerItemHeldEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		QuirkUser user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+		int slot = event.getNewSlot();
+		
+		if (user != null) {
+			Quirk quirk = user.getBind(slot);
+			if (quirk != null) {
+				plugin.getMethods().sendActionBarMessage(quirk.getChatColor() + quirk.getName(), event.getPlayer());
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -171,8 +189,6 @@ public class QuirkListener implements Listener {
 			return;
 		}
 		
-		if (quirk.hasActivationType(type)) {
-			quirk.createAbilityInstance(user, type);
-		}
+		user.createAbilityInstance(type);
 	}
 }

@@ -20,11 +20,11 @@ public class HardenRecharge extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		if (user.getStamina().get() >= user.getStamina().getMaxStamina()) {
+		if (user.getStamina().getValue() >= user.getStamina().getMaxStamina()) {
 			return false;
 		}
 		
-		user.getStamina().set(user.getStamina().get() + 1);
+		user.getStamina().setValue(user.getStamina().getValue() + 1);
 		
 		return true;
 	}

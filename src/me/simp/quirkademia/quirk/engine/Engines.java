@@ -8,6 +8,7 @@ import org.bukkit.entity.LivingEntity;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.util.ParticleEffect;
 import me.simp.quirkademia.util.StatusEffect;
 
 public class Engines extends QuirkAbility {
@@ -39,13 +40,16 @@ public class Engines extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		int diff = user.getStamina().get() - fuelConsumption;
+		int diff = user.getStamina().getValue() - fuelConsumption;
 		
 		if (diff < 0) {
 			return false;
 		}
 		
-		user.getStamina().set(diff);
+		Location display = player.getLocation().clone().add(0, 0.25, 0);
+		ParticleEffect.displayColoredParticle("2c538f", display, 6 * (reciproBurst ? reciproFactor : 1), 0.1, 0.1, 0.1);
+		
+		user.getStamina().setValue(diff);
 		
 		for (Entity e : methods.getEntitiesAroundPoint(player.getLocation().clone().add(0, 1, 0), 1.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {

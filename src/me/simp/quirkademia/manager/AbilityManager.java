@@ -137,7 +137,7 @@ public class AbilityManager implements Manager {
 			if (!ability.getPlayer().isOnline() || ability.getPlayer().isDead()) {
 				remove.add(ability);
 				continue;
-			} else if (!ability.getUser().getQuirk().equals(getAbilityInfo(ability.getClass()).getQuirk())) {
+			} else if (!ability.getUser().hasQuirk(getAbilityInfo(ability.getClass()).getQuirk())) {
 				remove.add(ability);
 				continue;
 			} else if (ability.getUser().getStatus().has(StatusEffect.QUIRK_ERASED)) {

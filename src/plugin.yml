@@ -18,3 +18,5 @@ permissions:
     default: op
     children:
       quirk.command.user.set: true
+      quirk.command.fuse: true
+      quirk.command.user.toggle.others: true

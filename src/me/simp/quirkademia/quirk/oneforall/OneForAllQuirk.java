@@ -4,19 +4,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
-import me.simp.quirkademia.quirk.Quirk;
-import me.simp.quirkademia.quirk.QuirkType;
+import me.simp.quirkademia.quirk.FusedQuirk;
 import me.simp.quirkademia.util.ActivationType;
 
-public class OneForAllQuirk extends Quirk {
+public class OneForAllQuirk extends FusedQuirk {
 
 	public OneForAllQuirk() {
-		super("One For All", QuirkType.EMITTER);
+		super("One For All");
 	}
 
 	@Override
 	public String getDescription() {
-		return "One For All is a mysterious quirk that is the result of the fusing of a power-stockpiling quirk and a quirk which can be transferred to others, making it the ultimate quirk to fight against All For One. The current holder, Izuku Midoriya, inherited the power from All Might, the world's Symbol of Peace.";
+		return "One For All is a mysterious quirk that is the result of the fusing of a power-stockpiling quirk and a quirk which can be transferred to others, making it the ultimate quirk to fight against All For One. The current holder, Izuku Midoriya, inherited the power from All Might, the world's Symbol of Peace. Recently Deku learns that the previous holder's quirks were merged with the core of One For All, and that in time he will manifest them!";
 	}
 
 	@Override

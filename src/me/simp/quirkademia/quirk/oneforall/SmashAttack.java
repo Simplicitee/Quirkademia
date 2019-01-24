@@ -40,12 +40,12 @@ public class SmashAttack extends QuirkAbility {
 			power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Power");
 			stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".StaminaUse");
 			
-			int diff = user.getStamina().get() - stamina; 
+			int diff = user.getStamina().getValue() - stamina; 
 			if (diff < 0) {
 				return;
 			}
 			
-			user.getStamina().set(diff);
+			user.getStamina().setValue(diff);
 			
 			start = player.getEyeLocation().clone();
 			loc = start.clone();

@@ -24,10 +24,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
-import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.event.QuirkAbilityDamageEntityEvent;
-import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.util.StatusEffect;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -41,28 +38,6 @@ public class GeneralMethods {
 	
 	public QuirkPlugin getPlugin() {
 		return plugin;
-	}
-	
-	public boolean canUseAbility(final QuirkAbilityInfo info, final QuirkUser user) {
-		if (info == null) {
-			return false;
-		} else if (user.isQuirkDisabled()) {
-			return false;
-		} else if (user.getStatus().has(StatusEffect.QUIRK_ERASED)) {
-			return false;
-		} else if (!info.getQuirk().equals(user.getQuirk())) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-	public boolean canUseAbility(final Class<? extends QuirkAbility> clazz, final QuirkUser user) {
-		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(clazz), user);
-	}
-	
-	public boolean canUseAbility(final String name, final QuirkUser user) {
-		return canUseAbility(plugin.getAbilityManager().getAbilityInfo(name), user);
 	}
 	
 	public void damageEntity(final LivingEntity damaged, final Player damager, final QuirkAbility ability, final double damage) {
@@ -304,6 +279,10 @@ public class GeneralMethods {
 	
 	public boolean isAir(final Block b) {
 		return b.getType() == Material.AIR || b.getType() == Material.CAVE_AIR || b.getType() == Material.VOID_AIR;
+	}
+	
+	public boolean isIce(final Block b) {
+		return b.getType() == Material.BLUE_ICE || b.getType() == Material.FROSTED_ICE || b.getType() == Material.ICE || b.getType() == Material.PACKED_ICE;
 	}
 	
 	public boolean isTransparent(final Block b) {

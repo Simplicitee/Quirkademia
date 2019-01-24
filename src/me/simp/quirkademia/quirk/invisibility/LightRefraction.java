@@ -48,11 +48,11 @@ public class LightRefraction extends QuirkAbility {
 			return false;
 		}
 		
-		if (user.getStamina().get() <= 0) {
+		if (user.getStamina().getValue() <= 0) {
 			return false;
 		}
 		
-		user.getStamina().set(user.getStamina().get() - 5);
+		user.getStamina().setValue(user.getStamina().getValue() - 5);
 		
 		Vector direction = player.getEyeLocation().getDirection().clone().normalize();
 		Location last = loc.clone();

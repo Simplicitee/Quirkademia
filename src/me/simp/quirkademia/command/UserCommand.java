@@ -10,20 +10,21 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.quirk.FusedQuirk;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class UserCommand extends QuirkCommand {
 
 	public UserCommand() {
-		super("user", "Command for anything dealing with quirkusers", "/quirk user [player [toggle | set <quirk>]]", new String[] {"user", "u", "player"});
+		super("user", "Command for anything dealing with quirkusers", "/quirk user [player [toggle | set <quirk> | bind <quirk> [slot]]]", new String[] {"user", "u", "player"});
 	}
 
 	@Override
 	public void execute(CommandSender sender, List<String> args) {
 		if (!hasPermission(sender, false)) {
 			return;
-		} else if (!acceptableLength(sender, args.size(), 0, 3)) {
+		} else if (!acceptableLength(sender, args.size(), 0, 4)) {
 			return;
 		}
 		
@@ -56,6 +57,22 @@ public class UserCommand extends QuirkCommand {
 				sendUserInfo(sender, user);
 			} else if (args.size() == 2) {
 				if (args.get(1).equalsIgnoreCase("toggle")) {
+					String from = "";
+					
+					if (sender instanceof Player) {
+						Player player = (Player) sender;
+						if (!player.getUniqueId().equals(target.getUniqueId())) {
+							if (!sender.hasPermission("quirk.command.user.toggle.others")) {
+								sender.sendMessage(ChatColor.RED + "You don't have permission to do that!");
+								return;
+							}
+							
+							from = " by " + player.getName() + " ";
+						}
+					} else {
+						from = " by CONSOLE ";
+					}
+					
 					String state = "";
 					if (user.isQuirkDisabled()) {
 						user.enableQuirk();
@@ -63,17 +80,6 @@ public class UserCommand extends QuirkCommand {
 					} else {
 						user.disableQuirk();
 						state = ChatColor.RED + "OFF";
-					}
-					
-					String from = "";
-					
-					if (sender instanceof Player) {
-						Player player = (Player) sender;
-						if (!player.getUniqueId().equals(target.getUniqueId())) {
-							from = " by " + player.getName() + " ";
-						}
-					} else {
-						from = " by CONSOLE ";
 					}
 					
 					target.sendMessage(ChatColor.YELLOW + "Your quirk has been toggled " + state + ChatColor.YELLOW + from + "!");
@@ -102,6 +108,58 @@ public class UserCommand extends QuirkCommand {
 					} else {
 						target.sendMessage(ChatColor.YELLOW + "CONSOLE has set your quirk to " + quirk.getChatColor() + quirk.getName());
 					}
+				} else if (args.get(1).equalsIgnoreCase("bind")) {
+					Quirk quirk = plugin.getQuirkManager().getQuirk(args.get(2).replace('-', ' ').replace('_', ' '));
+					int slot = target.getInventory().getHeldItemSlot();
+					
+					if (!(user.getQuirk() instanceof FusedQuirk)) {
+						sender.sendMessage(ChatColor.RED + "The user's quirk must be a fusion of other quirks to use binds!");
+						return;
+					} else if (quirk == null) {
+						sender.sendMessage(ChatColor.RED + "Unknown quirk!");
+						return;
+					} else if (!((FusedQuirk) user.getQuirk()).getQuirks().contains(quirk)) {
+						sender.sendMessage(ChatColor.RED + "Quirk isn't part of the user's fusion!");
+						return;
+					} else if (slot < 0 || slot > 9) {
+						sender.sendMessage(ChatColor.RED + "Slot must be between 0 and 9 (inclusive)");
+						return;
+					}
+					
+					user.setBind(slot, quirk);
+					target.sendMessage(sender.getName() + ChatColor.YELLOW + " has set your slot " + (slot + 1) + " to use " + quirk.getName());
+					if (sender instanceof Player) {
+						if (!target.equals((Player) sender)) {
+							sender.sendMessage(ChatColor.YELLOW + "You have set " + target.getName() + "'s slot " + (slot + 1) + " bind to " + quirk.getName());
+						}
+					}
+				}
+			} else if (args.size() == 4) {
+				if (args.get(1).equalsIgnoreCase("bind")) {
+					Quirk quirk = plugin.getQuirkManager().getQuirk(args.get(2).replace('-', ' ').replace('_', ' '));
+					int slot = Integer.parseInt(args.get(3));
+					
+					if (!(user.getQuirk() instanceof FusedQuirk)) {
+						sender.sendMessage(ChatColor.RED + "The user's quirk must be a fusion of other quirks to use binds!");
+						return;
+					} else if (quirk == null) {
+						sender.sendMessage(ChatColor.RED + "Unknown quirk!");
+						return;
+					} else if (!((FusedQuirk) user.getQuirk()).getQuirks().contains(quirk)) {
+						sender.sendMessage(ChatColor.RED + "Quirk isn't part of the user's fusion!");
+						return;
+					} else if (slot < 0 || slot > 9) {
+						sender.sendMessage(ChatColor.RED + "Slot must be between 0 and 9 (inclusive)");
+						return;
+					}
+					
+					user.setBind(slot - 1, quirk);
+					target.sendMessage(sender.getName() + ChatColor.YELLOW + " has set your slot " + slot + " to use " + quirk.getName());
+					if (sender instanceof Player) {
+						if (!target.equals((Player) sender)) {
+							sender.sendMessage(ChatColor.YELLOW + "You have set " + target.getName() + "'s slot " + slot + " bind to " + quirk.getName());
+						}
+					}
 				}
 			}
 		}
@@ -128,6 +186,11 @@ public class UserCommand extends QuirkCommand {
 				sender.sendMessage(ChatColor.YELLOW + "-- " + user.getQuirk().getChatColor() + info.getName());
 			}
 		}
+		
+		if (quirk instanceof FusedQuirk) {
+			FusedQuirk fq = (FusedQuirk) quirk;
+			sender.sendMessage(ChatColor.YELLOW + "Fused Quirks: " + ChatColor.WHITE + fq.getFusionList());
+		}
 	}
 
 	@Override
@@ -139,11 +202,13 @@ public class UserCommand extends QuirkCommand {
 				completions.add(player.getName());
 			}
 		} else if (args.size() == 2) {
-			completions.addAll(Arrays.asList("set", "toggle"));
-		} else if (args.size() == 3 && args.get(1).equalsIgnoreCase("set")) {
+			completions.addAll(Arrays.asList("set", "toggle", "bind"));
+		} else if (args.size() == 3 && (args.get(1).equalsIgnoreCase("set") || args.get(1).equalsIgnoreCase("bind"))) {
 			for (Quirk quirk : plugin.getQuirkManager().getQuirks()) {
 				completions.add(quirk.getName().replace(" ", "-").toLowerCase());
 			}
+		} else if (args.size() == 4) {
+			completions.addAll(Arrays.asList("123456789".split("")));
 		}
 		
 		return completions;

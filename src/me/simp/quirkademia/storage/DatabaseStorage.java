@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.configuration.ConfigType;
+import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class DatabaseStorage implements Storage {
@@ -29,7 +30,7 @@ public class DatabaseStorage implements Storage {
 		this.connection = new DatabaseConnection(plugin, type);
 		
 		if (!connection.tableExists("players")) {
-			String query = databaseDatatypes("CREATE TABLE `players` (`uuid` %text%(36) NOT NULL, `quirk` %text%(255));");
+			String query = databaseDatatypes("CREATE TABLE `players` (`uuid` %text%(36) NOT NULL, `quirk` %text%(255), `Slot1` %text%(255), `Slot2` %text%(255), `Slot3` %text%(255), `Slot4` %text%(255), `Slot5` %text%(255), `Slot6` %text%(255), `Slot7` %text%(255), `Slot8` %text%(255), `Slot9` %text%(255));");
 			connection.modifyQuery(query, false);
 		}
 		
@@ -57,6 +58,17 @@ public class DatabaseStorage implements Storage {
 		
 		connection.modifyQuery("UPDATE players SET quirk = '" + quirk + "' WHERE uuid = '" + uuid + "'", false);
 		
+		for (int i = 1; i < 10; i++) {
+			Quirk q = user.getBind(i - 1);
+			String name = "null";
+			
+			if (q != null) {
+				name = q.getName();
+			}
+			
+			connection.modifyQuery("UPDATE players SET Slot" + i + " = '" + name + "'", false);
+		}
+		
 		if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
 			for (String name : user.getCooldowns().keySet()) {
 				int id = getCooldownID(name);
@@ -73,9 +85,16 @@ public class DatabaseStorage implements Storage {
 		
 		try {
 			if (!rs.next()) {
-				connection.modifyQuery("INSERT INTO players (uuid, quirk) VALUES ('" + uuid.toString() + "', 'null')", true);
+				connection.modifyQuery("INSERT INTO players (uuid, quirk, Slot1, Slot2, Slot3, Slot4, Slot5, Slot6, Slot7, Slot8, Slot9) VALUES ('" + uuid.toString() + "', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null', 'null')", true);
 			} else {
 				storage.put("quirk", rs.getString("quirk"));
+				
+				for (int i = 1; i < 10; i++) {
+					String name = rs.getString("Slot" + i);
+					if (name != null && !name.equals("null")) {
+						storage.put("Slot" + i, name);
+					}
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

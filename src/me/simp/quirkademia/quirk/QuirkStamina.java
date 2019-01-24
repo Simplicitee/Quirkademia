@@ -28,7 +28,7 @@ public class QuirkStamina {
 		this.recharge = user.getQuirk().getStaminaRecharge();
 		this.bar = new StaminaBar(this);
 		
-		set(maxStamina);
+		setValue(maxStamina);
 	}
 	
 	public QuirkUser getUser() {
@@ -55,11 +55,11 @@ public class QuirkStamina {
 		return bar;
 	}
 	
-	public int get() {
+	public int getValue() {
 		return stamina;
 	}
 	
-	public QuirkStamina set(int stamina) {
+	public QuirkStamina setValue(int stamina) {
 		if (stamina > maxStamina) {
 			stamina = maxStamina;
 		} else if (stamina < 0) {
@@ -89,8 +89,8 @@ public class QuirkStamina {
 		}
 		
 		public void update() {
-			bar.setTitle(stamina.getName() + " [" + ChatColor.GREEN + stamina.get() + ChatColor.WHITE + "/" + ChatColor.RED + stamina.getMaxStamina() + ChatColor.WHITE + "]");
-			bar.setProgress(((double) stamina.get()) / stamina.getMaxStamina());
+			bar.setTitle(stamina.getName() + " [" + ChatColor.GREEN + stamina.getValue() + ChatColor.WHITE + "/" + stamina.getMaxStamina() + ChatColor.WHITE + "]");
+			bar.setProgress(((double) stamina.getValue()) / stamina.getMaxStamina());
 		}
 		
 		public void destroy() {

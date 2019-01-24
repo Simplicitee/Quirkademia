@@ -76,12 +76,12 @@ public class FullCowling extends QuirkAbility {
 				return false;
 			}
 			
-			int diff = user.getStamina().get() - 2;
+			int diff = user.getStamina().getValue() - 2;
 			if (diff < 0) {
 				return false;
 			}
 			
-			user.getStamina().set(diff);
+			user.getStamina().setValue(diff);
 			
 			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, strength);
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);

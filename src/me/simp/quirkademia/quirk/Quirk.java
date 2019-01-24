@@ -1,6 +1,5 @@
 package me.simp.quirkademia.quirk;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.QuirkPlugin;
-import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.ActivationType;
@@ -59,15 +57,26 @@ public abstract class Quirk implements IQuirk {
 	
 	@Override
 	public String getStaminaTitle() {
-		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
+		String title = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
+		
+		if (title == null) {
+			title = getName();
+		}
+		
+		return title;
 	}
 
 	@Override
 	public BarColor getStaminaColor() {
-		BarColor color = BarColor.valueOf(plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color").toUpperCase());
+		String value = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color");
+		BarColor color = BarColor.WHITE;
 		
-		if (color == null) {
-			color = BarColor.WHITE;
+		if (value == null) {
+			if (this instanceof FusedQuirk) {
+				color = BarColor.PURPLE;
+			}
+		} else {
+			color = BarColor.valueOf(value.toUpperCase());
 		}
 		
 		return color;
@@ -75,12 +84,24 @@ public abstract class Quirk implements IQuirk {
 
 	@Override
 	public int getStaminaMax() {
-		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
+		int max = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
+		
+		if (max == 0) {
+			max = 1000;
+		}
+		
+		return max;
 	}
 
 	@Override
 	public int getStaminaRecharge() {
-		return plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
+		int recharge = 50;
+		
+		if (plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).contains("Quirks." + name.replace(" ", "") + ".Stamina.Recharge")) {
+			recharge = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
+		}
+		
+		return recharge;
 	}
 	
 	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {
@@ -89,25 +110,6 @@ public abstract class Quirk implements IQuirk {
 	
 	public boolean hasActivationType(ActivationType type) {
 		return abilities.containsKey(type);
-	}
-	
-	public QuirkAbility createAbilityInstance(QuirkUser user, ActivationType type) {
-		if (!hasActivationType(type)) {
-			return null;
-		}
-		
-		Class<? extends QuirkAbility> ability = abilities.get(type).getProvider();
-		
-		if (!plugin.getMethods().canUseAbility(ability, user)) {
-			return null;
-		}
-		
-		try {
-			Constructor<?> construct = ability.getConstructor(QuirkUser.class);
-			return (QuirkAbility) construct.newInstance(user);
-		} catch (Exception e) {
-			return null;
-		}
 	}
 	
 	public abstract Set<QuirkAbilityInfo> registerAbilities();

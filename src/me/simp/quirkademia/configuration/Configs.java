@@ -183,6 +183,16 @@ public class Configs {
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Cooldown", 8000);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Radius", 4);
 		
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Range", 17);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Damage", 2);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Cooldown", 3000);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Radius", 0.4);
+		
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Range", 2);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Damage", 0.5);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Cooldown", 8000);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Radius", 4);
+		
 		config.addDefault("Abilities.HalfColdHalfHot.Freeze.Duration", 20000);
 		config.addDefault("Abilities.HalfColdHalfHot.Freeze.MaxPower", 5);
 		
@@ -212,9 +222,14 @@ public class Configs {
 		config.addDefault("Storage.MySQL.user", "root");
 		
 		config.addDefault("AutoAssign.Enabled", true);
+		config.addDefault("AutoAssign.Fusions", false);
 		
 		c.save();
 		configs.put(ConfigType.PROPERTIES, c);
+		
+		c = new Config(ConfigType.FUSIONS.getPath());
+		//nothing to default here, just need to create the file and config
+		configs.put(ConfigType.FUSIONS, c);
 	}
 	
 	public Config get(ConfigType type) {

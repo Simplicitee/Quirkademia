@@ -48,13 +48,13 @@ public class ExplosionBlast extends QuirkAbility {
 				stamina += 20 * player.getVelocity().length();
 			}
 			
-			int diff = user.getStamina().get() - stamina;
+			int diff = user.getStamina().getValue() - stamina;
 			
 			if (diff < 0) {
 				return;
 			}
 			
-			user.getStamina().set(diff);
+			user.getStamina().setValue(diff);
 			
 			double originPower = power;
 			

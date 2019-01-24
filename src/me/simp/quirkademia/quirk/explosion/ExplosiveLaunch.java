@@ -29,13 +29,13 @@ public class ExplosiveLaunch extends QuirkAbility {
 		power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.Explosion.ExplosiveLaunch.Power");
 		stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Explosion.ExplosiveLaunch.StaminaUse");
 		
-		int diff = user.getStamina().get() - stamina;
+		int diff = user.getStamina().getValue() - stamina;
 		
 		if (diff < 0) {
 			return;
 		}
 		
-		user.getStamina().set(diff);
+		user.getStamina().setValue(diff);
 		
 		manager.start(this);
 	}

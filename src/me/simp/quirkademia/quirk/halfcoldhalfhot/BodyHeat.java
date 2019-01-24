@@ -3,6 +3,7 @@ package me.simp.quirkademia.quirk.halfcoldhalfhot;
 import java.util.LinkedList;
 
 import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -57,7 +58,8 @@ public class BodyHeat extends QuirkAbility {
 			
 			user.getStatus().remove(StatusEffect.INCREASED_SPEED);
 		} else {
-			user.getStatus().add(StatusEffect.INCREASED_SPEED, 1);
+			int power = methods.isIce(player.getLocation().getBlock().getRelative(BlockFace.DOWN)) ? 2 : 1;
+			user.getStatus().add(StatusEffect.INCREASED_SPEED, power);
 		}
 		
 		if (temperature == 0) {
@@ -66,7 +68,7 @@ public class BodyHeat extends QuirkAbility {
 			player.setFireTicks(20);
 		}
 		
-		user.getStamina().set(temperature);
+		user.getStamina().setValue(temperature);
 		return true;
 	}
 

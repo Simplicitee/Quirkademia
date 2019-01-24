@@ -14,13 +14,13 @@ public class BlastRushTurbo extends QuirkAbility {
 		super(user);
 		
 		int stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Explosion.BlastRushTurbo.StaminaUse");
-		int diff = user.getStamina().get() - stamina;
+		int diff = user.getStamina().getValue() - stamina;
 		
 		if (diff < 0) {
 			return;
 		}
 		
-		user.getStamina().set(diff);
+		user.getStamina().setValue(diff);
 		
 		Vector direction = player.getEyeLocation().getDirection().clone().normalize();
 		double power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.Explosion.BlastRushTurbo.Power");
