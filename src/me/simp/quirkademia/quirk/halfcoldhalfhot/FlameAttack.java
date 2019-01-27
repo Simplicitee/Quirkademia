@@ -55,7 +55,14 @@ public class FlameAttack extends QuirkAbility {
 		damage = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".Damage");
 		radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".Radius");
 		
-		passive.setTemperature(passive.getTemperature() + 5);
+		int diff = passive.getTemperature() + 5;
+		if (diff > passive.getMaxTemperature()) {
+			return;
+		}
+		
+		passive.setTemperature(diff);
+		
+		user.addCooldown("flame " + type.toString(), cooldown);
 		
 		manager.start(this);
 	}
@@ -83,7 +90,6 @@ public class FlameAttack extends QuirkAbility {
 
 	@Override
 	public void onRemove() {
-		user.addCooldown("flame " + type.toString(), cooldown);
 	}
 
 	private boolean progressBlast() {

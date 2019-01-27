@@ -59,6 +59,11 @@ public class BodyHeat extends QuirkAbility {
 			user.getStatus().remove(StatusEffect.INCREASED_SPEED);
 		} else {
 			int power = methods.isIce(player.getLocation().getBlock().getRelative(BlockFace.DOWN)) ? 2 : 1;
+			
+			if (user.getStatus().has(StatusEffect.INCREASED_SPEED) && user.getStatus().getPower(StatusEffect.INCREASED_SPEED) > power) {
+				user.getStatus().remove(StatusEffect.INCREASED_SPEED);
+			}
+			
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, power);
 		}
 		
@@ -115,6 +120,10 @@ public class BodyHeat extends QuirkAbility {
 	
 	public int getTemperature() {
 		return temperature;
+	}
+	
+	public int getMaxTemperature() {
+		return max;
 	}
 
 	public static enum IcyHotAbility {

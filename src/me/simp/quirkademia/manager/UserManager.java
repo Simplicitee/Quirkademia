@@ -96,34 +96,41 @@ public class UserManager implements Manager {
 			return users.get(uuid);
 		}
 		
+		QuirkUser user;
 		Map<String, String> storage = QuirkPlugin.get().getStorageManager().get().load(uuid);
 		
 		if (storage.isEmpty()) {
-			return new QuirkUser(uuid, null, new HashMap<>());
-		}
-		
-		Quirk quirk = plugin.getQuirkManager().getQuirk(storage.get("quirk"));
-		
-		if (quirk == null && plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("AutoAssign.Enabled")) {
-			quirk = randomAssign();
-		}
-		
-		Map<String, Cooldown> cooldowns = new HashMap<>();
-		
-		if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
-			for (String key : storage.keySet()) {
-				if (key.startsWith("cooldown.")) {
-					cooldowns.put(key.substring(9), new Cooldown(System.currentTimeMillis(), Long.valueOf(storage.get(key))));
+			Quirk quirk = null;
+			
+			if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("AutoAssign.Enabled")) {
+				quirk = randomAssign();
+			}
+			
+			user = new QuirkUser(uuid, quirk, new HashMap<>());
+		} else {
+			Quirk quirk = plugin.getQuirkManager().getQuirk(storage.get("quirk"));
+			
+			if (quirk == null && plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("AutoAssign.Enabled")) {
+				quirk = randomAssign();
+			}
+			
+			Map<String, Cooldown> cooldowns = new HashMap<>();
+			
+			if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
+				for (String key : storage.keySet()) {
+					if (key.startsWith("cooldown.")) {
+						cooldowns.put(key.substring(9), new Cooldown(System.currentTimeMillis(), Long.valueOf(storage.get(key))));
+					}
 				}
 			}
-		}
-		
-		QuirkUser user = new QuirkUser(uuid, quirk, cooldowns);
-		
-		for (int i = 0; i < 9; i++) {
-			String key = "Slot" + (i + 1);
-			if (storage.containsKey(key)) {
-				user.setBind(i, plugin.getQuirkManager().getQuirk(storage.get(key)));
+			
+			user = new QuirkUser(uuid, quirk, cooldowns);
+			
+			for (int i = 0; i < 9; i++) {
+				String key = "Slot" + (i + 1);
+				if (storage.containsKey(key)) {
+					user.setBind(i, plugin.getQuirkManager().getQuirk(storage.get(key)));
+				}
 			}
 		}
 		
@@ -139,7 +146,10 @@ public class UserManager implements Manager {
 		if (user != null) {
 			QuirkPlugin.get().getStorageManager().get().store(user);
 			
-			user.getStamina().getBar().destroy();
+			if (user.getStamina() != null) {
+				user.getStamina().getBar().destroy();
+			}
+			
 			users.remove(uuid);
 			checks.remove(user);
 		}

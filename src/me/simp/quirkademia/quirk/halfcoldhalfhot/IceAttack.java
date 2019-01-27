@@ -127,22 +127,26 @@ public class IceAttack extends QuirkAbility {
 		
 		loc.add(direction);
 		
-		/*
 		Block top = loc.getBlock();
 		int j = 0;
 		
-		while (methods.isAir(top) && j < 2) {
-			top = top.getRelative(BlockFace.DOWN);
-			j++;
+		if (methods.isAir(top)) {
+			while (methods.isAir(top) && j < 2) {
+				top = top.getRelative(BlockFace.DOWN);
+				j++;
+			}
+		} else {
+			while ((top.getType().isSolid() && top.getType() != Material.BLUE_ICE) && j < 2) {
+				top = top.getRelative(BlockFace.UP);
+				j++;
+			}
 		}
 		
-		while (!methods.isAir(top.getRelative(BlockFace.UP)) && j > -1) {
-			top = top.getRelative(BlockFace.UP);
-			j--;
+		if (top.getRelative(BlockFace.UP).getType().isSolid() && top.getRelative(BlockFace.UP).getType() != Material.BLUE_ICE) {
+			return false;
 		}
 		
-		loc = top.getLocation().clone();
-		*/
+		loc.add(0, top.getY() - loc.getBlockY(), 0);
 		
 		for (Entity e : methods.getEntitiesAroundPoint(loc, radius)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
@@ -158,7 +162,7 @@ public class IceAttack extends QuirkAbility {
 			}
 		}
 		
-		ParticleEffect.displayColoredParticle("caffff", loc, 8, radius/2, radius/2, radius/2);
+		ParticleEffect.displayColoredParticle("caffff", loc, 8, radius/1.5, radius/1.5, radius/1.5);
 		
 		for (Block b : methods.getBlocksAroundPoint(loc, (int) Math.floor(radius))) {
 			if (Math.random() < 0.42) {
@@ -176,6 +180,45 @@ public class IceAttack extends QuirkAbility {
 	}
 	
 	public boolean progressWall() {
+		if (start.distance(loc) > range) {
+			return false;
+		}
+		
+		loc.add(direction);
+		
+		for (double i = -radius; i < radius; i += 0.2) {
+			Location display = loc.clone();
+			Vector ortho = methods.getOrthogonalVector(direction, Math.PI/2).multiply(i);
+			
+			display.add(ortho);
+			
+			Block top = display.getBlock();
+			int j = 0;
+			
+			if (methods.isAir(top)) {
+				while (methods.isAir(top) && j < 2) {
+					top = top.getRelative(BlockFace.DOWN);
+					j++;
+				}
+			} else {
+				while ((top.getType().isSolid() && top.getType() != Material.BLUE_ICE) && j < 2) {
+					top = top.getRelative(BlockFace.UP);
+					j++;
+				}
+			}
+			
+			display.setY(display.getY() + (top.getY() - display.getBlockY()));
+			
+			for (int y = 0; y < radius; y += 1) {
+				display.add(0, 1, 0);
+				
+				if (methods.isAir(display.getBlock()) || methods.isWater(display.getBlock())) {
+					plugin.getRegenManager().regenerator(display.getBlock(), Material.BLUE_ICE.createBlockData(), this, 40000);
+				}
+			}
+		}
+		
+		radius += 0.5;
 		return true;
 	}
 }
