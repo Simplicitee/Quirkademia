@@ -19,7 +19,6 @@ import me.simp.quirkademia.quirk.FusedQuirk;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
 import me.simp.quirkademia.quirk.engine.EngineQuirk;
 import me.simp.quirkademia.quirk.explosion.ExplosionQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
@@ -54,7 +53,6 @@ public class QuirkManager {
 	
 	private void init() {
 		register(plugin, new FrogQuirk());
-		register(plugin, new ElectrificationQuirk());
 		register(plugin, new HardeningQuirk());
 		register(plugin, new InvisibilityQuirk());
 		register(plugin, new ExplosionQuirk());

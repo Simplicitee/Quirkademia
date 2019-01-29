@@ -40,11 +40,11 @@ public class Configs {
 		config.addDefault("Quirks.Frog.Stamina.Recharge", 0);
 		config.addDefault("Quirks.Frog.AssignChance", 4);
 		
-		config.addDefault("Quirks.Electrification.Stamina.Title", "Static Charge");
+		/*config.addDefault("Quirks.Electrification.Stamina.Title", "Static Charge");
 		config.addDefault("Quirks.Electrification.Stamina.Color", "YELLOW");
 		config.addDefault("Quirks.Electrification.Stamina.Max", 200);
 		config.addDefault("Quirks.Electrification.Stamina.Recharge", 20);
-		config.addDefault("Quirks.Electrification.AssignChance", 10);
+		config.addDefault("Quirks.Electrification.AssignChance", 10);*/
 		
 		config.addDefault("Quirks.Hardening.Stamina.Title", "Hardness");
 		config.addDefault("Quirks.Hardening.Stamina.Color", "RED");
@@ -64,11 +64,11 @@ public class Configs {
 		config.addDefault("Quirks.Explosion.Stamina.Recharge", 35);
 		config.addDefault("Quirks.Explosion.AssignChance", 1);
 		
-		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
+		/*config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
 		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
 		config.addDefault("Quirks.Creation.Stamina.Max", 500);
 		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
-		config.addDefault("Quirks.Creation.AssignChance", 4);
+		config.addDefault("Quirks.Creation.AssignChance", 4);*/
 		
 		config.addDefault("Quirks.Engine.Stamina.Title", "Fuel");
 		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
@@ -82,7 +82,7 @@ public class Configs {
 		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Recharge", 0);
 		config.addDefault("Quirks.HalfColdHalfHot.AssignChance", 1);
 		
-		config.addDefault("Quirks.NavelLaser.Stamina.Title", "Laser");
+		/*config.addDefault("Quirks.NavelLaser.Stamina.Title", "Laser");
 		config.addDefault("Quirks.NavelLaser.Stamina.Color", "BLUE");
 		config.addDefault("Quirks.NavelLaser.Stamina.Max", 20);
 		config.addDefault("Quirks.NavelLaser.Stamina.Recharge", 0);
@@ -98,7 +98,7 @@ public class Configs {
 		config.addDefault("Quirks.Acid.Stamina.Color", "PINK");
 		config.addDefault("Quirks.Acid.Stamina.Max", 200);
 		config.addDefault("Quirks.Acid.Stamina.Recharge", 5);
-		config.addDefault("Quirks.Acid.AssignChance", 3);
+		config.addDefault("Quirks.Acid.AssignChance", 3);*/
 		
 		c.save();
 		configs.put(ConfigType.QUIRKS, c);
