@@ -104,6 +104,10 @@ public abstract class Quirk implements IQuirk {
 		return recharge;
 	}
 	
+	public String getDisplayName() {
+		return getChatColor() + getName();
+	}
+	
 	public Map<ActivationType, QuirkAbilityInfo> getAbilities() {
 		return new HashMap<>(abilities);
 	}

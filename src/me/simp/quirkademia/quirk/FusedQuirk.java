@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
+
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 
 public class FusedQuirk extends Quirk {
@@ -37,15 +39,22 @@ public class FusedQuirk extends Quirk {
 	
 	public String getFusionList() {
 		StringBuilder builder = new StringBuilder();
+		
+		if (quirks.isEmpty()) {
+			return "No quirks present!";
+		} else if (quirks.size() == 1) {
+			return quirks.iterator().next().getDisplayName();
+		}
+		
 		Iterator<Quirk> iter = quirks.iterator();
 		
 		while (iter.hasNext()) {
 			Quirk quirk = iter.next();
 			
 			if (!iter.hasNext()) {
-				builder.append("and " + quirk.getName());
+				builder.append(ChatColor.WHITE + "and " + quirk.getDisplayName());
 			} else {
-				builder.append(quirk.getName() + ", ");
+				builder.append(quirk.getDisplayName() + ChatColor.WHITE + ", ");
 			}
 		}
 		
