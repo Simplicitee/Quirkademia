@@ -27,9 +27,8 @@ import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
 import me.simp.quirkademia.quirk.invisibility.InvisibilityQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 
-public class QuirkManager {
-
-	private QuirkPlugin plugin;
+public class QuirkManager extends Manager {
+	
 	private Map<Class<? extends Quirk>, Quirk> classMap;
 	private Map<String, Quirk> nameMap;
 	private Map<QuirkType, Set<Quirk>> typeMap;
@@ -37,18 +36,16 @@ public class QuirkManager {
 	private Map<String, FusedQuirk> fusions;
 	
 	public QuirkManager(QuirkPlugin plugin) {
-		this.plugin = plugin;
+		super(plugin);
+		
 		this.classMap = new HashMap<>();
 		this.nameMap = new HashMap<>();
 		this.typeMap = new HashMap<>();
 		this.plugins = new HashMap<>();
 		this.fusions = new HashMap<>();
+		
 		this.init();
 		this.loadFusions();
-	}
-	
-	public QuirkPlugin getPlugin() {
-		return plugin;
 	}
 	
 	private void init() {
@@ -230,4 +227,7 @@ public class QuirkManager {
 		
 		return false;
 	}
+
+	@Override
+	public void run() {}
 }

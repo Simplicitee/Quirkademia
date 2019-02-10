@@ -2,29 +2,34 @@ package me.simp.quirkademia.manager;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.FluidLevelChangeEvent;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.BlockRegen;
 
-public class RegenManager implements Manager {
+public class RegenManager extends Manager {
 
 	private QuirkPlugin plugin;
 	private Map<Block, PriorityQueue<BlockRegen>> blocks;
 	
 	public RegenManager(QuirkPlugin plugin) {
+		super(plugin);
+		
 		this.plugin = plugin;
 		this.blocks = new HashMap<>();
-		
-		plugin.getManagersRunnable().registerManager(this);
 	}
 
 	@Override
@@ -43,6 +48,32 @@ public class RegenManager implements Manager {
 				}
 			}
 		}
+	}
+
+	public void close() {
+		for (Block b : blocks.keySet()) {
+			PriorityQueue<BlockRegen> queue = blocks.get(b);
+			
+			while (!queue.isEmpty()) {
+				queue.poll().revert();
+			}
+		}
+	}
+	
+	public BlockRegen getBlockRegen(Block block) {
+		if (blocks.containsKey(block)) {
+			return blocks.get(block).peek();
+		}
+		
+		return null;
+	}
+	
+	public Queue<BlockRegen> getAllBlockRegensAtBlock(Block block) {
+		if (blocks.containsKey(block)) {
+			return new LinkedList<>(blocks.get(block));
+		}
+		
+		return null;
 	}
 	
 	public BlockRegen regenerator(Block block, Material newType, QuirkAbility creator) {
@@ -94,13 +125,35 @@ public class RegenManager implements Manager {
 		regen.revert();
 	}
 	
-	public void close() {
-		for (Block b : blocks.keySet()) {
-			PriorityQueue<BlockRegen> queue = blocks.get(b);
-			
-			while (!queue.isEmpty()) {
-				queue.poll().revert();
-			}
+	@EventHandler
+	public void blockFromTo(BlockFromToEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		BlockRegen regenFrom = getBlockRegen(event.getBlock());
+		BlockRegen regenTo = getBlockRegen(event.getToBlock());
+		
+		if (regenFrom != null) {
+			event.setCancelled(regenFrom.canFlowOut());
+		}
+		
+		if (!event.isCancelled() && regenTo != null) {
+			event.setCancelled(regenTo.canFlowOut());
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void fluidLevelChange(FluidLevelChangeEvent event) {
+		if (event.isCancelled()) {
+			return;
+		}
+		
+		BlockRegen regen = getBlockRegen(event.getBlock());
+		
+		if (regen != null) {
+			event.setCancelled(regen.canAffectLevels());
 		}
 	}
 }

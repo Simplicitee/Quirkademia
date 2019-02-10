@@ -13,6 +13,7 @@ public class BlockRegen {
 	private BlockData newData;
 	private QuirkAbility creator;
 	private long regenTime, createTime;
+	private boolean flowOut, flowIn, affectLevels;
 	
 	public BlockRegen(Block block, BlockData newData, QuirkAbility creator, long regenTime) {
 		this(block, block.getState(), newData, creator, regenTime);
@@ -25,6 +26,9 @@ public class BlockRegen {
 		this.creator = creator;
 		this.regenTime = regenTime;
 		this.createTime = System.currentTimeMillis();
+		this.flowOut = false;
+		this.flowIn = false;
+		this.affectLevels = false;
 		
 		this.block.setBlockData(newData);
 	}
@@ -53,7 +57,34 @@ public class BlockRegen {
 		return createTime;
 	}
 	
+	public boolean canAffectLevels() {
+		return affectLevels;
+	}
+	
+	public boolean canFlowIn() {
+		return flowIn;
+	}
+	
+	public boolean canFlowOut() {
+		return flowOut;
+	}
+	
 	public void revert() {
 		block.setType(old.getType());
+	}
+	
+	public BlockRegen setAffectLevels(boolean affectLevels) {
+		this.affectLevels = affectLevels;
+		return this;
+	}
+	
+	public BlockRegen setFlowIn(boolean flowIn) {
+		this.flowIn = flowIn;
+		return this;
+	}
+	
+	public BlockRegen setFlowOut(boolean flowOut) {
+		this.flowOut = flowOut;
+		return this;
 	}
 }

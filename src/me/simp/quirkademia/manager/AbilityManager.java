@@ -16,26 +16,20 @@ import me.simp.quirkademia.event.QuirkAbilityEvent.QuirkAbilityEventType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.StatusEffect;
 
-public class AbilityManager implements Manager {
+public class AbilityManager extends Manager {
 
-	private QuirkPlugin plugin;
 	private Set<QuirkAbility> instances;
 	private Map<QuirkUser, Map<Class<? extends QuirkAbility>, PriorityQueue<QuirkAbility>>> userInstances;
 	private Map<Class<? extends QuirkAbility>, QuirkAbilityInfo> abilityInfos;
 	private Map<String, QuirkAbilityInfo> abilityInfosNames;
 	
 	public AbilityManager(QuirkPlugin plugin) {
-		this.plugin = plugin;
+		super(plugin);
+		
 		this.instances = new HashSet<>();
 		this.userInstances = new HashMap<>();
 		this.abilityInfos = new HashMap<>();
 		this.abilityInfosNames = new HashMap<>();
-		
-		this.plugin.getManagersRunnable().registerManager(this);
-	}
-	
-	public QuirkPlugin getPlugin() {
-		return plugin;
 	}
 	
 	/**

@@ -24,18 +24,16 @@ import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.Cooldown;
 import me.simp.quirkademia.util.StatusEffect;
 
-public class UserManager implements Manager {
+public class UserManager extends Manager {
 	
-	private QuirkPlugin plugin;
 	private Map<QuirkUser, Long> checks;
 	private Map<UUID, QuirkUser> users;
 	
 	public UserManager(QuirkPlugin plugin) {
-		this.plugin = plugin;
+		super(plugin);
+		
 		this.checks = new HashMap<>();
 		this.users = new HashMap<>();
-		
-		plugin.getManagersRunnable().registerManager(this);
 	}
 	
 	@Override
@@ -81,10 +79,6 @@ public class UserManager implements Manager {
 	
 	public Set<QuirkUser> getOnlineUsers() {
 		return new HashSet<>(users.values());
-	}
-	
-	public QuirkPlugin getPlugin() {
-		return plugin;
 	}
 	
 	public QuirkUser getUser(UUID uuid) {
