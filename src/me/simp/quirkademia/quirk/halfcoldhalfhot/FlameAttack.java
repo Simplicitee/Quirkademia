@@ -7,13 +7,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
+import me.simp.quirkademia.ability.Collidable;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.halfcoldhalfhot.BodyHeat.IcyHotAbility;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class FlameAttack extends QuirkAbility {
+public class FlameAttack extends QuirkAbility implements Collidable {
 	
 	private BodyHeat passive;
 	private IcyHotAbility type;
@@ -150,6 +151,16 @@ public class FlameAttack extends QuirkAbility {
 			return false;
 		}
 		
+		return true;
+	}
+
+	@Override
+	public double getRadius() {
+		return radius;
+	}
+
+	@Override
+	public boolean onCollision(QuirkAbility other) {
 		return true;
 	}
 }

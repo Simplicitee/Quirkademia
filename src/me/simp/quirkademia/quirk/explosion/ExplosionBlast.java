@@ -5,13 +5,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
+import me.simp.quirkademia.ability.Collidable;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.explosion.ExplosionTracker.ExplosionType;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class ExplosionBlast extends QuirkAbility {
+public class ExplosionBlast extends QuirkAbility implements Collidable {
 	
 	private ExplosionType type;
 	private Location loc, start;
@@ -119,6 +120,18 @@ public class ExplosionBlast extends QuirkAbility {
 	@Override
 	public void onRemove() {
 		
+	}
+
+	@Override
+	public double getRadius() {
+		return radius + 1;
+	}
+
+	@Override
+	public boolean onCollision(QuirkAbility other) {
+		manager.remove(other);
+		loc.getWorld().createExplosion(loc, (float) radius * 3, true);
+		return true;
 	}
 
 }

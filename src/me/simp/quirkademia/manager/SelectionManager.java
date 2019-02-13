@@ -8,14 +8,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.metadata.Metadatable;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.quirk.QuirkUser;
 
+/**
+ * Tracks the selected entity / block when a user right clicks them
+ * @author simp
+ *
+ */
 public class SelectionManager extends Manager {
 
-	private Map<QuirkUser, Selection<? extends Metadatable>> selections;
+	private Map<QuirkUser, Selection<?>> selections;
 	
 	public SelectionManager(QuirkPlugin plugin) {
 		super(plugin);
@@ -35,9 +39,13 @@ public class SelectionManager extends Manager {
 		}
 	}
 	
-	public Selection<? extends Metadatable> getSelection(QuirkUser user) {
+	public Selection<?> getSelection(QuirkUser user) {
 		if (selections.containsKey(user)) {
-			return selections.get(user);
+			Selection<?> target = selections.get(user);
+			
+			selections.remove(user);
+			
+			return target;
 		}
 		
 		return null;
@@ -45,9 +53,11 @@ public class SelectionManager extends Manager {
 	
 	public Entity getSelectedEntity(QuirkUser user) {
 		if (selections.containsKey(user)) {
-			Selection<?> target = selections.get(user);
+			Object target = selections.get(user).getTarget();
 			
 			if (target instanceof Entity) {
+				selections.remove(user);
+				
 				return (Entity) target;
 			}
 		}
@@ -57,9 +67,11 @@ public class SelectionManager extends Manager {
 	
 	public Block getSelectedBlock(QuirkUser user) {
 		if (selections.containsKey(user)) {
-			Object target = selections.get(user);
+			Object target = selections.get(user).getTarget();
 			
 			if (target instanceof Block) {
+				selections.remove(user);
+				
 				return (Block) target;
 			}
 		}
@@ -73,7 +85,14 @@ public class SelectionManager extends Manager {
 		while (users.hasNext()) {
 			QuirkUser user = users.next();
 			Location loc = null;
-			Object target = selections.get(user);
+			Selection<?> selection = selections.get(user);
+			
+			if (System.currentTimeMillis() >= selection.getTime() + 7000) {
+				users.remove();
+				continue;
+			}
+			
+			Object target = selection.getTarget();
 			
 			if (target instanceof Entity) {
 				if (((Entity) target).isDead()) {
@@ -82,8 +101,13 @@ public class SelectionManager extends Manager {
 				}
 				
 				loc = ((Entity) target).getLocation();
-			} else {
+			} else if (target instanceof Block) {
 				loc = ((Block) target).getLocation();
+			}
+			
+			if (loc == null) {
+				users.remove();
+				continue;
 			}
 			
 			if (!loc.getWorld().equals(Bukkit.getPlayer(user.getUniqueId()).getWorld())) {
@@ -95,12 +119,14 @@ public class SelectionManager extends Manager {
 	
 	public class Selection<T> {
 		
-		public T target;
-		public QuirkUser user;
+		private T target;
+		private QuirkUser user;
+		private long time;
 		
 		public Selection(QuirkUser user, T target) {
 			this.user = user;
 			this.target = target;
+			this.time = System.currentTimeMillis();
 		}
 		
 		public T getTarget() {
@@ -109,6 +135,10 @@ public class SelectionManager extends Manager {
 		
 		public QuirkUser getUser() {
 			return user;
+		}
+		
+		public long getTime() {
+			return time;
 		}
 	}
 }

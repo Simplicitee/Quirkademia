@@ -64,11 +64,11 @@ public class Configs {
 		config.addDefault("Quirks.Explosion.Stamina.Recharge", 35);
 		config.addDefault("Quirks.Explosion.AssignChance", 1);
 		
-		/*config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
+		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
 		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
 		config.addDefault("Quirks.Creation.Stamina.Max", 500);
 		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
-		config.addDefault("Quirks.Creation.AssignChance", 4);*/
+		config.addDefault("Quirks.Creation.AssignChance", 4);
 		
 		config.addDefault("Quirks.Engine.Stamina.Title", "Fuel");
 		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
@@ -86,7 +86,7 @@ public class Configs {
 		config.addDefault("Quirks.NavelLaser.Stamina.Color", "BLUE");
 		config.addDefault("Quirks.NavelLaser.Stamina.Max", 20);
 		config.addDefault("Quirks.NavelLaser.Stamina.Recharge", 0);
-		config.addDefault("Quirks.NavelLaser.AssignChance", 4);
+		config.addDefault("Quirks.NavelLaser.AssignChance", 4);*/
 		
 		config.addDefault("Quirks.ZeroGravity.Stamina.Title", "Weight Limit");
 		config.addDefault("Quirks.ZeroGravity.Stamina.Color", "PINK");
@@ -94,7 +94,7 @@ public class Configs {
 		config.addDefault("Quirks.ZeroGravity.Stamina.Recharge", 0);
 		config.addDefault("Quirks.ZeroGravity.AssignChance", 4);
 		
-		config.addDefault("Quirks.Acid.Stamina.Title", "Acidity");
+		/*config.addDefault("Quirks.Acid.Stamina.Title", "Acidity");
 		config.addDefault("Quirks.Acid.Stamina.Color", "PINK");
 		config.addDefault("Quirks.Acid.Stamina.Max", 200);
 		config.addDefault("Quirks.Acid.Stamina.Recharge", 5);

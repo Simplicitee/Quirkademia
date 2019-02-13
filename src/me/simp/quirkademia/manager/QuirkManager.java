@@ -19,6 +19,7 @@ import me.simp.quirkademia.quirk.FusedQuirk;
 import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
 import me.simp.quirkademia.quirk.QuirkUser;
+import me.simp.quirkademia.quirk.creation.CreationQuirk;
 import me.simp.quirkademia.quirk.engine.EngineQuirk;
 import me.simp.quirkademia.quirk.explosion.ExplosionQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
@@ -26,6 +27,7 @@ import me.simp.quirkademia.quirk.halfcoldhalfhot.HalfColdHalfHotQuirk;
 import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
 import me.simp.quirkademia.quirk.invisibility.InvisibilityQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
+import me.simp.quirkademia.quirk.zerogravity.ZeroGravityQuirk;
 
 public class QuirkManager extends Manager {
 	
@@ -55,6 +57,8 @@ public class QuirkManager extends Manager {
 		register(plugin, new ExplosionQuirk());
 		register(plugin, new EngineQuirk());
 		register(plugin, new HalfColdHalfHotQuirk());
+		register(plugin, new ZeroGravityQuirk());
+		register(plugin, new CreationQuirk());
 		register(plugin, new OneForAllQuirk());
 	}
 	
@@ -103,9 +107,9 @@ public class QuirkManager extends Manager {
 	 * @param provider Class of the Quirk
 	 * @return null if Quirk by provider doesn't exist
 	 */
-	public Quirk getQuirk(Class<? extends Quirk> provider) {
+	public <T extends Quirk> T getQuirk(Class<T> provider) {
 		if (classMap.containsKey(provider)) {
-			return classMap.get(provider);
+			return provider.cast(classMap.get(provider));
 		}
 		
 		return null;

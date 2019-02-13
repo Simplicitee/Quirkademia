@@ -10,13 +10,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import me.simp.quirkademia.ability.Collidable;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.halfcoldhalfhot.BodyHeat.IcyHotAbility;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class IceAttack extends QuirkAbility {
+public class IceAttack extends QuirkAbility implements Collidable {
 	
 	private IcyHotAbility type;
 	private BodyHeat passive;
@@ -219,6 +220,16 @@ public class IceAttack extends QuirkAbility {
 		}
 		
 		radius += 0.5;
+		return true;
+	}
+
+	@Override
+	public double getRadius() {
+		return radius;
+	}
+
+	@Override
+	public boolean onCollision(QuirkAbility other) {
 		return true;
 	}
 }

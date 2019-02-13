@@ -5,13 +5,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
+import me.simp.quirkademia.ability.Collidable;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.oneforall.SmashTracker.SmashType;
 import me.simp.quirkademia.util.ParticleEffect;
 
-public class SmashAttack extends QuirkAbility {
+public class SmashAttack extends QuirkAbility implements Collidable {
 	
 	private SmashType type;
 	private Location start, loc;
@@ -94,5 +95,15 @@ public class SmashAttack extends QuirkAbility {
 
 	public SmashType getType() {
 		return type;
+	}
+
+	@Override
+	public double getRadius() {
+		return radius;
+	}
+
+	@Override
+	public boolean onCollision(QuirkAbility other) {
+		return true;
 	}
 }

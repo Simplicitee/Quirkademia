@@ -6,13 +6,14 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
+import org.bukkit.event.Listener;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.ActivationType;
 
-public abstract class Quirk implements IQuirk {
+public abstract class Quirk implements IQuirk, Listener {
 
 	protected QuirkPlugin plugin;
 	
@@ -32,6 +33,8 @@ public abstract class Quirk implements IQuirk {
 			abilities.put(info.getActivation(), info);
 			plugin.getAbilityManager().registerInfo(info);
 		}
+		
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@Override

@@ -89,14 +89,14 @@ public class AbilityManager extends Manager {
 	 * @return true if removed successfully
 	 */
 	public boolean remove(QuirkAbility ability) {
-		QuirkAbilityEvent event = new QuirkAbilityEvent(ability.getUser(), ability, QuirkAbilityEventType.END);
-		plugin.getServer().getPluginManager().callEvent(event);
-		
-		if (event.isCancelled()) {
-			return false;
-		}
-		
 		if (instances.remove(ability)) {
+			QuirkAbilityEvent event = new QuirkAbilityEvent(ability.getUser(), ability, QuirkAbilityEventType.END);
+			plugin.getServer().getPluginManager().callEvent(event);
+			
+			if (event.isCancelled()) {
+				return false;
+			}
+		
 			QuirkUser user = ability.getUser();
 			
 			if (userInstances.containsKey(user)) {

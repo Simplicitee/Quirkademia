@@ -6,9 +6,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.simp.quirkademia.command.Commands;
 import me.simp.quirkademia.configuration.Configs;
 import me.simp.quirkademia.manager.AbilityManager;
+import me.simp.quirkademia.manager.CollisionManager;
 import me.simp.quirkademia.manager.ManagersRunnable;
 import me.simp.quirkademia.manager.QuirkManager;
 import me.simp.quirkademia.manager.RegenManager;
+import me.simp.quirkademia.manager.SelectionManager;
 import me.simp.quirkademia.manager.UserManager;
 import me.simp.quirkademia.storage.StorageManager;
 
@@ -25,6 +27,8 @@ public class QuirkPlugin extends JavaPlugin{
 	private StorageManager storage;
 	private QuirkManager quirks;
 	private RegenManager regen;
+	private SelectionManager selections;
+	private CollisionManager collisions;
 	
 	@Override
 	public void onEnable() {
@@ -39,6 +43,8 @@ public class QuirkPlugin extends JavaPlugin{
 		userManager = new UserManager(this);
 		commands = new Commands(this);
 		regen = new RegenManager(this);
+		selections = new SelectionManager(this);
+		collisions = new CollisionManager(this);
 		
 		new QuirkListener(this);
 		
@@ -96,5 +102,13 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	public RegenManager getRegenManager() {
 		return regen;
+	}
+	
+	public SelectionManager getSelectionManager() {
+		return selections;
+	}
+	
+	public CollisionManager getCollisionManager() {
+		return collisions;
 	}
 }

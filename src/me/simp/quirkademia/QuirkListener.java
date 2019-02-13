@@ -118,6 +118,8 @@ public class QuirkListener implements Listener {
 		ActivationType type = player.isSneaking() ? ActivationType.RIGHT_CLICK_ENTITY_SNEAKING : ActivationType.RIGHT_CLICK_ENTITY;
 		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
 		
+		plugin.getSelectionManager().update(user, event.getRightClicked());
+		
 		activateAbility(user, type);
 	}
 	
@@ -161,6 +163,8 @@ public class QuirkListener implements Listener {
 		Player player = event.getPlayer();
 		ActivationType type = player.isSneaking() ? ActivationType.RIGHT_CLICK_BLOCK_SNEAKING : ActivationType.RIGHT_CLICK_BLOCK;
 		QuirkUser user = plugin.getUserManager().getUser(player.getUniqueId());
+		
+		plugin.getSelectionManager().update(user, event.getClickedBlock());
 		
 		activateAbility(user, type);
 	}
