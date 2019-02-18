@@ -28,77 +28,15 @@ public class Configs {
 		
 		//quirk properties config
 		
-		config.addDefault("Quirks.OneForAll.Stamina.Title", "Stamina");
-		config.addDefault("Quirks.OneForAll.Stamina.Color", "GREEN");
-		config.addDefault("Quirks.OneForAll.Stamina.Max", 1000);
-		config.addDefault("Quirks.OneForAll.Stamina.Recharge", 40);
 		config.addDefault("Quirks.OneForAll.AssignChance", 1);
-		
-		config.addDefault("Quirks.Frog.Stamina.Title", "Sleepiness");
-		config.addDefault("Quirks.Frog.Stamina.Color", "GREEN");
-		config.addDefault("Quirks.Frog.Stamina.Max", 100);
-		config.addDefault("Quirks.Frog.Stamina.Recharge", 0);
 		config.addDefault("Quirks.Frog.AssignChance", 4);
-		
-		/*config.addDefault("Quirks.Electrification.Stamina.Title", "Static Charge");
-		config.addDefault("Quirks.Electrification.Stamina.Color", "YELLOW");
-		config.addDefault("Quirks.Electrification.Stamina.Max", 200);
-		config.addDefault("Quirks.Electrification.Stamina.Recharge", 20);
-		config.addDefault("Quirks.Electrification.AssignChance", 10);*/
-		
-		config.addDefault("Quirks.Hardening.Stamina.Title", "Hardness");
-		config.addDefault("Quirks.Hardening.Stamina.Color", "RED");
-		config.addDefault("Quirks.Hardening.Stamina.Max", 800);
-		config.addDefault("Quirks.Hardening.Stamina.Recharge", 0);
 		config.addDefault("Quirks.Hardening.AssignChance", 7);
-		
-		config.addDefault("Quirks.Invisibility.Stamina.Title", "Light Refraction");
-		config.addDefault("Quirks.Invisibility.Stamina.Color", "WHITE");
-		config.addDefault("Quirks.Invisibility.Stamina.Max", 100);
-		config.addDefault("Quirks.Invisibility.Stamina.Recharge", 5);
 		config.addDefault("Quirks.Invisibility.AssignChance", 4);
-		
-		config.addDefault("Quirks.Explosion.Stamina.Title", "Nitrosweat");
-		config.addDefault("Quirks.Explosion.Stamina.Color", "RED");
-		config.addDefault("Quirks.Explosion.Stamina.Max", 700);
-		config.addDefault("Quirks.Explosion.Stamina.Recharge", 35);
 		config.addDefault("Quirks.Explosion.AssignChance", 1);
-		
-		config.addDefault("Quirks.Creation.Stamina.Title", "Lipids");
-		config.addDefault("Quirks.Creation.Stamina.Color", "PURPLE");
-		config.addDefault("Quirks.Creation.Stamina.Max", 500);
-		config.addDefault("Quirks.Creation.Stamina.Recharge", 0);
 		config.addDefault("Quirks.Creation.AssignChance", 4);
-		
-		config.addDefault("Quirks.Engine.Stamina.Title", "Fuel");
-		config.addDefault("Quirks.Engine.Stamina.Color", "BLUE");
-		config.addDefault("Quirks.Engine.Stamina.Max", 1000);
-		config.addDefault("Quirks.Engine.Stamina.Recharge", 50);
 		config.addDefault("Quirks.Engine.AssignChance", 5);
-		
-		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Title", "Body Heat");
-		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Color", "RED");
-		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Max", 100);
-		config.addDefault("Quirks.HalfColdHalfHot.Stamina.Recharge", 0);
 		config.addDefault("Quirks.HalfColdHalfHot.AssignChance", 1);
-		
-		/*config.addDefault("Quirks.NavelLaser.Stamina.Title", "Laser");
-		config.addDefault("Quirks.NavelLaser.Stamina.Color", "BLUE");
-		config.addDefault("Quirks.NavelLaser.Stamina.Max", 20);
-		config.addDefault("Quirks.NavelLaser.Stamina.Recharge", 0);
-		config.addDefault("Quirks.NavelLaser.AssignChance", 4);*/
-		
-		config.addDefault("Quirks.ZeroGravity.Stamina.Title", "Weight Limit");
-		config.addDefault("Quirks.ZeroGravity.Stamina.Color", "PINK");
-		config.addDefault("Quirks.ZeroGravity.Stamina.Max", 6000);
-		config.addDefault("Quirks.ZeroGravity.Stamina.Recharge", 0);
 		config.addDefault("Quirks.ZeroGravity.AssignChance", 4);
-		
-		/*config.addDefault("Quirks.Acid.Stamina.Title", "Acidity");
-		config.addDefault("Quirks.Acid.Stamina.Color", "PINK");
-		config.addDefault("Quirks.Acid.Stamina.Max", 200);
-		config.addDefault("Quirks.Acid.Stamina.Recharge", 5);
-		config.addDefault("Quirks.Acid.AssignChance", 3);*/
 		
 		c.save();
 		configs.put(ConfigType.QUIRKS, c);
@@ -107,24 +45,28 @@ public class Configs {
 		config = c.get();
 		
 		//ability config
+		
+		//one for all
 		config.addDefault("Abilities.OneForAll.FullCowling.Cooldown", 2000);
 		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Speed", 2);
 		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Jump", 2);
 		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Strength", 1);
 		config.addDefault("Abilities.OneForAll.FullCowling.Effects.Endurance", 2);
-		config.addDefault("Abilities.OneForAll.FullCowling.ChargeTime", 3000);
 		config.addDefault("Abilities.OneForAll.FullCowling.DamageThreshold", 8.0);
 		
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Cooldown", 800);
-		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Power", 1.5);
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Strength", 1.5);
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Range", 10);
 		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.Radius", 0.4);
+		config.addDefault("Abilities.OneForAll.Smash.DELAWARE.PowerUse", 10);
 		
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Cooldown", 8000);
-		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Power", 3.2);
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Strength", 3.2);
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Range", 22);
 		config.addDefault("Abilities.OneForAll.Smash.DETROIT.Radius", 1.1);
+		config.addDefault("Abilities.OneForAll.Smash.DETROIT.PowerUse", 100);
 		
+		//frog
 		config.addDefault("Abilities.Frog.Froglike.Jump", 4);
 		config.addDefault("Abilities.Frog.Froglike.SwimSpeed", 3);
 		config.addDefault("Abilities.Frog.Froglike.CamoChargeTime", 3000);
@@ -132,6 +74,9 @@ public class Configs {
 		config.addDefault("Abilities.Frog.Tongue.Cooldown", 2000);
 		config.addDefault("Abilities.Frog.Tongue.Range", 10);
 		config.addDefault("Abilities.Frog.Tongue.Damage", 2.0);
+		
+		//hardening
+		config.addDefault("Abilities.Hardening.Passive.MaxStamina", 800);
 		
 		config.addDefault("Abilities.Hardening.Harden.StaminaUse", 1);
 		config.addDefault("Abilities.Hardening.Harden.Strength", 1);
@@ -141,6 +86,9 @@ public class Configs {
 		config.addDefault("Abilities.Invisibility.LightRefraction.Range", 10);
 		config.addDefault("Abilities.Invisibility.LightRefraction.Radius", 1.1);
 		config.addDefault("Abilities.Invisibility.LightRefraction.StaminaUse", 5);
+		
+		//explosion
+		config.addDefault("Abilities.Explosion.Passive.MaxSweat", 700);
 		
 		config.addDefault("Abilities.Explosion.Blast.NORMAL.Cooldown", 3000);
 		config.addDefault("Abilities.Explosion.Blast.NORMAL.Range", 5);
@@ -168,33 +116,49 @@ public class Configs {
 		config.addDefault("Abilities.Explosion.ExplosiveLaunch.Power", 3.4);
 		config.addDefault("Abilities.Explosion.ExplosiveLaunch.StaminaUse", 100);
 		
+		//engine
+		config.addDefault("Abilities.Engine.Passive.MaxFuel", 2000);
+		
 		config.addDefault("Abilities.Engine.Engines.Speed", 2);
 		config.addDefault("Abilities.Engine.Engines.FuelConsumption", 2);
-		config.addDefault("Abilities.Engine.Engines.ReciproBurst.Factor", 3);
-		config.addDefault("Abilities.Engine.Engines.ReciproBurst.StallTime", 15000);
 		
+		config.addDefault("Abilities.Engine.ReciproBurst.Factor", 3);
+		config.addDefault("Abilities.Engine.ReciproBurst.StallTime", 15000);
+		
+		//half cold half hot
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Range", 17);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Damage", 2);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Cooldown", 3000);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Radius", 0.4);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.HeatRaise", 5);
 		
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Range", 2);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Damage", 0.5);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Cooldown", 8000);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.Radius", 4);
+		config.addDefault("Abilities.HalfColdHalfHot.Flame.WALL.HeatRaise", 3);
 		
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Range", 17);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Damage", 2);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Cooldown", 3000);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.Radius", 0.4);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.BLAST.HeatLower", 4);
 		
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Range", 2);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Damage", 0.5);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Cooldown", 8000);
 		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.Radius", 4);
+		config.addDefault("Abilities.HalfColdHalfHot.Ice.WALL.HeatLower", 3);
 		
 		config.addDefault("Abilities.HalfColdHalfHot.Freeze.Duration", 20000);
 		config.addDefault("Abilities.HalfColdHalfHot.Freeze.MaxPower", 5);
+		config.addDefault("Abilities.HalfColdHalfHot.Freeze.HeatLower", 2);
+		
+		//zero gravity
+		config.addDefault("Abilities.ZeroGravity.Passive.WeightLimit", 6000);
+		
+		//creation
+		config.addDefault("Abilities.Creation.Passive.MaxLipids", 700);
 		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);

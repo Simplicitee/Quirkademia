@@ -4,17 +4,20 @@ import java.util.LinkedList;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
+import org.bukkit.boss.BarColor;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.configuration.ConfigType;
+import me.simp.quirkademia.quirk.QuirkStamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ParticleEffect;
 import me.simp.quirkademia.util.StatusEffect;
 
 public class BodyHeat extends QuirkAbility {
 	
-	private int temperature, max;
+	private QuirkStamina temperature;
 	private long lastChange;
 	private IcyHotAbility active;
 	private LinkedList<IcyHotAbility> cycle;
@@ -22,8 +25,9 @@ public class BodyHeat extends QuirkAbility {
 	public BodyHeat(QuirkUser user) {
 		super(user);
 		
-		max = user.getStamina().getMaxStamina();
-		temperature = max/2;
+		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Passive.MaxTemperature");
+		
+		temperature = new QuirkStamina(user.getUniqueId(), "Body Temperature", BarColor.RED, max/2, max);
 		lastChange = System.currentTimeMillis();
 		
 		active = IcyHotAbility.NONE;
@@ -42,18 +46,18 @@ public class BodyHeat extends QuirkAbility {
 	@Override
 	public boolean progress() {
 		if (System.currentTimeMillis() >= lastChange + 10000) {
-			if (temperature > max/2) {
-				temperature--;
-			} else if (temperature < max/2) {
-				temperature++;
+			if (temperature.getValue() > temperature.getMaxStamina()/2) {
+				temperature.setValue(temperature.getValue() - 1);
+			} else if (temperature.getValue() < temperature.getMaxStamina()/2) {
+				temperature.setValue(temperature.getValue() + 1);
 			}
 		}
 		
-		if (!inRange(temperature, max/2 + max/4, max/2 - max/4)) {
-			if (temperature < max/2) {
-				ParticleEffect.displayColoredParticle("caffff", player.getLocation().clone().add(0, 1, 0), Math.min(3, (max - temperature)/10), 0.1, 0.5, 0.1);
-			} else if (temperature > max/2) {
-				ParticleEffect.FLAME.display(player.getLocation().clone().add(0, 1, 0), Math.min(3, (max - temperature)), 0.1, 0.5, 0.1);
+		if (!inRange(temperature.getValue(), 3*temperature.getMaxStamina()/4, temperature.getMaxStamina()/4)) {
+			if (temperature.getValue() < temperature.getMaxStamina()/2) {
+				ParticleEffect.displayColoredParticle("caffff", player.getLocation().clone().add(0, 1, 0), Math.min(3, (temperature.getMaxStamina() - temperature.getValue())/10), 0.1, 0.5, 0.1);
+			} else if (temperature.getValue() > temperature.getMaxStamina()/2) {
+				ParticleEffect.FLAME.display(player.getLocation().clone().add(0, 1, 0), Math.min(3, (temperature.getMaxStamina() - temperature.getValue())), 0.1, 0.5, 0.1);
 			}
 			
 			user.getStatus().remove(StatusEffect.INCREASED_SPEED);
@@ -67,13 +71,12 @@ public class BodyHeat extends QuirkAbility {
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, power);
 		}
 		
-		if (temperature == 0) {
+		if (temperature.getValue() == 0) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 5, 2, true, false), true);
-		} else if (temperature == max) {
+		} else if (temperature.getValue() == temperature.getMaxStamina()) {
 			player.setFireTicks(20);
 		}
 		
-		user.getStamina().setValue(temperature);
 		return true;
 	}
 
@@ -85,6 +88,7 @@ public class BodyHeat extends QuirkAbility {
 	@Override
 	public void onRemove() {
 		user.getStatus().remove(StatusEffect.INCREASED_SPEED);
+		temperature.getBar().destroy(player);
 	}
 	
 	private boolean inRange(int value, int max, int min) {
@@ -106,24 +110,28 @@ public class BodyHeat extends QuirkAbility {
 	 * @param temp the temperature to set body to, min temp is 0, max is the quirk's max stamina
 	 * @return
 	 */
-	public BodyHeat setTemperature(int temp) {
-		if (temp > max) {
-			temp = max;
-		} else if (temp < 0) {
-			temp = 0;
+	public boolean raise(int amount) {
+		int diff = temperature.getValue() + amount;
+		
+		if (diff > temperature.getMaxStamina()) {
+			return false;
 		}
 		
 		this.lastChange = System.currentTimeMillis();
-		this.temperature = temp;
-		return this;
+		this.temperature.setValue(diff);
+		return true;
 	}
 	
-	public int getTemperature() {
-		return temperature;
-	}
-	
-	public int getMaxTemperature() {
-		return max;
+	public boolean lower(int amount) {
+		int diff = temperature.getValue() - amount;
+		
+		if (diff < 0) {
+			return false;
+		}
+		
+		this.lastChange = System.currentTimeMillis();
+		this.temperature.setValue(diff);
+		return true;
 	}
 
 	public static enum IcyHotAbility {

@@ -38,15 +38,14 @@ public class SmashAttack extends QuirkAbility implements Collidable {
 			cooldown = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.Smash." + type.toString() + ".Cooldown");
 			range = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".Range");
 			radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Radius");
-			power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Power");
-			stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".StaminaUse");
+			power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.Smash." + type.toString() + ".Strength");
+			stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.OneForAll.Smash." + type.toString() + ".PowerUse");
 			
-			int diff = user.getStamina().getValue() - stamina; 
-			if (diff < 0) {
+			SmashTracker passive = manager.getAbility(user, SmashTracker.class);
+			
+			if (!passive.usePower(stamina)) {
 				return;
 			}
-			
-			user.getStamina().setValue(diff);
 			
 			start = player.getEyeLocation().clone();
 			loc = start.clone();

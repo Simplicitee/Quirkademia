@@ -14,13 +14,16 @@ public class BlastRushTurbo extends QuirkAbility {
 		super(user);
 		
 		int stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Explosion.BlastRushTurbo.StaminaUse");
-		int diff = user.getStamina().getValue() - stamina;
 		
-		if (diff < 0) {
+		if (!manager.hasAbility(user, ExplosionTracker.class)) {
 			return;
 		}
 		
-		user.getStamina().setValue(diff);
+		ExplosionTracker passive = manager.getAbility(user, ExplosionTracker.class);
+		
+		if (!passive.expendNitroglycerin(stamina)) {
+			return;
+		}
 		
 		Vector direction = player.getEyeLocation().getDirection().clone().normalize();
 		double power = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.Explosion.BlastRushTurbo.Power");

@@ -1,5 +1,7 @@
 package me.simp.quirkademia.quirk;
 
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -13,25 +15,24 @@ public class QuirkStamina {
 
 	protected QuirkPlugin plugin;
 	
-	private QuirkUser user;
+	private UUID user;
 	private String name;
 	private BarColor color;
-	private int maxStamina, recharge, stamina;
+	private int maxStamina, stamina;
 	private StaminaBar bar;
 	
-	public QuirkStamina(QuirkUser user) {
+	public QuirkStamina(UUID user, String name, BarColor color, int stamina, int max) {
 		this.plugin = QuirkPlugin.get();
 		this.user = user;
-		this.name = user.getQuirk().getStaminaTitle();
-		this.color = user.getQuirk().getStaminaColor();
-		this.maxStamina = user.getQuirk().getStaminaMax();
-		this.recharge = user.getQuirk().getStaminaRecharge();
+		this.name = name;
+		this.color = color;
+		this.maxStamina = max;
 		this.bar = new StaminaBar(this);
 		
-		setValue(maxStamina);
+		setValue(stamina);
 	}
 	
-	public QuirkUser getUser() {
+	public UUID getUser() {
 		return user;
 	}
 	
@@ -45,10 +46,6 @@ public class QuirkStamina {
 	
 	public int getMaxStamina() {
 		return maxStamina;
-	}
-	
-	public int getRecharge() {
-		return recharge;
 	}
 	
 	public StaminaBar getBar() {
@@ -67,7 +64,7 @@ public class QuirkStamina {
 		}
 		
 		this.stamina = stamina;
-		this.bar.update();
+		this.bar.update(Bukkit.getPlayer(user));
 		return this;
 	}
 	
@@ -75,25 +72,26 @@ public class QuirkStamina {
 		
 		private QuirkStamina stamina;
 		private BossBar bar;
-		private Player player;
 		
 		public StaminaBar(QuirkStamina stamina) {
 			this.stamina = stamina;
-			this.player = Bukkit.getPlayer(stamina.getUser().getUniqueId());
 			this.bar = plugin.getServer().createBossBar(stamina.getName() + " [ Loading ]", stamina.getColor(), BarStyle.SOLID);
-			this.bar.addPlayer(player);
 		}
 		
 		public QuirkStamina getStamina() {
 			return stamina;
 		}
 		
-		public void update() {
+		public void update(Player player) {
 			bar.setTitle(stamina.getName() + " [" + ChatColor.GREEN + stamina.getValue() + ChatColor.WHITE + "/" + stamina.getMaxStamina() + ChatColor.WHITE + "]");
 			bar.setProgress(((double) stamina.getValue()) / stamina.getMaxStamina());
+			
+			if (!bar.getPlayers().contains(player)) {
+				bar.addPlayer(player);
+			}
 		}
 		
-		public void destroy() {
+		public void destroy(Player player) {
 			this.bar.removePlayer(player);
 		}
 	}

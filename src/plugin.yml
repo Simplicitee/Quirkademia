@@ -1,7 +1,7 @@
 name: Quirkademia
 author: Simplicitee
 api-version: 1.13
-version: 0.1.0
+version: 1.0.0
 main: me.simp.quirkademia.QuirkPlugin
 commands:
   quirk:
@@ -14,9 +14,11 @@ permissions:
       quirk.command.user: true
       quirk.command.help: true
       quirk.command.list: true
+      quirk.oneforall.deku: true
   quirk.admin:
     default: op
     children:
       quirk.command.user.set: true
       quirk.command.fuse: true
       quirk.command.user.toggle.others: true
+      quirk.oneforall.unbounded: true

@@ -12,7 +12,13 @@ public class FloatSelf extends QuirkAbility {
 		
 		if (player.isOnGround()) {
 			if (manager.hasAbility(user, Floaty.class)) {
-				manager.getAbility(user, Floaty.class).makeFloat(player, 1500);
+				Floaty passive = manager.getAbility(user, Floaty.class);
+				
+				if (!passive.canFloat(1500)) {
+					return;
+				}
+				
+				passive.makeFloat(player, 1500);
 			}
 		}
 	}

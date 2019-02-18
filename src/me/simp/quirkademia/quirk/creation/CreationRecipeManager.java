@@ -5,6 +5,8 @@ import java.util.Set;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.ShapedRecipe;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.manager.Manager;
@@ -17,25 +19,47 @@ public class CreationRecipeManager extends Manager {
 		super(plugin);
 		
 		this.recipes = new HashSet<>();
-		this.init();
 	}
 	
 	public void init() {
-		register(new Material[] {Material.AIR, Material.COOKIE, Material.AIR, Material.AIR, Material.COOKIE, Material.AIR, Material.AIR, Material.COOKIE, Material.AIR}, new ItemStack(Material.IRON_SWORD));
+		for (Material m : Material.values()) {
+			if (!m.isBlock() && !m.isEdible() && !m.isFuel() && m.isItem()) {
+				Recipe r = plugin.getServer().getRecipesFor(new ItemStack(m)).get(0);
+				
+				if (r instanceof ShapedRecipe) {
+					ShapedRecipe sr = (ShapedRecipe) r;
+					ItemStack[] order = new ItemStack[9];
+					
+					int i = 0;
+					for (int j = 0; j < 3; j++) {
+						for (int k = 0; k < 3; k++) {
+							if (sr.getShape()[j].length() > k) {
+								order[i] = sr.getIngredientMap().get(sr.getShape()[j].charAt(k));
+							} else {
+								order[i] = null;
+							}
+							i++;
+						}
+					}
+					
+					register(order, sr.getResult());
+				}
+			}
+		}
 	}
 
 	public class CreationRecipe {
 
-		private Material[] materialOrder;
+		private ItemStack[] order;
 		private ItemStack craft;
 		
-		private CreationRecipe(Material[] materialOrder, ItemStack craft) {
-			this.materialOrder = materialOrder;
+		private CreationRecipe(ItemStack[] order, ItemStack craft) {
+			this.order = order;
 			this.craft = craft;
 		}
 		
-		public Material[] getMaterialOrder() {
-			return materialOrder;
+		public ItemStack[] getIngredients() {
+			return order;
 		}
 		
 		public ItemStack getCrafted() {
@@ -44,21 +68,20 @@ public class CreationRecipeManager extends Manager {
 	}
 	
 	public ItemStack getCraftableItem(ItemStack[] order) {
-		Material[] materialOrder = new Material[order.length];
-		
-		for (int i = 0; i < order.length; i++) {
-			if (order[i] == null) {
-				materialOrder[i] = Material.AIR;
-			} else {
-				materialOrder[i] = order[i].getType();
-			}
-		}
-		
 		ItemStack craftable = null;
 		
 		loop: for (CreationRecipe recipe : recipes) {
 			for (int i = 0; i < 9; i++) {
-				if (recipe.getMaterialOrder()[i] != materialOrder[i]) {
+				ItemStack ingredient = recipe.getIngredients()[i];
+				if (ingredient == null && order[i] != null) {
+					continue loop;
+				} else if (ingredient != null && order[i] == null) {
+					continue loop;
+				} else if (ingredient == null && order[i] == null) {
+					continue;
+				} else if (ingredient.isSimilar(order[i]) && ingredient.getAmount() == order[i].getAmount()) {
+					continue;
+				} else {
 					continue loop;
 				}
 			}
@@ -70,14 +93,8 @@ public class CreationRecipeManager extends Manager {
 		return craftable;
 	}
 	
-	public CreationRecipe register(Material[] materialOrder, ItemStack craft) {
-		for (int i = 0; i < materialOrder.length; i++) {
-			if (materialOrder[i] == null) {
-				materialOrder[i] = Material.AIR;
-			}
-		}
-		
-		CreationRecipe recipe = new CreationRecipe(materialOrder, craft);
+	public CreationRecipe register(ItemStack[] order, ItemStack craft) {
+		CreationRecipe recipe = new CreationRecipe(order, craft);
 		
 		recipes.add(recipe);
 		

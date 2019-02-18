@@ -56,16 +56,6 @@ public class UserManager extends Manager {
 				}
 			}
 			
-			if (checks.containsKey(user)) {
-				if (System.currentTimeMillis() >= checks.get(user) + 1000) {
-					int recharge = user.getStamina().getRecharge();
-					
-					user.getStamina().setValue(user.getStamina().getValue() + recharge);
-					
-					checks.put(user, System.currentTimeMillis());
-				}
-			}
-			
 			Iterator<String> keys = user.getCooldowns().keySet().iterator();
 			while (keys.hasNext()) {
 				Cooldown cd = user.getCooldowns().get(keys.next());
@@ -100,7 +90,7 @@ public class UserManager extends Manager {
 				quirk = randomAssign();
 			}
 			
-			user = new QuirkUser(uuid, quirk, new HashMap<>());
+			user = new QuirkUser(uuid, quirk);
 		} else {
 			Quirk quirk = plugin.getQuirkManager().getQuirk(storage.get("quirk"));
 			
@@ -108,22 +98,20 @@ public class UserManager extends Manager {
 				quirk = randomAssign();
 			}
 			
-			Map<String, Cooldown> cooldowns = new HashMap<>();
-			
-			if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
-				for (String key : storage.keySet()) {
-					if (key.startsWith("cooldown.")) {
-						cooldowns.put(key.substring(9), new Cooldown(System.currentTimeMillis(), Long.valueOf(storage.get(key))));
-					}
-				}
-			}
-			
-			user = new QuirkUser(uuid, quirk, cooldowns);
+			user = new QuirkUser(uuid, quirk);
 			
 			for (int i = 0; i < 9; i++) {
 				String key = "Slot" + (i + 1);
 				if (storage.containsKey(key)) {
 					user.setBind(i, plugin.getQuirkManager().getQuirk(storage.get(key)));
+				}
+			}
+			
+			if (plugin.getConfigs().getConfiguration(ConfigType.PROPERTIES).getBoolean("Storage.SaveCooldowns")) {
+				for (String key : storage.keySet()) {
+					if (key.startsWith("cooldown.")) {
+						user.addCooldown(key.substring(10), Long.valueOf(storage.get(key)));
+					}
 				}
 			}
 		}
@@ -139,10 +127,6 @@ public class UserManager extends Manager {
 		
 		if (user != null) {
 			QuirkPlugin.get().getStorageManager().get().store(user);
-			
-			if (user.getStamina() != null) {
-				user.getStamina().getBar().destroy();
-			}
 			
 			users.remove(uuid);
 			checks.remove(user);

@@ -15,31 +15,34 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.Cooldown;
+import me.simp.quirkademia.util.DisplayBoard;
 import me.simp.quirkademia.util.StatusEffect;
 
 public class QuirkUser {
 	
 	private UUID uuid;
 	private Quirk quirk;
-	private QuirkStamina stamina;
 	private QuirkUserStatus status;
-	private AbilityBoard board;
+	private DisplayBoard board;
 	private boolean disabled;
 	private Map<String, Cooldown> cooldowns;
 	private Map<Integer, Quirk> binds;
 	
-	public QuirkUser(UUID uuid, Quirk quirk, Map<String, Cooldown> map) {
+	public QuirkUser(UUID uuid, Quirk quirk) {
 		this.uuid = uuid;
 		this.quirk = quirk;
 		
 		if (quirk != null) {
-			this.stamina = new QuirkStamina(this);
-			this.board = new AbilityBoard(this);
+			if (quirk instanceof FusedQuirk) {
+				this.board = new BindsBoard(this);
+			} else {
+				this.board = new AbilityBoard(this);
+			}
 		}
 		
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
-		this.cooldowns = map;
+		this.cooldowns = new HashMap<>();
 		this.binds = new HashMap<>();
 	}
 	
@@ -58,25 +61,19 @@ public class QuirkUser {
 		
 		this.quirk = quirk;
 		
-		if (this.stamina != null && this.stamina.getBar() != null) {
-			this.stamina.getBar().destroy();
-		}
-		
-		this.stamina = new QuirkStamina(this);
-		
 		if (this.board != null) {
 			this.board.destroy();
 		}
 		
-		this.board = new AbilityBoard(this);
+		if (quirk instanceof FusedQuirk) {
+			this.board = new BindsBoard(this);
+		} else {
+			this.board = new AbilityBoard(this);
+		}
 		
 		this.binds.clear();
 		
 		return this;
-	}
-	
-	public QuirkStamina getStamina() {
-		return stamina;
 	}
 	
 	public QuirkUserStatus getStatus() {
@@ -116,6 +113,10 @@ public class QuirkUser {
 	}
 	
 	public boolean hasBind(int slot) {
+		if (binds == null || binds.isEmpty()) {
+			return false;
+		}
+		
 		return binds.containsKey(slot);
 	}
 	

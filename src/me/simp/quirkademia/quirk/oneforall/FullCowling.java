@@ -12,14 +12,11 @@ import me.simp.quirkademia.util.StatusEffect;
 
 public class FullCowling extends QuirkAbility {
 	
-	private long chargeTime;
-	private long startTime;
-	private double animationHeight;
-	private double animationAngle;
 	private double health;
 	private double damageThreshold;
 	private boolean charged;
-	private int strength, speed, jump, endurance;
+	private int strength, speed, jump, endurance, power, limit;
+	private SmashTracker passive;
 
 	public FullCowling(QuirkUser user) {
 		super(user);
@@ -31,9 +28,24 @@ public class FullCowling extends QuirkAbility {
 			return;
 		}
 		
-		chargeTime = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.FullCowling.ChargeTime");
-		animationHeight = 0;
-		animationAngle = 0;
+		if (!manager.hasAbility(user, SmashTracker.class)) {
+			return;
+		}
+		
+		passive = manager.getAbility(user, SmashTracker.class);
+		
+		if (player.hasPermission("quirk.oneforall.deku")) {
+			limit = 20;
+		}
+		
+		if (player.hasPermission("quirk.oneforall.allmight")) {
+			limit = 1000;
+		}
+		
+		if (player.hasPermission("quirk.oneforall.unbounded")) {
+			limit = 1000000;
+		}
+		
 		charged = false;
 		health = player.getHealth();
 		damageThreshold = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.FullCowling.DamageThreshold");
@@ -47,50 +59,34 @@ public class FullCowling extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		if (player.isSneaking() && !charged) {
-			Location display = player.getLocation().clone();
-			Location display2 = player.getLocation().clone();
-			
-			double x = 0.3 * Math.cos(animationAngle);
-			double z = 0.3 * Math.sin(animationAngle);
-			
-			display.add(x, animationHeight, z);
-			display2.add(-x, animationHeight, -z);
-			
-			ParticleEffect.displayColoredParticle("03c58b", display, 2, 0.1, 0.1, 0.1);
-			ParticleEffect.displayColoredParticle("03c58b", display2, 2, 0.1, 0.1, 0.1);
-			
-			animationAngle += Math.PI / 12;
-			animationHeight += 1.6 / (chargeTime/50);
-			
-			if (System.currentTimeMillis() >= startTime + chargeTime) {
+		if (!charged) {
+			if (player.isSneaking()) {
+				power++;
+				
+				if (power > limit) {
+					power = limit;
+					methods.sendActionBarMessage("&c!> &aOutput Limit Reached &c<!", player);
+				} else {
+					methods.sendActionBarMessage("&c!> &aPower Output - " + power + "% &c<!", player);
+				}
+			} else {
 				charged = true;
+				passive.usePower(power);
 			}
-		} else if (!player.isSneaking() && !charged) {
-			return false;
-		}
-		
-		if (charged) {
+		} else {
 			if (health - player.getHealth() >= damageThreshold) {
 				user.addCooldown("full cowling", configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.OneForAll.FullCowling.Cooldown"));
 				return false;
 			}
 			
-			int diff = user.getStamina().getValue() - 2;
-			if (diff < 0) {
-				return false;
-			}
+			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, strength + power/20);
+			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed + power/20);
+			user.getStatus().add(StatusEffect.INCREASED_JUMP, jump + power/20);
+			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, endurance + power/20);
 			
-			user.getStamina().setValue(diff);
+			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, speed + power/20, true, false), true);
 			
-			user.getStatus().add(StatusEffect.INCREASED_STRENGTH, strength);
-			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);
-			user.getStatus().add(StatusEffect.INCREASED_JUMP, jump);
-			user.getStatus().add(StatusEffect.INCREASED_ENDURANCE, endurance);
-			
-			player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 5, speed, true, false), true);
-			
-			ParticleEffect.displayColoredParticle("03c58b", player.getLocation().clone().add(0, 1, 0), 6, 0.25, 0.6, 0.25);
+			ParticleEffect.displayColoredParticle("03c58b", player.getLocation().clone().add(0, 1, 0), 9, 0.25, 0.6, 0.25);
 		}
 		
 		return true;
@@ -98,7 +94,6 @@ public class FullCowling extends QuirkAbility {
 
 	@Override
 	public void onStart() {
-		startTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -112,5 +107,9 @@ public class FullCowling extends QuirkAbility {
 	@Override
 	public Location getLocation() {
 		return player.getLocation().clone().add(0, 1, 0);
+	}
+	
+	public int getPower() {
+		return power;
 	}
 }

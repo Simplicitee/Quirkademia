@@ -82,14 +82,12 @@ public class IceAttack extends QuirkAbility implements Collidable {
 		range = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Ice." + type.toString() + ".Range");
 		damage = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Ice." + type.toString() + ".Damage");
 		radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Ice." + type.toString() + ".Radius");
+		int stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Ice." + type.toString() + ".HeatLower");
 		
-		int diff = passive.getTemperature() - 5;
-		
-		if (diff < 0) {
+		if (!passive.lower(stamina)) {
 			return;
 		}
 		
-		passive.setTemperature(diff);
 		user.addCooldown("ice " + type.toString(), cooldown);
 		
 		manager.start(this);

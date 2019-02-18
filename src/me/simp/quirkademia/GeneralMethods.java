@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -310,8 +311,10 @@ public class GeneralMethods {
 	}
 	
 	public void sendActionBarMessage(final String message, final Player...players) {
+		String sending = ChatColor.translateAlternateColorCodes('&', message);
+		
 		for (Player player : players) {
-			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+			player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(sending));
 		}
 	}
 }

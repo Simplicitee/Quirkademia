@@ -15,6 +15,7 @@ import me.simp.quirkademia.util.ParticleEffect;
 public class ExplosionBlast extends QuirkAbility implements Collidable {
 	
 	private ExplosionType type;
+	private ExplosionTracker passive;
 	private Location loc, start;
 	private Vector direction;
 	private int range, stamina;
@@ -25,7 +26,8 @@ public class ExplosionBlast extends QuirkAbility implements Collidable {
 		super(user);
 		
 		if (manager.hasAbility(user, ExplosionTracker.class)) {
-			type = manager.getAbility(user, ExplosionTracker.class).getType();
+			passive = manager.getAbility(user, ExplosionTracker.class);
+			type = passive.getType();
 		} else {
 			return;
 		}
@@ -49,17 +51,11 @@ public class ExplosionBlast extends QuirkAbility implements Collidable {
 				stamina += 20 * player.getVelocity().length();
 			}
 			
-			int diff = user.getStamina().getValue() - stamina;
-			
-			if (diff < 0) {
+			if (!passive.expendNitroglycerin(stamina)) {
 				return;
 			}
 			
-			user.getStamina().setValue(diff);
-			
 			double originPower = power;
-			
-			
 			
 			loc = player.getEyeLocation().clone();
 			start = loc.clone();

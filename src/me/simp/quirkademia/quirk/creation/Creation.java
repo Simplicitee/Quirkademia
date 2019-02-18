@@ -14,6 +14,7 @@ import me.simp.quirkademia.quirk.QuirkUser;
 
 public class Creation extends QuirkAbility {
 	
+	private BodyLipids passive;
 	private Inventory station;
 	private int counter;
 	private int[] craftSlots = {3, 4, 5, 12, 13, 14, 21, 22, 23};
@@ -21,6 +22,11 @@ public class Creation extends QuirkAbility {
 	public Creation(QuirkUser user) {
 		super(user);
 		
+		if (!manager.hasAbility(user, BodyLipids.class)) {
+			return;
+		}
+		
+		passive = manager.getAbility(user, BodyLipids.class);
 		station = newStation();
 		counter = 0;
 		
@@ -63,6 +69,27 @@ public class Creation extends QuirkAbility {
 		
 	}
 	
+	public static enum LipidType {
+		IRON("Iron", Material.IRON_INGOT),
+		STICK("Stick", Material.STICK);
+		
+		private String name;
+		private Material m;
+		
+		private LipidType(String name, Material m) {
+			this.name = name;
+			this.m = m;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public Material getMaterial() {
+			return m;
+		}
+	}
+	
 	public Inventory getStation() {
 		return station;
 	}
@@ -76,15 +103,14 @@ public class Creation extends QuirkAbility {
 			}
 		}
 		
-		int diff = user.getStamina().getValue() - lipids * 10;
-		
-		if (diff >= 0) {
-			user.getStamina().setValue(diff);
+		if (passive.useLipids(lipids * 10)) {
+			ItemStack inHand = player.getInventory().getItemInMainHand();
+			if (inHand != null) {
+				player.getInventory().addItem(inHand);
+			}
 			
-			player.getInventory().addItem(item);
+			player.getInventory().setItemInMainHand(item);
 		}
-		
-		player.closeInventory();
 	}
 
 	private Inventory newStation() {
@@ -92,8 +118,10 @@ public class Creation extends QuirkAbility {
 		
 		for (int i = 0; i < 27; i++) {
 			if (i % 9 < 3 || i % 9 > 5) {
-				if (i == 10) {
-					inv.setItem(i, lipidItem());
+				if (i == 9) { 
+					inv.setItem(i, lipidItem(LipidType.STICK));
+				} else if (i == 10) {
+					inv.setItem(i, lipidItem(LipidType.IRON));
 				} else if (i == 16) {
 					inv.setItem(i, errorItem());
 				} else {
@@ -105,12 +133,12 @@ public class Creation extends QuirkAbility {
 		return inv;
 	}
 	
-	public ItemStack lipidItem() {
-		ItemStack lipids = new ItemStack(Material.COOKIE);
+	public ItemStack lipidItem(LipidType type) {
+		ItemStack lipids = new ItemStack(type.getMaterial());
 		ItemMeta im = lipids.getItemMeta();
 		
-		im.setDisplayName(ChatColor.LIGHT_PURPLE + "!> Body Lipids <!");
-		im.setLore(Arrays.asList("Use your body fat to create items!"));
+		im.setDisplayName(ChatColor.LIGHT_PURPLE + "!> " + type.getName() + " Lipids <!");
+		im.setLore(Arrays.asList("Use your body fat to create items with " + type.getName().toLowerCase() + "(s)!"));
 		
 		lipids.setItemMeta(im);
 		lipids.setAmount(9);
@@ -123,7 +151,7 @@ public class Creation extends QuirkAbility {
 		ItemMeta im = error.getItemMeta();
 		
 		im.setDisplayName(ChatColor.RED + "!> No Item <!");
-		im.setLore(Arrays.asList("There is no item to create given the current recipe"));
+		im.setLore(Arrays.asList("There is no item to create given the current recipe!"));
 		
 		error.setItemMeta(im);
 		

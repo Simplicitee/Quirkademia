@@ -5,12 +5,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
 import org.bukkit.event.Listener;
 
 import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
-import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.util.ActivationType;
 
 public abstract class Quirk implements IQuirk, Listener {
@@ -56,55 +54,6 @@ public abstract class Quirk implements IQuirk, Listener {
 			case FUSION: return ChatColor.DARK_PURPLE;
 			default: return ChatColor.GRAY;
 		}
-	}
-	
-	@Override
-	public String getStaminaTitle() {
-		String title = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Title");
-		
-		if (title == null) {
-			title = getName();
-		}
-		
-		return title;
-	}
-
-	@Override
-	public BarColor getStaminaColor() {
-		String value = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getString("Quirks." + name.replace(" ", "") + ".Stamina.Color");
-		BarColor color = BarColor.WHITE;
-		
-		if (value == null) {
-			if (this instanceof FusedQuirk) {
-				color = BarColor.PURPLE;
-			}
-		} else {
-			color = BarColor.valueOf(value.toUpperCase());
-		}
-		
-		return color;
-	}
-
-	@Override
-	public int getStaminaMax() {
-		int max = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Max");
-		
-		if (max == 0) {
-			max = 1000;
-		}
-		
-		return max;
-	}
-
-	@Override
-	public int getStaminaRecharge() {
-		int recharge = 50;
-		
-		if (plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).contains("Quirks." + name.replace(" ", "") + ".Stamina.Recharge")) {
-			recharge = plugin.getConfigs().getConfiguration(ConfigType.QUIRKS).getInt("Quirks." + name.replace(" ", "") + ".Stamina.Recharge");
-		}
-		
-		return recharge;
 	}
 	
 	public String getDisplayName() {

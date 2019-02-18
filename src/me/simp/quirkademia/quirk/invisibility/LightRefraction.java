@@ -23,6 +23,8 @@ public class LightRefraction extends QuirkAbility {
 		
 		if (manager.hasAbility(user, LightRefraction.class)) {
 			return;
+		} else if (user.hasCooldown("light refraction")) {
+			return;
 		}
 		
 		current = 1;
@@ -41,18 +43,14 @@ public class LightRefraction extends QuirkAbility {
 	@Override
 	public boolean progress() {
 		if (current >= range) {
+			user.addCooldown("light refraction", 10000);
 			return false;
 		}
 		
 		if (!player.isSneaking()) {
+			user.addCooldown("light refraction", 10000);
 			return false;
 		}
-		
-		if (user.getStamina().getValue() <= 0) {
-			return false;
-		}
-		
-		user.getStamina().setValue(user.getStamina().getValue() - 5);
 		
 		Vector direction = player.getEyeLocation().getDirection().clone().normalize();
 		Location last = loc.clone();

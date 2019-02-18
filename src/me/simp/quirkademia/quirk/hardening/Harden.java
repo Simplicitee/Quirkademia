@@ -1,6 +1,5 @@
 package me.simp.quirkademia.quirk.hardening;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,6 +18,7 @@ public class Harden extends QuirkAbility {
 	private int stamina;
 	private int unbreakable;
 	private boolean hasUnbreakable;
+	private Hardening passive;
 
 	public Harden(QuirkUser user) {
 		super(user);
@@ -31,6 +31,12 @@ public class Harden extends QuirkAbility {
 			manager.remove(manager.getAbility(user, Harden.class));
 			return;
 		}
+		
+		if (!manager.hasAbility(user, Hardening.class)) {
+			return;
+		}
+		
+		passive = manager.getAbility(user, Hardening.class);
 		
 		strength = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Hardening.Harden.Strength");
 		endurance = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Hardening.Harden.Endurance");
@@ -47,11 +53,9 @@ public class Harden extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		if (user.getStamina().getValue() <= 0) {
+		if (!passive.use(stamina)) {
 			return false;
 		}
-		
-		user.getStamina().setValue(user.getStamina().getValue() - stamina);
 		
 		ParticleEffect.CRIT.display(player.getLocation().clone().add(0, 1, 0), 3, 0.2, 0.55, 0.2);
 		
@@ -99,7 +103,7 @@ public class Harden extends QuirkAbility {
 	}
 
 	public void activateUnbreakable() {
-		methods.sendActionBarMessage(ChatColor.RED + "Unbreakable mode!", player);
+		methods.sendActionBarMessage("&c!> &6UNBREAKABLE &c<!", player);
 		
 		hasUnbreakable = true;
 		

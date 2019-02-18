@@ -6,9 +6,17 @@ import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class HardenRecharge extends QuirkAbility {
+	
+	private Hardening passive;
 
 	public HardenRecharge(QuirkUser user) {
 		super(user);
+		
+		if (!manager.hasAbility(user, Hardening.class)) {
+			return;
+		}
+		
+		passive = manager.getAbility(user, Hardening.class);
 		
 		manager.start(this);
 	}
@@ -20,13 +28,11 @@ public class HardenRecharge extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		if (user.getStamina().getValue() >= user.getStamina().getMaxStamina()) {
-			return false;
+		if (passive.recharge()) {
+			return true;
 		}
 		
-		user.getStamina().setValue(user.getStamina().getValue() + 1);
-		
-		return true;
+		return false;
 	}
 
 	@Override

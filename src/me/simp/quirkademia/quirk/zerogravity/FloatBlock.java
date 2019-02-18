@@ -34,11 +34,17 @@ public class FloatBlock extends QuirkAbility {
 			
 			b.setType(Material.AIR);
 			
+			Floaty passive = manager.getAbility(user, Floaty.class);
+			int weight = (int) state.getType().getHardness() * 50;
+			
+			if (!passive.canFloat(weight)) {
+				return;
+			}
+			
 			FallingBlock fb = b.getWorld().spawnFallingBlock(b.getLocation().clone().add(0.5, 0.3, 0.5), state.getBlockData());
 			fb.setGravity(false);
 			
-			
-			manager.getAbility(user, Floaty.class).makeFloat(fb, (int) (state.getType().getHardness() * 100));
+			passive.makeFloat(fb, weight);
 		}
 	}
 

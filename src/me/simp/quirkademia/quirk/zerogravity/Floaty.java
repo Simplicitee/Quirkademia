@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.Location;
+import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.LivingEntity;
@@ -12,16 +13,22 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
+import me.simp.quirkademia.configuration.ConfigType;
+import me.simp.quirkademia.quirk.QuirkStamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class Floaty extends QuirkAbility {
 	
 	private Set<Entity> floating;
+	private QuirkStamina floaty;
 
 	public Floaty(QuirkUser user) {
 		super(user);
 		
+		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.ZeroGravity.Passive.WeightLimit");
+		
 		floating = new HashSet<>();
+		floaty = new QuirkStamina(user.getUniqueId(), "Weight Limit", BarColor.PINK, max, max);
 		
 		manager.start(this);
 	}
@@ -47,19 +54,23 @@ public class Floaty extends QuirkAbility {
 		
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 2, true, false), true);
 		
-		if (user.getStamina().getValue() < user.getStamina().getMaxStamina()/6) {
+		if (floaty.getValue() < floaty.getMaxStamina()/6) {
 			player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 2, true, false));
 		}
 		
 		return true;
 	}
 	
+	public boolean canFloat(int weight) {
+		return floaty.getValue() - weight >= 0;
+	}
+	
 	public void makeFloat(Entity e, int weight) {
-		int diff = user.getStamina().getValue() - weight;
+		int diff = floaty.getValue() - weight;
 		
 		if (diff >= 0) {
 			if (floating.add(e)) {
-				user.getStamina().setValue(diff);
+				floaty.setValue(diff);
 			}
 		}
 	}
@@ -75,7 +86,7 @@ public class Floaty extends QuirkAbility {
 		}
 		
 		floating.clear();
-		user.getStamina().setValue(user.getStamina().getMaxStamina());
+		floaty.setValue(floaty.getMaxStamina());
 	}
 
 	@Override
@@ -85,7 +96,7 @@ public class Floaty extends QuirkAbility {
 
 	@Override
 	public void onRemove() {
-		
+		floaty.getBar().destroy(player);
 	}
 
 }

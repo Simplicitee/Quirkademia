@@ -21,13 +21,20 @@ public class FloatEntity extends QuirkAbility {
 		}
 		
 		if (manager.hasAbility(user, Floaty.class)) {
-			manager.getAbility(user, Floaty.class).makeFloat(e, (int) (e.getBoundingBox().getVolume() * 10));
+			Floaty passive = manager.getAbility(user, Floaty.class);
+			int weight = (int) (e.getBoundingBox().getVolume() * 10);
+			
+			if (!passive.canFloat(weight)) {
+				return;
+			}
+			
+			passive.makeFloat(e, weight);
 		}
 	}
 
 	@Override
 	public Location getLocation() {
-		return null;
+		return player.getLocation();
 	}
 
 	@Override

@@ -22,6 +22,7 @@ public class EngineQuirk extends Quirk {
 	@Override
 	public Set<QuirkAbilityInfo> registerAbilities() {
 		Set<QuirkAbilityInfo> register = new HashSet<>();
+		register.add(new QuirkAbilityInfo(ActivationType.PASSIVE, FuelGauge.class, this, "Fuel Gauge", "Keeps track of your fuel!", "Passively active"));
 		register.add(new QuirkAbilityInfo(ActivationType.OFFHAND_TRIGGER, Engines.class, this, "Engines", "The engines in your calves allow you to run at incredible speeds!", "Press the offhand trigger to start your engines!"));
 		register.add(new QuirkAbilityInfo(ActivationType.OFFHAND_TRIGGER_SNEAKING, ReciproBurst.class, this, "Recipro Burst", "Pushing your engines to the max, you can reach even higher speeds. After using it though, your engines will stall!", "While sneaking and with your engines activated, press the offhand trigger"));
 		return register;

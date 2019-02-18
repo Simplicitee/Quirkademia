@@ -30,6 +30,7 @@ public class Freeze extends QuirkAbility {
 		int power = 1;
 		long duration = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.HalfColdHalfHot.Freeze.Duration");
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Freeze.MaxPower");
+		int stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Freeze.HeatLower");
 		
 		if (lent.hasPotionEffect(PotionEffectType.SLOW)) {
 			if (lent.getPotionEffect(PotionEffectType.SLOW).getAmplifier() >= max) {
@@ -41,7 +42,9 @@ public class Freeze extends QuirkAbility {
 		
 		lent.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) duration/1000*20, power, true, false), true);
 		
-		passive.setTemperature(passive.getTemperature() - 2);
+		if (!passive.lower(stamina)) {
+			return;
+		}
 		
 		user.addCooldown("freeze", 500);
 	}

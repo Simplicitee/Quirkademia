@@ -55,13 +55,11 @@ public class FlameAttack extends QuirkAbility implements Collidable {
 		range = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".Range");
 		damage = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".Damage");
 		radius = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".Radius");
+		int stamina = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Flame." + type.toString() + ".HeatRaise");
 		
-		int diff = passive.getTemperature() + 5;
-		if (diff > passive.getMaxTemperature()) {
+		if (!passive.raise(stamina)) {
 			return;
 		}
-		
-		passive.setTemperature(diff);
 		
 		user.addCooldown("flame " + type.toString(), cooldown);
 		

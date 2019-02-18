@@ -1,6 +1,5 @@
 package me.simp.quirkademia.quirk.engine;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -17,6 +16,7 @@ public class Engines extends QuirkAbility {
 	private int fuelConsumption;
 	private int reciproFactor;
 	private boolean reciproBurst;
+	private FuelGauge passive;
 	
 	public Engines(QuirkUser user) {
 		super(user);
@@ -26,9 +26,19 @@ public class Engines extends QuirkAbility {
 			return;
 		}
 		
+		if (!manager.hasAbility(user, FuelGauge.class)) {
+			return;
+		}
+		
+		passive = manager.getAbility(user, FuelGauge.class);
+		
+		if (passive.isStalled()) {
+			return;
+		}
+		
 		speed = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Engine.Engines.Speed");
 		fuelConsumption = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Engine.Engines.FuelConsumption");
-		reciproFactor = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Engine.Engines.ReciproBurst.Factor");
+		reciproFactor = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Engine.ReciproBurst.Factor");
 		
 		manager.start(this);
 	}
@@ -40,16 +50,12 @@ public class Engines extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
-		int diff = user.getStamina().getValue() - fuelConsumption;
-		
-		if (diff < 0) {
+		if (!passive.useFuel(fuelConsumption)) {
 			return false;
 		}
 		
 		Location display = player.getLocation().clone().add(0, 0.25, 0);
 		ParticleEffect.displayColoredParticle("2c538f", display, 6 * (reciproBurst ? reciproFactor : 1), 0.1, 0.1, 0.1);
-		
-		user.getStamina().setValue(diff);
 		
 		for (Entity e : methods.getEntitiesAroundPoint(player.getLocation().clone().add(0, 1, 0), 1.5)) {
 			if (e instanceof LivingEntity && e.getEntityId() != player.getEntityId()) {
@@ -62,17 +68,18 @@ public class Engines extends QuirkAbility {
 
 	@Override
 	public void onStart() {
-		methods.sendActionBarMessage(ChatColor.BLUE + "ENGINES STARTED", player);
+		methods.sendActionBarMessage("&c!> &9ENGINES STARTED &c<!", player);
 		user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);
 	}
 
 	@Override
 	public void onRemove() {
-		methods.sendActionBarMessage(ChatColor.BLUE + "ENGINES STOPPED", player);
+		methods.sendActionBarMessage("&c!> &9ENGINES STOPPED &c<!", player);
 		user.getStatus().remove(StatusEffect.INCREASED_SPEED);
 		
 		if (reciproBurst) {
 			user.addCooldown("Engines", configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.Engine.Engines.ReciproBurst.StallTime"));
+			passive.stallEnginges();
 		}
 	}
 
@@ -85,7 +92,7 @@ public class Engines extends QuirkAbility {
 			user.getStatus().remove(StatusEffect.INCREASED_SPEED);
 			user.getStatus().add(StatusEffect.INCREASED_SPEED, speed);
 			
-			methods.sendActionBarMessage(ChatColor.BLUE + "RECIPROBURST ACTIVATED", player);
+			methods.sendActionBarMessage("&c!> &9RECIPROBURST &c<!", player);
 		}
 	}
 }
