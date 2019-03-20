@@ -20,6 +20,7 @@ import me.simp.quirkademia.quirk.Quirk;
 import me.simp.quirkademia.quirk.QuirkType;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.quirk.creation.CreationQuirk;
+import me.simp.quirkademia.quirk.electrification.ElectrificationQuirk;
 import me.simp.quirkademia.quirk.engine.EngineQuirk;
 import me.simp.quirkademia.quirk.explosion.ExplosionQuirk;
 import me.simp.quirkademia.quirk.frog.FrogQuirk;
@@ -59,6 +60,7 @@ public class QuirkManager extends Manager {
 		register(plugin, new HalfColdHalfHotQuirk());
 		register(plugin, new ZeroGravityQuirk());
 		register(plugin, new CreationQuirk());
+		register(plugin, new ElectrificationQuirk());
 		register(plugin, new OneForAllQuirk());
 	}
 	

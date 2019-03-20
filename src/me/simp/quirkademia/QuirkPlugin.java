@@ -12,6 +12,7 @@ import me.simp.quirkademia.manager.QuirkManager;
 import me.simp.quirkademia.manager.RegenManager;
 import me.simp.quirkademia.manager.SelectionManager;
 import me.simp.quirkademia.manager.UserManager;
+import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.storage.StorageManager;
 
 public class QuirkPlugin extends JavaPlugin{
@@ -55,8 +56,9 @@ public class QuirkPlugin extends JavaPlugin{
 	
 	@Override
 	public void onDisable() {
-		for (Player player : getServer().getOnlinePlayers()) {
-			userManager.logout(player.getUniqueId());
+		for (QuirkUser user : userManager.getOnlineUsers()) {
+			abilManager.removeAllFromUser(user);
+			userManager.logout(user.getUniqueId());
 		}
 		
 		regen.close();

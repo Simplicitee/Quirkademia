@@ -160,6 +160,9 @@ public class Configs {
 		//creation
 		config.addDefault("Abilities.Creation.Passive.MaxLipids", 700);
 		
+		//electrification
+		config.addDefault("Abilities.Electrification.Discharge.Range", 17);
+		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);
 		
