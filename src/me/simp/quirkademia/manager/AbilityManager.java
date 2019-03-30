@@ -169,7 +169,8 @@ public class AbilityManager extends Manager {
 				while (abils.hasNext()) {
 					QuirkAbility abil = abils.next();
 					abils.remove();
-					remove(abil);
+					instances.remove(abil);
+					abil.onRemove();
 				}
 			}
 		}

@@ -24,7 +24,6 @@ public class ElectrificationQuirk extends Quirk {
 		Set<QuirkAbilityInfo> register = new HashSet<>();
 		register.add(new QuirkAbilityInfo(ActivationType.PASSIVE, Static.class, this, "Static Charge", "Your body courses with electricity, but using too much of it will lower your cognitive functionality!", "Passively active"));
 		register.add(new QuirkAbilityInfo(ActivationType.OFFHAND_TRIGGER_SNEAKING, Discharge.class, this, "Discharge", "Discharge the electricity from your body depending on what type of discharge you do!", "Press the offhand trigger while sneaking!"));
-		register.add(new QuirkAbilityInfo(ActivationType.OFFHAND_TRIGGER, DischargeCycler.class, this, "Discharge Cycler", "Change how your discharge ability will release electricity", "Press the offhand trigger while neither sneaking nor running"));
 		return register;
 	}
 

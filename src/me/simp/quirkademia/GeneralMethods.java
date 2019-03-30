@@ -3,7 +3,6 @@ package me.simp.quirkademia;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -14,12 +13,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
@@ -80,7 +77,7 @@ public class GeneralMethods {
 		return blocks;
 	}
 	
-	public LinkedList<Location> getCircle(Location center, double radius, final double interval, final int sections, final boolean hollow) {
+	public LinkedList<Location> getHorizontalCircle(Location center, double radius, final double interval, final int sections, final boolean hollow) {
 		LinkedList<Location> circle = new LinkedList<>();
 		
 		radius = Math.abs(radius);
@@ -104,7 +101,7 @@ public class GeneralMethods {
 		return circle;
 	}
 	
-	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location center, final double radius, final EntityType...ignore) {
+	public PriorityQueue<Entity> getEntitiesAroundPoint(final Location center, final double radius) {
 		PriorityQueue<Entity> entities = new PriorityQueue<>(100, new Comparator<Entity>() {
 			@Override
 			public int compare(final Entity a, final Entity b) {
@@ -112,34 +109,7 @@ public class GeneralMethods {
 			}
 		});
 		
-		World world = center.getWorld();
-		List<EntityType> ignoring = Arrays.asList(ignore);
-
-		// To find chunks we use chunk coordinates (not block coordinates!)
-		int x1 = (int) (center.getX() - radius) >> 4;
-		int x2 = (int) (center.getX() + radius) >> 4;
-		int z1 = (int) (center.getZ() - radius) >> 4;
-		int z2 = (int) (center.getZ() + radius) >> 4;
-
-		for (int x = x1; x <= x2; x++) {
-			for (int z = z1; z <= z2; z++) {
-				if (world.isChunkLoaded(x, z)) {
-					entities.addAll(Arrays.asList(world.getChunkAt(x, z).getEntities()));
-				}
-			}
-		}
-
-		Iterator<Entity> entityIterator = entities.iterator();
-		while (entityIterator.hasNext()) {
-			Entity e = entityIterator.next();
-			if (e.getWorld().equals(center.getWorld()) && e.getLocation().distanceSquared(center) > radius * radius) {
-				entityIterator.remove();
-			} else if (e instanceof Player && (((Player) e).isDead() || ((Player) e).getGameMode().equals(GameMode.SPECTATOR))) {
-				entityIterator.remove();
-			} else if (ignoring.contains(e.getType())) {
-				entityIterator.remove();
-			}
-		}
+		entities.addAll(center.getWorld().getNearbyEntities(center, radius, radius, radius, entity -> !(entity.isDead() || (entity instanceof Player && ((Player) entity).getGameMode() != GameMode.SPECTATOR))));
 
 		return entities;
 	}

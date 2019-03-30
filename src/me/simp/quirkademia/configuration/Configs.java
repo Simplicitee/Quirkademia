@@ -126,6 +126,8 @@ public class Configs {
 		config.addDefault("Abilities.Engine.ReciproBurst.StallTime", 15000);
 		
 		//half cold half hot
+		config.addDefault("Abilities.HalfColdHalfHot.Passive.MaxTemperature", 100);
+		
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Range", 17);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Damage", 2);
 		config.addDefault("Abilities.HalfColdHalfHot.Flame.BLAST.Cooldown", 3000);
@@ -162,6 +164,10 @@ public class Configs {
 		
 		//electrification
 		config.addDefault("Abilities.Electrification.Discharge.Range", 17);
+		
+		//navel laser
+		config.addDefault("Abilities.NavelLaser.Laser.Damage", 3);
+		config.addDefault("Abilities.NavelLaser.Laser.Range", 40);
 		
 		c.save();
 		configs.put(ConfigType.ABILITIES, c);

@@ -15,7 +15,7 @@ public class FullCowling extends QuirkAbility {
 	private double health;
 	private double damageThreshold;
 	private boolean charged;
-	private int strength, speed, jump, endurance, power, limit;
+	private int strength, speed, jump, endurance, power, limit, charge;
 	private SmashTracker passive;
 
 	public FullCowling(QuirkUser user) {
@@ -46,6 +46,7 @@ public class FullCowling extends QuirkAbility {
 			limit = 1000000;
 		}
 		
+		charge = 0;
 		charged = false;
 		health = player.getHealth();
 		damageThreshold = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.OneForAll.FullCowling.DamageThreshold");
@@ -61,13 +62,15 @@ public class FullCowling extends QuirkAbility {
 	public boolean progress() {
 		if (!charged) {
 			if (player.isSneaking()) {
-				power++;
-				
-				if (power > limit) {
-					power = limit;
-					methods.sendActionBarMessage("&c!> &aOutput Limit Reached &c<!", player);
-				} else {
-					methods.sendActionBarMessage("&c!> &aPower Output - " + power + "% &c<!", player);
+				if (++charge % 10 == 0) {
+					power++;
+					
+					if (power > limit) {
+						power = limit;
+						methods.sendActionBarMessage("&c!> &aOutput Limit Reached &c<!", player);
+					} else {
+						methods.sendActionBarMessage("&c!> &aPower Output - " + power + "% &c<!", player);
+					}
 				}
 			} else {
 				charged = true;

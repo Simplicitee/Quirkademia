@@ -3,13 +3,13 @@ package me.simp.quirkademia.quirk.creation;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.quirk.Quirk;
@@ -18,17 +18,9 @@ import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ActivationType;
 
 public class CreationQuirk extends Quirk {
-	
-	private CreationRecipeManager recipes;
 
 	public CreationQuirk() {
 		super("Creation", QuirkType.EMITTER);
-		
-		recipes = new CreationRecipeManager(plugin);
-	}
-	
-	public CreationRecipeManager getRecipeManager() {
-		return recipes;
 	}
 
 	@Override
@@ -63,7 +55,7 @@ public class CreationQuirk extends Quirk {
 		
 		plugin.getAbilityManager().getAbility(user, BodyLipids.class).restoreLipids();
 	}
-		
+	
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		if (!(event.getWhoClicked() instanceof Player)) {
@@ -81,41 +73,16 @@ public class CreationQuirk extends Quirk {
 			return;
 		}
 		
-		Creation abil = plugin.getAbilityManager().getAbility(user, Creation.class);
-			
 		if (event.getClickedInventory() == null) {
 			return;
 		}
 		
-		if (!event.getInventory().equals(abil.getStation())) {
-			plugin.getAbilityManager().remove(abil);
-			return;
-		}
-		
-		if (!event.getClickedInventory().equals(event.getInventory())) {
-			event.setCancelled(true);
-			return;
-		} 
+		if (event.getSlot() == 0) {
+			ItemStack item = event.getCurrentItem();
 			
-		if (event.getSlot() % 9 < 3 || event.getSlot() % 9 > 5) {
-			if (event.getSlot() != 10) {
+			if (item != null && item.getType() != Material.AIR) {
+				plugin.getAbilityManager().getAbility(user, Creation.class).craftItem(item);
 				event.setCancelled(true);
-			}
-			
-			if (event.getSlot() == 16) {
-				if (!event.getCurrentItem().isSimilar(abil.errorItem())) {
-					final ItemStack clicked = event.getCurrentItem();
-					
-					new BukkitRunnable() {
-
-						@Override
-						public void run() {
-							player.closeInventory();
-							abil.craftItem(clicked);
-						}
-						
-					}.runTaskLater(plugin, 1);
-				}
 			}
 		}
 	}
@@ -128,6 +95,7 @@ public class CreationQuirk extends Quirk {
 			
 			if (user != null) {
 				if (plugin.getAbilityManager().hasAbility(user, Creation.class)) {
+					event.getInventory().clear();
 					plugin.getAbilityManager().remove(plugin.getAbilityManager().getAbility(user, Creation.class));
 				}
 			}

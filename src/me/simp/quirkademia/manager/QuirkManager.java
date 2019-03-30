@@ -27,6 +27,7 @@ import me.simp.quirkademia.quirk.frog.FrogQuirk;
 import me.simp.quirkademia.quirk.halfcoldhalfhot.HalfColdHalfHotQuirk;
 import me.simp.quirkademia.quirk.hardening.HardeningQuirk;
 import me.simp.quirkademia.quirk.invisibility.InvisibilityQuirk;
+import me.simp.quirkademia.quirk.navellaser.NavelLaserQuirk;
 import me.simp.quirkademia.quirk.oneforall.OneForAllQuirk;
 import me.simp.quirkademia.quirk.zerogravity.ZeroGravityQuirk;
 
@@ -61,6 +62,7 @@ public class QuirkManager extends Manager {
 		register(plugin, new ZeroGravityQuirk());
 		register(plugin, new CreationQuirk());
 		register(plugin, new ElectrificationQuirk());
+		register(plugin, new NavelLaserQuirk());
 		register(plugin, new OneForAllQuirk());
 	}
 	

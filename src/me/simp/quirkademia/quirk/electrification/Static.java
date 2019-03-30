@@ -1,8 +1,5 @@
 package me.simp.quirkademia.quirk.electrification;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
 import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Entity;
@@ -19,7 +16,6 @@ public class Static extends QuirkAbility {
 	
 	private boolean dumbMode;
 	private QuirkStamina charge;
-	private Queue<DischargeType> cycle;
 
 	public Static(QuirkUser user) {
 		super(user);
@@ -27,16 +23,7 @@ public class Static extends QuirkAbility {
 		this.dumbMode = false;
 		this.charge = new QuirkStamina(user.getUniqueId(), "Static Charge", BarColor.YELLOW, 1600, 1600);
 		
-		this.cycle = new LinkedList<>();
-		this.cycle.add(DischargeType.NONE);
-		this.cycle.add(DischargeType.INDISCRIMINATE);
-		this.cycle.add(DischargeType.POINTER_N_SHOOTER);
-		
 		manager.start(this);
-	}
-	
-	public static enum DischargeType {
-		NONE, INDISCRIMINATE, POINTER_N_SHOOTER;
 	}
 
 	@Override
@@ -47,7 +34,7 @@ public class Static extends QuirkAbility {
 	@Override
 	public boolean progress() {
 		if (charge.getValue() < 400) {
-			player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 160, 10, true, false));
+			player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 670, 10, true, false));
 			dumbMode = true;
 		} else {
 			dumbMode = false;
@@ -100,19 +87,5 @@ public class Static extends QuirkAbility {
 		charge.setValue(0);
 		
 		return val;
-	}
-	
-	public DischargeType getSelectedType() {
-		return cycle.peek();
-	}
-	
-	public Static cycleType() {
-		cycle.add(cycle.poll());
-		
-		DischargeType cycled = cycle.peek();
-		
-		methods.sendActionBarMessage("&6Discharged type: &e" + cycled.toString(), player);
-		
-		return this;
 	}
 }

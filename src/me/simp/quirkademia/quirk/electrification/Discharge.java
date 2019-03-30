@@ -21,6 +21,8 @@ public class Discharge extends QuirkAbility {
 	private Set<Location> bolts;
 	private double range;
 	private Location start;
+	private int charge;
+	private Static passive;
 
 	public Discharge(QuirkUser user) {
 		super(user);
@@ -29,29 +31,14 @@ public class Discharge extends QuirkAbility {
 			return;
 		}
 		
-		Static passive = manager.getAbility(user, Static.class);
+		this.passive = manager.getAbility(user, Static.class);
 		
 		if (passive.isDumbMode()) {
 			return;
 		}
 		
-		if (!passive.useCharge(900)) {
-			return;
-		}
-		
 		this.bolts = new HashSet<>();
-		this.start = player.getLocation().clone().add(0, 1, 0);
-		
-		for (int i = -180; i < 180; i += 4) {
-			Location bolt = start.clone();
-			
-			bolt.setYaw(bolt.getYaw() + i);
-			bolt.setPitch((new Random().nextFloat() * 90) - 45f);
-			bolt.getDirection().normalize();
-			
-			bolts.add(bolt);
-		}
-		
+		this.charge = 0;
 		this.range = configs.getConfiguration(ConfigType.ABILITIES).getDouble("Abilities.Electrification.Discharge.Range");
 		
 		manager.start(this);
@@ -64,6 +51,26 @@ public class Discharge extends QuirkAbility {
 
 	@Override
 	public boolean progress() {
+		if (!player.isSneaking()) {
+			return false;
+		}
+		
+		if (charge++ % 20 == 0) {
+			if (passive.useCharge(240)) {
+				this.start = player.getLocation().clone().add(0, 1, 0);
+				
+				for (int i = -180; i < 180; i += 4) {
+					Location bolt = start.clone();
+					
+					bolt.setYaw(bolt.getYaw() + i);
+					bolt.setPitch((new Random().nextFloat() * 90) - 45f);
+					bolt.getDirection().normalize();
+					
+					bolts.add(bolt);
+				}
+			}
+		}
+		
 		Iterator<Location> iter = bolts.iterator();
 		while (iter.hasNext()) {
 			Location bolt = iter.next();
