@@ -41,7 +41,7 @@ public class FusedQuirk extends Quirk {
 		StringBuilder builder = new StringBuilder();
 		
 		if (quirks.isEmpty()) {
-			return "No quirks present!";
+			return "No quirks fused!";
 		} else if (quirks.size() == 1) {
 			return quirks.iterator().next().getDisplayName();
 		}

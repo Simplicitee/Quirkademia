@@ -1,4 +1,4 @@
-package me.simp.quirkademia.quirk.oneforall;
+package me.simp.quirkademia.quirk.oneforall.stockpile;
 
 import org.bukkit.Location;
 import org.bukkit.potion.PotionEffect;
@@ -34,16 +34,12 @@ public class FullCowling extends QuirkAbility {
 		
 		passive = manager.getAbility(user, SmashTracker.class);
 		
-		if (player.hasPermission("quirk.oneforall.deku")) {
-			limit = 20;
-		}
-		
-		if (player.hasPermission("quirk.oneforall.allmight")) {
-			limit = 1000;
-		}
-		
 		if (player.hasPermission("quirk.oneforall.unbounded")) {
 			limit = 1000000;
+		} else if (player.hasPermission("quirk.oneforall.allmight")) {
+			limit = 1000;
+		} else if (player.hasPermission("quirk.oneforall.deku")) {
+			limit = 20;
 		}
 		
 		charge = 0;

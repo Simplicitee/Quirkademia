@@ -1,4 +1,4 @@
-package me.simp.quirkademia.quirk;
+package me.simp.quirkademia.object;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import me.simp.quirkademia.QuirkPlugin;
 
-public class QuirkStamina {
+public class Stamina {
 
 	protected QuirkPlugin plugin;
 	
@@ -21,7 +21,7 @@ public class QuirkStamina {
 	private int maxStamina, stamina;
 	private StaminaBar bar;
 	
-	public QuirkStamina(UUID user, String name, BarColor color, int stamina, int max) {
+	public Stamina(UUID user, String name, BarColor color, int stamina, int max) {
 		this.plugin = QuirkPlugin.get();
 		this.user = user;
 		this.name = name;
@@ -56,7 +56,7 @@ public class QuirkStamina {
 		return stamina;
 	}
 	
-	public QuirkStamina setValue(int stamina) {
+	public Stamina setValue(int stamina) {
 		if (stamina > maxStamina) {
 			stamina = maxStamina;
 		} else if (stamina < 0) {
@@ -70,15 +70,15 @@ public class QuirkStamina {
 	
 	public class StaminaBar {
 		
-		private QuirkStamina stamina;
+		private Stamina stamina;
 		private BossBar bar;
 		
-		public StaminaBar(QuirkStamina stamina) {
+		public StaminaBar(Stamina stamina) {
 			this.stamina = stamina;
 			this.bar = plugin.getServer().createBossBar(stamina.getName() + " [ Loading ]", stamina.getColor(), BarStyle.SOLID);
 		}
 		
-		public QuirkStamina getStamina() {
+		public Stamina getStamina() {
 			return stamina;
 		}
 		

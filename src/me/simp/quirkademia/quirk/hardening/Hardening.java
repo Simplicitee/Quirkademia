@@ -5,19 +5,19 @@ import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class Hardening extends QuirkAbility {
 	
-	public QuirkStamina hardening;
+	public Stamina hardening;
 
 	public Hardening(QuirkUser user) {
 		super(user);
 		
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Hardening.Passive.MaxStamina");
 		
-		hardening = new QuirkStamina(user.getUniqueId(), "Hardness", BarColor.RED, max, max);
+		hardening = new Stamina(user.getUniqueId(), "Hardness", BarColor.RED, max, max);
 		
 		manager.start(this);
 	}

@@ -10,14 +10,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ParticleEffect;
 import me.simp.quirkademia.util.StatusEffect;
 
 public class BodyHeat extends QuirkAbility {
 	
-	private QuirkStamina temperature;
+	private Stamina temperature;
 	private long lastChange;
 	private IcyHotAbility active;
 	private LinkedList<IcyHotAbility> cycle;
@@ -27,7 +27,7 @@ public class BodyHeat extends QuirkAbility {
 		
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.HalfColdHalfHot.Passive.MaxTemperature");
 		
-		temperature = new QuirkStamina(user.getUniqueId(), "Body Temperature", BarColor.RED, max/2, max);
+		temperature = new Stamina(user.getUniqueId(), "Body Temperature", BarColor.RED, max/2, max);
 		lastChange = System.currentTimeMillis();
 		
 		active = IcyHotAbility.NONE;

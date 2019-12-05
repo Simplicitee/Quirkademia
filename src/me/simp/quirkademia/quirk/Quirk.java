@@ -1,13 +1,17 @@
 package me.simp.quirkademia.quirk;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import me.simp.quirkademia.QuirkPlugin;
+import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
 import me.simp.quirkademia.util.ActivationType;
 
@@ -53,6 +57,34 @@ public abstract class Quirk implements IQuirk, Listener {
 			case MUTANT: return ChatColor.GREEN;
 			case FUSION: return ChatColor.DARK_PURPLE;
 			default: return ChatColor.GRAY;
+		}
+	}
+	
+	public QuirkAbility activateAbility(QuirkUser user, ActivationType type) {
+		Player player = Bukkit.getPlayer(user.getUniqueId());
+		
+		if (player == null) {
+			return null;
+		}
+		
+		if (!hasActivationType(type)) {
+			return null;
+		}
+		
+		QuirkAbilityInfo info = abilities.get(type);
+		
+		if (type == ActivationType.PASSIVE && QuirkPlugin.get().getAbilityManager().hasAbility(user, info.getProvider())) {
+			return null;
+		} else if (!user.canUseAbility(info)) {
+			return null;
+		}
+		
+		try {
+			Constructor<?> construct = info.getProvider().getConstructor(QuirkUser.class);
+			
+			return (QuirkAbility) construct.newInstance(this);
+		} catch (Exception e) {
+			return null;
 		}
 	}
 	

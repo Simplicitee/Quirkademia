@@ -13,6 +13,7 @@ import me.simp.quirkademia.QuirkPlugin;
 import me.simp.quirkademia.ability.AbilityBoard;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.ability.QuirkAbilityInfo;
+import me.simp.quirkademia.object.BindsBoard;
 import me.simp.quirkademia.util.ActivationType;
 import me.simp.quirkademia.util.Cooldown;
 import me.simp.quirkademia.util.DisplayBoard;
@@ -39,6 +40,8 @@ public class QuirkUser {
 				this.board = new AbilityBoard(this);
 			}
 		}
+		
+		initializePassives();
 		
 		this.status = new QuirkUserStatus();
 		this.disabled = false;
@@ -129,10 +132,8 @@ public class QuirkUser {
 	}
 	
 	public QuirkUser setBind(int slot, Quirk quirk) {
-		if (slot < 0) {
-			slot = 0;
-		} else if (slot > 9) {
-			slot = 9;
+		if (slot < 0 || slot > 9) {
+			throw new IllegalArgumentException("Slot number must be within range 0 - 9 inclusively.");
 		}
 		
 		binds.put(slot, quirk);
@@ -150,54 +151,25 @@ public class QuirkUser {
 	}
 	
 	public QuirkAbility createAbilityInstance(ActivationType type) {
-		Quirk using = quirk;
-		Player player = Bukkit.getPlayer(uuid);
-		
+		Quirk active = quirk;
 		if (quirk instanceof FusedQuirk) {
-			if (type == ActivationType.PASSIVE) {
-				createMultipleAbilities(type);
-			} else {
-				if (player != null) {
-					int slot = player.getInventory().getHeldItemSlot();
-					
-					if (binds.containsKey(slot)) {
-						using = binds.get(slot);
-					}
-				}
-			}
+			Player p = Bukkit.getPlayer(uuid);
+			active = getBind(p.getInventory().getHeldItemSlot());
 		}
 		
-		if (!using.hasActivationType(type)) {
-			return null;
-		}
-		
-		QuirkAbilityInfo info = using.getAbilities().get(type);
-		
-		if (type == ActivationType.PASSIVE && QuirkPlugin.get().getAbilityManager().hasAbility(this, info.getProvider())) {
-			return null;
-		} else if (!canUseAbility(info)) {
-			return null;
-		}
-		
-		try {
-			Constructor<?> construct = info.getProvider().getConstructor(QuirkUser.class);
-			
-			return (QuirkAbility) construct.newInstance(this);
-		} catch (Exception e) {
-			return null;
-		}
+		return active.activateAbility(this, type);
 	}
 	
-	public void createMultipleAbilities(ActivationType type) {
+	public void initializePassives() {
 		if (quirk instanceof FusedQuirk) {
-			for (Quirk using : ((FusedQuirk) quirk).getQuirks()) {
-				if (!using.hasActivationType(type)) {
+			for (Quirk q : ((FusedQuirk) quirk).getQuirks()) {
+				if (!q.hasActivationType(ActivationType.PASSIVE)) {
 					continue;
 				}
 				
-				QuirkAbilityInfo info = using.getAbilities().get(type);
+				QuirkAbilityInfo info = q.getAbilities().get(ActivationType.PASSIVE);
 				
-				if (type == ActivationType.PASSIVE && QuirkPlugin.get().getAbilityManager().hasAbility(this, info.getProvider())) {
+				if (QuirkPlugin.get().getAbilityManager().hasAbility(this, info.getProvider())) {
 					continue;
 				}
 				
@@ -210,6 +182,8 @@ public class QuirkUser {
 					construct.newInstance(this);
 				} catch (Exception e) {}
 			}
+		} else {
+			quirk.activateAbility(this, ActivationType.PASSIVE);
 		}
 	}
 	

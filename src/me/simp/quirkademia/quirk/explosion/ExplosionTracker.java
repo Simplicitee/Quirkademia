@@ -7,20 +7,20 @@ import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class ExplosionTracker extends QuirkAbility {
 
 	private ExplosionType type;
 	private LinkedList<ExplosionType> cycle;
-	private QuirkStamina stamina;
+	private Stamina stamina;
 	
 	public ExplosionTracker(QuirkUser user) {
 		super(user);
 		
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Explosion.Passive.MaxSweat");
-		stamina = new QuirkStamina(user.getUniqueId(), "Nitroglycerin", BarColor.RED, 0, max);
+		stamina = new Stamina(user.getUniqueId(), "Nitroglycerin", BarColor.RED, 0, max);
 		
 		type = ExplosionType.NONE;
 		cycle = new LinkedList<>();

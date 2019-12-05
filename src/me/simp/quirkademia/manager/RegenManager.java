@@ -143,7 +143,6 @@ public class RegenManager extends Manager {
 		}
 	}
 	
-	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void fluidLevelChange(FluidLevelChangeEvent event) {
 		if (event.isCancelled()) {

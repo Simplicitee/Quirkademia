@@ -1,11 +1,11 @@
-package me.simp.quirkademia.quirk.oneforall;
+package me.simp.quirkademia.quirk.oneforall.stockpile;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.oneforall.SmashTracker.SmashType;
+import me.simp.quirkademia.quirk.oneforall.stockpile.SmashTracker.SmashType;
 
 public class SmashCycle extends QuirkAbility {
 

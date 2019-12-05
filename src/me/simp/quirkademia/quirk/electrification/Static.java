@@ -8,20 +8,20 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import me.simp.quirkademia.ability.QuirkAbility;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 import me.simp.quirkademia.util.ParticleEffect;
 
 public class Static extends QuirkAbility {
 	
 	private boolean dumbMode;
-	private QuirkStamina charge;
+	private Stamina charge;
 
 	public Static(QuirkUser user) {
 		super(user);
 		
 		this.dumbMode = false;
-		this.charge = new QuirkStamina(user.getUniqueId(), "Static Charge", BarColor.YELLOW, 1600, 1600);
+		this.charge = new Stamina(user.getUniqueId(), "Static Charge", BarColor.YELLOW, 1600, 1600);
 		
 		manager.start(this);
 	}

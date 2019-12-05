@@ -1,4 +1,4 @@
-package me.simp.quirkademia.quirk.oneforall;
+package me.simp.quirkademia.quirk.oneforall.stockpile;
 
 import java.util.LinkedList;
 
@@ -6,19 +6,19 @@ import org.bukkit.Location;
 import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.ability.QuirkAbility;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class SmashTracker extends QuirkAbility {
 	
 	private SmashType active;
 	private LinkedList<SmashType> cycle;
-	private QuirkStamina battery;
+	private Stamina battery;
 
 	public SmashTracker(QuirkUser user) {
 		super(user);
 		
-		battery = new QuirkStamina(user.getUniqueId(), "Stockpiled Power", BarColor.GREEN, 0, 1000000);
+		battery = new Stamina(user.getUniqueId(), "Stockpiled Power", BarColor.GREEN, 0, 1000000);
 		
 		active = SmashType.NONE;
 		cycle = new LinkedList<>();

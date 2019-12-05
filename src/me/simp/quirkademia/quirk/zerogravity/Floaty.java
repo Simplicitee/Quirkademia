@@ -14,13 +14,13 @@ import org.bukkit.util.Vector;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class Floaty extends QuirkAbility {
 	
 	private Set<Entity> floating;
-	private QuirkStamina floaty;
+	private Stamina floaty;
 
 	public Floaty(QuirkUser user) {
 		super(user);
@@ -28,7 +28,7 @@ public class Floaty extends QuirkAbility {
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.ZeroGravity.Passive.WeightLimit");
 		
 		floating = new HashSet<>();
-		floaty = new QuirkStamina(user.getUniqueId(), "Weight Limit", BarColor.PINK, max, max);
+		floaty = new Stamina(user.getUniqueId(), "Weight Limit", BarColor.PINK, max, max);
 		
 		manager.start(this);
 	}

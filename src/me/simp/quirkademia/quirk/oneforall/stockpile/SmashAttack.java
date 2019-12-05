@@ -1,4 +1,4 @@
-package me.simp.quirkademia.quirk.oneforall;
+package me.simp.quirkademia.quirk.oneforall.stockpile;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -9,7 +9,7 @@ import me.simp.quirkademia.ability.Collidable;
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
 import me.simp.quirkademia.quirk.QuirkUser;
-import me.simp.quirkademia.quirk.oneforall.SmashTracker.SmashType;
+import me.simp.quirkademia.quirk.oneforall.stockpile.SmashTracker.SmashType;
 import me.simp.quirkademia.util.ParticleEffect;
 
 public class SmashAttack extends QuirkAbility implements Collidable {

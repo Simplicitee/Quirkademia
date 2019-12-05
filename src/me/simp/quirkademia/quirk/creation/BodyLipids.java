@@ -5,18 +5,18 @@ import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class BodyLipids extends QuirkAbility {
 	
-	private QuirkStamina bodyfat;
+	private Stamina bodyfat;
 
 	public BodyLipids(QuirkUser user) {
 		super(user);
 		
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Creation.Passive.MaxLipids");
-		bodyfat = new QuirkStamina(user.getUniqueId(), "Body Lipids", BarColor.PINK, max, max);
+		bodyfat = new Stamina(user.getUniqueId(), "Body Lipids", BarColor.PINK, max, max);
 		
 		manager.start(this);
 	}

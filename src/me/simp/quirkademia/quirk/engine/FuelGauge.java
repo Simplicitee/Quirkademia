@@ -5,12 +5,12 @@ import org.bukkit.boss.BarColor;
 
 import me.simp.quirkademia.ability.QuirkAbility;
 import me.simp.quirkademia.configuration.ConfigType;
-import me.simp.quirkademia.quirk.QuirkStamina;
+import me.simp.quirkademia.object.Stamina;
 import me.simp.quirkademia.quirk.QuirkUser;
 
 public class FuelGauge extends QuirkAbility {
 	
-	private QuirkStamina fuel;
+	private Stamina fuel;
 	private boolean stalled;
 	private long stalledTime, stallTime;
 
@@ -18,7 +18,7 @@ public class FuelGauge extends QuirkAbility {
 		super(user);
 		
 		int max = configs.getConfiguration(ConfigType.ABILITIES).getInt("Abilities.Engine.Passive.MaxFuel");
-		fuel = new QuirkStamina(user.getUniqueId(), "Fuel Gauge", BarColor.BLUE, max, max);
+		fuel = new Stamina(user.getUniqueId(), "Fuel Gauge", BarColor.BLUE, max, max);
 		stalled = false;
 		stallTime = configs.getConfiguration(ConfigType.ABILITIES).getLong("Abilities.Engine.ReciproBurst.StallTime");
 		
